@@ -84,7 +84,7 @@
     		var email = $("#email").val();
 			var Verificationcode = $("#Verificationcode").val(); //输入的验证码
 
-			if( email=="" || Verificationcode==""){
+			if( email==="" || Verificationcode===""){
 				var obj = document.getElementById("errorMsg");
 				$("#tipMsg").html("请填写完整的注册信息！");
 				obj.setAttribute("class", "tip-box visiblility-show");
@@ -160,7 +160,7 @@
     //倒计时函数
     var time = 5;
     function countdown(e){
-         if (time == 0) {
+         if (time === 0) {
              e.setAttribute("onclick","sendsms(this)");
              $("#verifyCode").html("获取验证码");
              //颜色恢复

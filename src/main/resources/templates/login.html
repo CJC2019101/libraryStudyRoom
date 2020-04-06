@@ -54,7 +54,7 @@
 
             <!-- 用户名 -->
             <div class="normalInput" id="cycode-box">
-                <input class="ipt-account inp-focus" name="account" id="account" maxlength="50" placeholder="邮箱/用户名" autocomplete="off"  onfocus="closeErrorMsg()" />
+                <input class="ipt-account inp-focus" name="account" id="account" maxlength="50" placeholder="学号/职工号" autocomplete="off"  onfocus="closeErrorMsg()" />
             </div>
             <!-- 密 码 -->
             <div class="normalInput ">
@@ -75,7 +75,7 @@
             </div>
             <br/>
 
-            <a id="login" class="fullBtnBlue">登录</a>
+            <a id="login" class="fullBtnBlue" th:action="@{/isExist}" >登录</a>
             <div class="transferField">
                 <a class="go2forgetpwd linkABlue rememberFieldForA" href="#">忘记密码?</a>
             </div>
@@ -98,10 +98,10 @@
 
     //一加载就执行填充信息  用于记住登录信息
     $(document).ready(function(){
-        if($.cookie("password") != ''){
+        if($.cookie("password") !== ''){
             $("#password").val($.cookie("password"));
         }
-        if($.cookie("account") != ''){
+        if($.cookie("account") !== ''){
             $("#account").val($.cookie("account"));
         }
 
@@ -117,8 +117,8 @@
 
     //回车登录
     function keyLogin(){
-        if (event.keyCode==13){ //回车键的键值为13
-            //document.getElementById("login").click(); //调用登录按钮的登录事件
+        if (event.keyCode===13){ //回车键的键值为13
+            // document.getElementById("login").click(); //调用登录按钮的登录事件
             //或者使用jquery实现
             $("#login").click();
         }
@@ -129,15 +129,13 @@
     document.getElementById("code").onclick=changeImg;
     function changeImg(){
         //alert("换图片");
-        var arrays=new Array(
-            '1','2','3','4','5','6','7','8','9','0',
+        var arrays=['1','2','3','4','5','6','7','8','9','0',
             'a','b','c','d','e','f','g','h','i','j',
             'k','l','m','n','o','p','q','r','s','t',
             'u','v','w','x','y','z',
             'A','B','C','D','E','F','G','H','I','J',
             'K','L','M','N','O','P','Q','R','S','T',
-            'U','V','W','X','Y','Z'
-        );
+            'U','V','W','X','Y','Z'];
         code='';//重新初始化验证码
         //alert(arrays.length);
         //随机从数组中获取四个元素组成验证码
@@ -156,14 +154,14 @@
         var account = $("#account").val();
         var password = $("#password").val();
         var verify = $("#verify").val();
-        if( account=="" || password=="" || verify==""){
+        if( account==="" || password==="" || verify===""){
             var obj = document.getElementById("errorMsg");
             $("#tipMsg").html("请填写完整的登录信息！");
             obj.setAttribute("class", "tip-box visiblility-show");
             return ;
         }
         //验证码不对
-        if( code.toLowerCase()!=verify){
+        if( code !==verify){
             //提示错误信息
             var obj = document.getElementById("errorMsg");
             //修改提示文字
@@ -172,7 +170,7 @@
             return ;
         }
         //判断是否勾选记住登录信息
-        if ($("#remember").prop("checked") == true) {
+        if ($("#remember").prop("checked") === true) {
             //记录信息
             var account = $("#account").val();
             var password = $("#password").val();
@@ -187,19 +185,19 @@
         //发送ajax请求
         $.ajax({
             type: 'POST',
-            url: 'login.action',
+            url: '/isExist',
             data: 'account='+account+'&password='+password,
             dataType: 'JSON',
             success: function(data){
                 //如果密码错误，则把cookie中的password清空同时表单内容设置为空,同时清空验证码，刷新验证码
-                if(data=="!0"){
+                if(data===0){
                     $("#password").val("");
                     $.cookie("password", "");
                     $("#verify").val("")
                     changeImg();
                     alert("密码错误");
                 }else{ //登录成功跳转页面
-                    window.location.href = '';
+                    window.location.href = '/templates/main.html';
                 }
             },
         });
