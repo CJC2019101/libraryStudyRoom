@@ -1,4 +1,4 @@
-package cn.cqucc.library.service.dao;
+package cn.cqucc.library.service.student.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * @author JianfeiChen
  * @date 2020/4/6 10:50
- * @Description cn.cqucc.library.service.dao
+ * @Description cn.cqucc.library.service.student.dao
  */
 @Mapper
 public interface ICKStudentDAO {

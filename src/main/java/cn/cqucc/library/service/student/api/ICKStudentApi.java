@@ -1,9 +1,9 @@
-package cn.cqucc.library.service.api;
+package cn.cqucc.library.service.student.api;
 
 /**
  * @author JianfeiChen
  * @date 2020/4/6 10:48
- * @Description cn.cqucc.library.service.api
+ * @Description cn.cqucc.library.service.student.api
  */
 public interface ICKStudentApi {
     /**

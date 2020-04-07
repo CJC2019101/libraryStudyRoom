@@ -1,11 +1,9 @@
 package cn.cqucc.library.controller.login;
 
-import cn.cqucc.library.service.api.ICKStudentApi;
-import cn.cqucc.library.service.bo.CKStudentBO;
+import cn.cqucc.library.service.admin.api.ICKAdminAPI;
+import cn.cqucc.library.service.student.api.ICKStudentApi;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,23 +22,38 @@ public class Login {
 
     @Autowired
     private ICKStudentApi studentBO;
+    @Autowired
+    private ICKAdminAPI adminBO;
 
     @RequestMapping("/login")
-    @ApiOperation(value = "访问登录主页")
+    @ApiOperation(value = "访问学生登录主页")
     public String login() {
         return "login";
     }
 
-    @RequestMapping(value = "/isExist",method = RequestMethod.POST)
-    @ApiOperation(value = "登录判断")
+    @RequestMapping(value = "/isExist", method = RequestMethod.POST)
+    @ApiOperation(value = "学生登录判断")
     @ResponseBody
-    public int isExist(@RequestParam String account,@RequestParam String password){
-        return studentBO.isExist(account,password);
+    public int isExist(@RequestParam String account, @RequestParam String password) {
+        return studentBO.isExist(account, password);
     }
 
     @RequestMapping("/register")
     @ApiOperation(value = "访问注册主页")
     public String userRegister() {
         return "register";
+    }
+
+    @RequestMapping(value = "/adminLogin")
+    @ApiOperation(value = "访问管理员登录主页")
+    public String adminLogin() {
+        return "adminLogin";
+    }
+
+    @RequestMapping(value = "/adminIsExist",method = RequestMethod.POST)
+    @ApiOperation(value = "管理员登录判断")
+    @ResponseBody
+    public int adminIsExist(@RequestParam String account, @RequestParam String password) {
+        return adminBO.isExist(account,password);
     }
 }

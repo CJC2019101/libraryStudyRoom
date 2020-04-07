@@ -1,4 +1,4 @@
-package cn.cqucc.library.model;
+package cn.cqucc.library.model.student;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

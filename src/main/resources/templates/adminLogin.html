@@ -42,9 +42,9 @@
 
         <form id="mainForm" class="main-form"  >
             <div class="tab-title">
-                <a class="linkABlue" id="toAccountLogin" href="/login">学生登录</a>
+                <a class="linkAGray" id="toAccountLogin" href="/login">学生登录</a>
                 <span class="register-line"></span>
-                <a class="linkAGray" id="toVCodeLogin" href="/adminLogin">管理员登录</a>
+                <a class="linkABlue" id="toVCodeLogin" href="/adminLogin">管理员登录</a>
             </div>
             <div id="errorMsg" class="tip-box visiblility-hidden">
                 <i class="err-ico"></i>
@@ -75,7 +75,7 @@
             </div>
             <br/>
 
-            <a id="login" class="fullBtnBlue" th:action="@{/isExist}" >登录</a>
+            <a id="login" class="fullBtnBlue" th:action="@{/adminIsExist}" >登录</a>
             <div class="transferField">
                 <a class="go2forgetpwd linkABlue rememberFieldForA" href="#">忘记密码?</a>
             </div>
@@ -185,7 +185,7 @@
         //发送ajax请求
         $.ajax({
             type: 'POST',
-            url: '/isExist',
+            url: '/adminIsExist',
             data: 'account='+account+'&password='+password,
             dataType: 'JSON',
             success: function(data){
@@ -195,9 +195,9 @@
                     $.cookie("password", "");
                     $("#verify").val("")
                     changeImg();
-                    alert("密码错误");
+                    alert("密码错误或账户不存在");
                 }else{ //登录成功跳转页面
-                    window.location.href = '/main.html';
+                    window.location.href = '/adminMain.html';
                 }
             },
         });
