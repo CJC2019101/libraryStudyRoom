@@ -24,11 +24,21 @@
             align-items: center; /*定义body的元素垂直居中*/
             justify-content: center; /*定义body的里的元素水平居中*/
         }
+        #loginALabel{
+            position: absolute;
+            top: 20px;
+            right: 0px;
+        }
 
     </style>
 </head>
 <body class="text-center">
 <h1 class="text-center">城科图书馆座位管理系统</h1>
+<div id="loginALabel">
+    <a href="/login">学生后台入口</a>&emsp;
+    <a href="/adminLogin">管理员后台入口</a>
+</div>
+
 <div class="btn-group, text-center btnSelect">
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -36,9 +46,9 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li><a href="#">一楼</a></li>
-            <li><a href="#">二楼</a></li>
-            <li><a href="#">三楼</a></li>
+            <li><a href="/firstFloor.html">一楼</a></li>
+            <li><a href="/secondFloor.html">二楼</a></li>
+            <li><a href="/thirdFloor.html">三楼</a></li>
         </ul>
     </div>
     <div class="btn-group">
@@ -47,9 +57,9 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li><a href="#">一楼</a></li>
-            <li><a href="#">二楼</a></li>
-            <li><a href="#">三楼</a></li>
+            <li><a href="/firstFloor.html">一楼</a></li>
+            <li><a href="/secondFloor.html">二楼</a></li>
+            <li><a href="/thirdFloor.html">三楼</a></li>
         </ul>
     </div>
 
