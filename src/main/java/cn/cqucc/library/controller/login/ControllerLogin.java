@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Api(tags = "用户登录")
 @Controller
-public class Login {
+public class ControllerLogin {
 
     @Autowired
     private ICKStudentApi studentBO;

@@ -1,10 +1,104 @@
 <!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>一楼</title>
+
+    <title>主页</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/style/css/base.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/style/css/login.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/style/layui/css/layui.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/style/layer/skin/layer.css}">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script type="text/javascript" th:src="@{/style/js/jquery-1.7.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/style/js/jquery.cookie.js}"></script>
+    <script type="text/javascript" th:src="@{/style/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/style/layer/layer.js}"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .text-center {
+            font-weight: 700;
+        / / 字体加粗
+            /*color: #2b2b2b;*/
+        font-size: 40 px;
+        }
+
+        .table {
+            font-size: 20px;
+        }
+
+        #loginALabel {
+            position: absolute;
+            top: 20px;
+            right: 10px;
+        }
+    </style>
+
 </head>
 <body>
-<h1>一楼</h1>
+
+<div id="loginALabel">
+    <a>Cookie中获取用户信息</a>
+</div>
+
+<h3 class="text-center">城科图书馆</h3>
+<table class="table table-hover" style="margin-top: 10px">
+    <thead>
+    <tr>
+        <th>教室号</th>
+        <th>楼层</th>
+        <th>规格</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Tanmay</td>
+        <td>Bangalore</td>
+        <td>560001</td>
+        <td>座位</td>
+    </tr>
+    <tr>
+        <td>Sachin</td>
+        <td>Mumbai</td>
+        <td>400003</td>
+        <td>座位</td>
+    </tr>
+    <tr>
+        <td>Uma</td>
+        <td>Pune</td>
+        <td>411027</td>
+        <td>座位</td>
+    </tr>
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+
+    //一加载就执行填充信息  用于记住登录信息
+    $(document).ready(function () {
+        //发送ajax请求
+        $.ajax({
+            type: 'GET',
+            url: '/findRooms?floorNumber=1',
+            // data: 'floorNumber=' + 1,
+            dataType: 'JSON',
+            success: function (data) {
+                //如果密码错误，则把cookie中的password清空同时表单内容设置为空,同时清空验证码，刷新验证码
+                if (data === null) {
+                    alert("数据库没有数据可以显示返回主页")
+                    window.location.href = '/main.html';
+                } else { //加载JSON数据
+
+                }
+            },
+        });
+    })
+</script>
+
+
 </body>
 </html>

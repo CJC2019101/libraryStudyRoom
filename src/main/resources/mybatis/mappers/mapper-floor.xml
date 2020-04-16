@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cqucc.library.service.floor.dao.ICKFloorDAO">
+    <resultMap id="BaseResultMap" type="cn.cqucc.library.model.floor.Floor">
+        <id column="floor_number" property="floorNumber"/>
+        <result column="room_number" property="roomNumber"
+                typeHandler="cn.cqucc.library.utils.ArrayTypeHandler"/>
+    </resultMap>
+
+    <select id="findRooms" resultMap="BaseResultMap">
+        select * from floors
+        where floor_number = #{floorNumber}
+    </select>
+</mapper>
