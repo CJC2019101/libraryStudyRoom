@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cqucc.library.service.room.dao.ICKRoomDAO">
+
+    <resultMap id="BaseResultMap" type="cn.cqucc.library.model.room.Room">
+        <id column="id" property="id"/>
+        <id column="floor_number" property="floorNumber"/>
+        <result column="long" property="roomLong"/>
+        <result column="width" property="roomWidth"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select * from rooms
+    </select>
+
+    <select id="findRoom" resultMap="BaseResultMap">
+        select * from rooms
+            where rooms.id = #{roomId}
+    </select>
+</mapper>
