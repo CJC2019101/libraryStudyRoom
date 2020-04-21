@@ -140,12 +140,16 @@
 
     // 座位按钮点击事件
     $("#rooms").delegate(".tableButton ", "click", function () {
-        var row = $(this).parent().index() + 1; // 行位置
-        var col = $(this).index() + 1; // 列位置
-
+        // 行位置
+        var row = $(this).parent().index() + 1;
+        // 列位置
+        var col = $(this).index() + 1;
         var x = document.getElementById('rooms').rows[row].cells;
-        var roomId = x[0].innerHTML // 教室号
-        alert("当前位置：第" + row + "行，第" + col + "列，教室号：" + roomId)
+        // 教室号
+        var roomId = x[0].innerHTML
+        // 楼层号
+        var floorNumber = x[1].innerHTML.substr(0, 1)
+        alert("当前位置：第" + row + "行，第" + col + "列，楼层号：" + floorNumber + "楼，教室号：" + roomId)
         //发送ajax请求
         $.ajax({
             type: 'GET',
@@ -159,7 +163,8 @@
                 if (data.code === 200) {
                     var $table = $('#roomTable');//绑定表格id
                     var room = data.data
-                    buildTable($table, room.roomWidth, room.roomLong); //设置所要加载的表格列数和行数，此处为24行24列
+                    //设置所要加载的表格列数和行数，已经当前的教室号、楼层号
+                    buildTable($table, room.roomWidth, room.roomLong, floorNumber, roomId);
                 } else {
                     alert(data.msg())
                     window.location.href = "/firstFloor.html"
@@ -171,33 +176,64 @@
 
 
     // 创建表格
-    function buildTable($el, cells, rows) {
-        var i, j, row,
-            columns = [],
-            data = [];
-        var roomTitle = $('#myModalLabel');
-        // roomTitle.html("daf")
+    function buildTable($el, cells, rows, floorNumber, roomId) {
+        var chairData = {
+            "roomId": roomId,
+            "floorNumber": floorNumber
+        };
 
-        for (i = 1; i <= cells; i++) {
-            columns.push({
-                field: 'field' + i,
-                title: '第' + i + '列',
-                sortable: true
-            });
-        }
-        for (i = 1; i <= rows; i++) {
-            row = {};
-            for (j = 1; j <= cells; j++) {
-                row['field' + j] = i + '行' + j + '列';
+        //发送ajax请求
+        $.ajax({
+            type: 'POST',
+            url: '/occupyChairs',
+            // data: 'floorNumber=' + floorNumber + '&roomId=' + roomId,
+            data: JSON.stringify(chairData),
+            dataType: 'JSON',
+            contentType: "application/json",
+            error: function (data) {
+                alert("连接超时");
+            },
+            success: function (data) {
+                if (data.code === 200) {
+                    var chairs = data.data
+                    var i, j, row,
+                        columns = [],
+                        data = [];
+                    var roomTitle = $('#myModalLabel');
+
+                    for (i = 1; i <= cells; i++) {
+                        columns.push({
+                            field: 'field' + i,
+                            title: '第' + i + '列',
+                            sortable: true
+                        });
+                    }
+                    for (i = 1; i <= rows; i++) {
+                        row = {};
+                        for (j = 1; j <= cells; j++) {
+                            for (var k = 0; k < chairs.length; k++) {
+                                if (i === chairs[k].row && j === chairs[k].cell) {
+                                    row['field' + j] = "已经被占用";
+                                } else {
+                                    row['field' + j] = i + '行' + j + '列';
+                                }
+                            }
+                        }
+                        data.push(row);
+                    }
+                    $el.bootstrapTable('destroy').bootstrapTable({
+                        columns: columns,
+                        data: data,
+                        search: true,
+                        toolbar: '.toolbar'
+                    });
+                } else {
+                    alert(data.msg)
+                    window.location.href = "/main.html"
+                }
             }
-            data.push(row);
-        }
-        $el.bootstrapTable('destroy').bootstrapTable({
-            columns: columns,
-            data: data,
-            search: true,
-            toolbar: '.toolbar'
         });
+
     }
 
 

@@ -56,7 +56,6 @@ public class ControllerRoom {
             response.setMsg("成功");
             response.setData(room);
         }
-        System.out.println("room = " + room);
         return response;
     }
 }

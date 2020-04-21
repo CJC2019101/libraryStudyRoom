@@ -1,0 +1,51 @@
+package cn.cqucc.library.controller.chair;
+
+import cn.cqucc.library.model.chair.Chair;
+import cn.cqucc.library.service.chair.bo.CKChairBO;
+import cn.cqucc.library.status.BaseResponse;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import org.hibernate.validator.constraints.EAN;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+
+/**
+ * @author JianfeiChen
+ * @date 2020/4/21 16:20
+ * @Description
+ */
+@Controller
+public class ControllerChair {
+
+    @Autowired
+    CKChairBO chairBO;
+
+    @RequestMapping(value = "/occupyChairs", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "roomId", value = "教室号", required = true),
+            @ApiImplicitParam(paramType = "query", name = "floorNumber", value = "楼层号", required = true)
+    }
+    )
+    @ResponseBody
+    public BaseResponse occupyChairs(@RequestBody Chair chair) {
+        System.out.println("chair = " + chair.toString());
+        List<Chair> occupyChairs = chairBO.occupyChairs(chair);
+        BaseResponse<List> response = new BaseResponse<>();
+        if (occupyChairs.size()>0){
+            response.setData(occupyChairs);
+            response.setCode(200);
+        }else {
+            response.setMsg("数据未查询出数据");
+            response.setCode(502);
+        }
+        System.out.println("occupyChairs = " + occupyChairs.toString());
+        return response;
+    }
+}
