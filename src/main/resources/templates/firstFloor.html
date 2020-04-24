@@ -249,7 +249,7 @@
             },
             success: function (data) {
                 if (data.code === 200) {
-                    var chairs = data.data
+                    var chairs = data.data;
                     var i, j, row,
                         columns = [],
                         data = [];
@@ -266,8 +266,10 @@
                         row = {};
                         for (j = 1; j <= cells; j++) {
                             for (var k = 0; k < chairs.length; k++) {
-                                if (i === chairs[k].row && j === chairs[k].cell) {
-                                    row['field' + j] = "<p>" + "填用户名称" + "</p>";
+                                if (i === chairs[k].crow && j === chairs[k].cell) {
+                                    row['field' + j] = "<button type='button' class='btn btn-success' title='" + chairs[k].processionGrade +
+                                        "' data-container= 'body' data-toggle= 'popover' data-placement='bottom'" +
+                                        " data-content= '" + chairs[k].userId + "' > " + chairs[k].userName + " </button>"
                                     break;
                                 } else {
                                     var checkboxValue = i + "-" + j;
@@ -284,6 +286,12 @@
                         search: true,
                         toolbar: '.toolbar'
                     });
+
+                    // 选座信息提示框
+                    $(function () {
+                        $("[data-toggle='popover']").popover();
+                    });
+
                 } else {
                     alert(data.msg)
                     window.location.href = "/main.html"

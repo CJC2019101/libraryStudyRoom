@@ -34,7 +34,6 @@ public class ControllerChair {
     )
     @ResponseBody
     public BaseResponse occupyChairs(@RequestBody Chair chair) {
-        System.out.println("chair = " + chair.toString());
         List<Chair> occupyChairs = chairBO.occupyChairs(chair);
         BaseResponse<List> response = new BaseResponse<>();
         if (occupyChairs.size() > 0) {
