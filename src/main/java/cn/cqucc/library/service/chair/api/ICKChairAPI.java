@@ -1,7 +1,7 @@
 package cn.cqucc.library.service.chair.api;
 
 import cn.cqucc.library.model.chair.Chair;
-import cn.cqucc.library.status.BaseResponse;
+import cn.cqucc.library.model.chair.req.CKSelectedChair;
 
 import java.util.List;
 
@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface ICKChairAPI {
     List<Chair> occupyChairs(Chair chair);
+
+    int selectChair(List<Chair> chairs);
 }

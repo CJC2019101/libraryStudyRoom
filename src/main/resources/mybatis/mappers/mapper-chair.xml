@@ -9,11 +9,25 @@
         <result column="user_id" property="userId"/>
         <result column="user_type" property="userType"/>
         <result column="is_occupy" property="isOccupy"/>
+        <result column="is_valid" property="isValid"/>
     </resultMap>
 
     <select id="occupyChairs" resultMap="BaseResultMap">
         select * from chairs
         where floor_number = #{floorNumber} and
-            room_id = #{roomId} and is_occupy = true
+            room_id = #{roomId} and is_occupy = true and is_valid = true
     </select>
+
+    <select id="selectChairAmount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from chairs
+            where user_id = #{account} and is_valid =true;
+    </select>
+
+    <insert id="selectChair" parameterType="cn.cqucc.library.model.chair.Chair">
+        insert into
+            chairs (chair_row, chair_cell, room_id, floor_number, is_occupy, user_id, is_valid)
+                values (
+                #{row}, #{cell}, #{roomId}, #{floorNumber}, #{isOccupy}, #{userId}, #{isValid}
+                );
+    </insert>
 </mapper>

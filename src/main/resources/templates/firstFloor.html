@@ -105,7 +105,8 @@
     <div class="modal-dialog">
         <div class="modal-content" id="modalDiv">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <button type="button" id="hideFloorNumber" style="display: none" class="close" data-dismiss="modal"
+                        aria-hidden="true">
                     &times;
                 </button>
                 <h4 class="modal-title" align="center" id="myModalLabel">
@@ -132,7 +133,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
-                <button type="button" class="btn btn-primary">
+                <button type="button" id="commit" class="btn btn-primary">
                     提交
                 </button>
             </div>
@@ -253,7 +254,7 @@
                         columns = [],
                         data = [];
                     $('#myModalLabel').html(roomId + "教室")
-
+                    $('#hideFloorNumber').html(floorNumber)
                     for (i = 1; i <= cells; i++) {
                         columns.push({
                             field: 'field' + i,
@@ -267,9 +268,10 @@
                             for (var k = 0; k < chairs.length; k++) {
                                 if (i === chairs[k].row && j === chairs[k].cell) {
                                     row['field' + j] = "<p>" + "填用户名称" + "</p>";
+                                    break;
                                 } else {
                                     var checkboxValue = i + "-" + j;
-                                    row['field' + j] = "<input type='checkbox' value=" + checkboxValue + " class='check_view_state' id=checkbox-" + checkboxValue + " style='display: none;'>\n" +
+                                    row['field' + j] = "<input type='checkbox' value=" + checkboxValue + " class='check_view_state' name='chair' id=checkbox-" + checkboxValue + " style='display: none;'>\n" +
                                         "<label for=checkbox-" + checkboxValue + ">" + i + " - " + j + "</label>"
                                 }
                             }
@@ -288,9 +290,63 @@
                 }
             }
         });
-
     }
 
+
+    // 发送选中的座位数据
+    $("body").delegate("#commit", "click", function () {
+        var checkboxs = document.getElementsByName("chair");
+        var chairInfo = new Array();
+        for (var i = 0; i < checkboxs.length; i++) {
+            if (checkboxs[i].checked) {
+                chairInfo.push(checkboxs[i].value)
+            }
+        }
+        if (chairInfo.length > 4) {
+            alert("您选择的座位太多，我规定最多只能选择4个。而您选中了" + chairInfo.length + "个")
+            return
+        }
+
+        var chairData = new Array();
+        // 处理座位信息为行、列
+        for (var i = 0; i < chairInfo.length; i++) {
+            var strs = chairInfo[i].split("-");
+
+            // 封装座位信息
+            var ajaxData = {
+                "roomId": $('#myModalLabel').text().replace("教室", ""),
+                "floorNumber": $('#hideFloorNumber').text(),
+                "row": strs[0],
+                "cell": strs[1],
+                "userId": $.cookie("account"),
+                "isValid": true,
+                "isOccupy": true
+            };
+            chairData[i] = ajaxData;
+        }
+
+        // alert(JSON.stringify(chairData))
+        // 发送数据
+        $.ajax({
+            type: 'POST',
+            url: '/selectChair',
+            data: JSON.stringify(chairData),
+            dataType: 'JSON',
+            contentType: "application/json",
+            error: function (data) {
+                // 后台返回错误信息
+                alert(data.msg);
+            },
+            success: function (data) {
+                if (data.code === 502) {
+                    alert(data.msg)
+                } else {
+                    alert("选座成功")
+                }
+            }
+        });
+
+    });
 
 
 </script>

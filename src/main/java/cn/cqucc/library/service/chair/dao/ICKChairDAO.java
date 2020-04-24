@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.chair.dao;
 
 import cn.cqucc.library.model.chair.Chair;
+import cn.cqucc.library.model.chair.req.CKSelectedChair;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,4 +15,8 @@ import java.util.List;
 public interface ICKChairDAO {
 
     List<Chair> occupyChairs(Chair chair);
+
+    void selectChair(Chair chairs);
+
+    int selectChairAmount(String account);
 }

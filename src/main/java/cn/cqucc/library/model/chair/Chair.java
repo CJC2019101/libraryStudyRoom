@@ -36,4 +36,8 @@ public class Chair implements Serializable {
 
     @ApiModelProperty(value = "用户类型，0：学生、1：老师")
     private int userType;
+
+    @ApiModelProperty(value = "是否是有效数据")
+    private Boolean isValid;
+
 }
