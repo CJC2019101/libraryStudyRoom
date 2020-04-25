@@ -1,8 +1,13 @@
 package cn.cqucc.library.controller.login;
 
+import cn.cqucc.library.model.student.Student;
 import cn.cqucc.library.service.admin.api.ICKAdminAPI;
 import cn.cqucc.library.service.student.api.ICKStudentApi;
+import cn.cqucc.library.status.BaseResponse;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,10 +55,36 @@ public class ControllerLogin {
         return "adminLogin";
     }
 
-    @RequestMapping(value = "/adminIsExist",method = RequestMethod.POST)
+    @RequestMapping(value = "/adminIsExist", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "account", value = "用户账户", required = true),
+            @ApiImplicitParam(paramType = "query", name = "password", value = "用户密码", required = true)
+    })
     @ApiOperation(value = "管理员登录判断")
     @ResponseBody
     public int adminIsExist(@RequestParam String account, @RequestParam String password) {
-        return adminBO.isExist(account,password);
+        return adminBO.isExist(account, password);
     }
+
+
+    @RequestMapping(value = "/getUserInfo")
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "query", name = "account", value = "账号", required = true),
+            @ApiImplicitParam(type = "query", name = "password", value = "密码", required = true)
+    })
+    @ApiOperation(value = "获取用户信息，后续添加用户类型判断。")
+    @ResponseBody
+    public BaseResponse getUserInfo(@RequestParam String account, @RequestParam String password) {
+        BaseResponse response = new BaseResponse();
+        Student student = studentBO.getUserInfo(account, password);
+        if (student.getStudentId() == null || student.getStudentId().equals("")) {
+            response.setMsg("数据库信息不存在");
+            response.setCode(502);
+        } else {
+            response.setData(student);
+            response.setCode(200);
+        }
+        return response;
+    }
+
 }

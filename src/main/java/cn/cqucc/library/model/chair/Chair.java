@@ -23,7 +23,7 @@ public class Chair implements Serializable {
     private int floorNumber;
 
     @ApiModelProperty(value = "行号")
-    private int crow;
+    private int row;
 
     @ApiModelProperty(value = "列号")
     private int cell;

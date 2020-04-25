@@ -49,10 +49,6 @@
 
         }
 
-        .statusSpan {
-            width: 2px;
-            height: 2px;
-        }
 
         /*座位状态框*/
         input[type="checkbox"] + label {
@@ -75,13 +71,13 @@
         }
 
         input:checked + label {
-            background-color: #F47164;
-            border: 1px solid #F47164;
+            background-color: #5cb85c;
+            border: 1px solid #5cb85c;
         }
 
         [id ="checkbox-1"]:checked + label {
-            background-color: #F47164;
-            border: 1px solid #F47164;
+            background-color: #5cb85c;
+            border: 1px solid #5cb85c;
         }
 
         [id="checkbox-2"]:checked + label {
@@ -96,7 +92,7 @@
 <body>
 
 <div id="loginALabel">
-    <a>Cookie中获取用户信息</a>
+    <button id="userInfo" type="button" class="btn btn-success"></button>
 </div>
 
 
@@ -160,7 +156,7 @@
     //一加载就执行填充信息  用于记住登录信息
     $(document).ready(function () {
 
-        //发送ajax请求
+        //发送ajax请求 -- 教室表格的创建
         $.ajax({
             type: 'GET',
             url: '/findAllRooms',
@@ -189,9 +185,28 @@
             }
         });
 
+        // 获取用户信息
+        getUserInfo()
 
     })
 
+
+    function getUserInfo() {
+        // 发送ajax请求 -- 获取用户信息
+        $.ajax({
+            type: 'GET',
+            url: '/getUserInfo',
+            data: 'account=' + $.cookie("account") + "&password=" + $.cookie("password"),
+            dataType: 'JSON',
+            error: function (data) {
+                alert(data.msg)
+            },
+            success: function (data) {
+                var student = data.data;
+                $("#userInfo").html(student.studentName);
+            }
+        })
+    }
 
     // 座位按钮点击事件
     $("#rooms").delegate(".tableButton ", "click", function () {
@@ -313,6 +328,9 @@
         if (chairInfo.length > 4) {
             alert("您选择的座位太多，我规定最多只能选择4个。而您选中了" + chairInfo.length + "个")
             return
+        }else if (chairInfo.length === 0){
+            alert("请至少选择一个座位")
+            return
         }
 
         var chairData = new Array();
@@ -349,12 +367,15 @@
                 if (data.code === 502) {
                     alert(data.msg)
                 } else {
-                    alert("选座成功")
+                    alert("选座成功，三秒后跳转回主页")
+                    setTimeout(function () {
+                        window.location.href = "/main.html", 2000
+                    });
                 }
             }
         });
 
-    });
+    })
 
 
 </script>

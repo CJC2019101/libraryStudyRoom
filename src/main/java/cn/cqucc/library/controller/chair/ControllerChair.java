@@ -6,6 +6,7 @@ import cn.cqucc.library.service.chair.bo.CKChairBO;
 import cn.cqucc.library.status.BaseResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,7 @@ public class ControllerChair {
             @ApiImplicitParam(paramType = "query", name = "floorNumber", value = "楼层号", required = true)
     }
     )
+    @ApiOperation(value = "获取被占用的座位")
     @ResponseBody
     public BaseResponse occupyChairs(@RequestBody Chair chair) {
         List<Chair> occupyChairs = chairBO.occupyChairs(chair);
@@ -43,7 +45,6 @@ public class ControllerChair {
             response.setMsg("数据未查询出数据");
             response.setCode(502);
         }
-        System.out.println("occupyChairs = " + occupyChairs.toString());
         return response;
     }
 
@@ -55,6 +56,7 @@ public class ControllerChair {
             @ApiImplicitParam(paramType = "insert", name = "列", value = "cells", required = true),
             @ApiImplicitParam(paramType = "insert", name = "账户", value = "account", required = true),
     })
+    @ApiOperation(value = "选中座位")
     @ResponseBody
     public BaseResponse selectChair(@RequestBody List<Chair> chairs) {
         BaseResponse response = new BaseResponse();
