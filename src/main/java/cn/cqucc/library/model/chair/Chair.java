@@ -16,6 +16,10 @@ import java.io.Serializable;
 public class Chair implements Serializable {
     private static final long serialVersionUID = -3908479939340949556L;
 
+
+    @ApiModelProperty(value = "主键ID")
+    private String id;
+
     @ApiModelProperty(value = "教室号")
     private String roomId;
 
@@ -23,7 +27,7 @@ public class Chair implements Serializable {
     private int floorNumber;
 
     @ApiModelProperty(value = "行号")
-    private int row;
+    private int crow;
 
     @ApiModelProperty(value = "列号")
     private int cell;
@@ -40,4 +44,6 @@ public class Chair implements Serializable {
     @ApiModelProperty(value = "是否是有效数据")
     private Boolean isValid;
 
+    @ApiModelProperty(value = "座位选中状态：0-全天，1-上午，2-下午，3-晚上")
+    private Integer status;
 }

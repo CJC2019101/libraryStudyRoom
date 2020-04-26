@@ -39,4 +39,7 @@ public class CKStudentChairInfo implements Serializable {
     @ApiModelProperty(value = "学生专业年级")
     private String processionGrade;
 
+    @ApiModelProperty(value = "座位状态")
+    private int status;
+
 }

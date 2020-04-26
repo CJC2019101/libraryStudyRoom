@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author JianfeiChen
@@ -35,6 +36,7 @@ public class CKChairBO implements ICKChairAPI {
             return 502;
         }
         for (Chair chair : chairs) {
+            chair.setId(UUID.randomUUID().toString().replaceAll("-", ""));
             chairDAO.selectChair(chair);
         }
         return 200;

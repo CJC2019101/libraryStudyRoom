@@ -38,13 +38,8 @@ public class ControllerChair {
     public BaseResponse occupyChairs(@RequestBody Chair chair) {
         List<Chair> occupyChairs = chairBO.occupyChairs(chair);
         BaseResponse<List> response = new BaseResponse<>();
-        if (occupyChairs.size() > 0) {
-            response.setData(occupyChairs);
-            response.setCode(200);
-        } else {
-            response.setMsg("数据未查询出数据");
-            response.setCode(502);
-        }
+        response.setData(occupyChairs);
+        response.setCode(200);
         return response;
     }
 
@@ -54,7 +49,7 @@ public class ControllerChair {
             @ApiImplicitParam(paramType = "insert", name = "教室号", value = "roomId", required = true),
             @ApiImplicitParam(paramType = "insert", name = "行", value = "rows", required = true),
             @ApiImplicitParam(paramType = "insert", name = "列", value = "cells", required = true),
-            @ApiImplicitParam(paramType = "insert", name = "账户", value = "account", required = true),
+            @ApiImplicitParam(paramType = "insert", name = "账户", value = "account", required = true)
     })
     @ApiOperation(value = "选中座位")
     @ResponseBody
