@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.student.dao;
 
 import cn.cqucc.library.model.student.Student;
+import cn.cqucc.library.model.student.req.CKLibraryUserReq;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,4 +15,6 @@ public interface ICKStudentDAO {
     int isExist(@Param(value = "account")String account, @Param(value = "password") String password);
 
     Student getUserInfo(@Param(value = "account") String account, @Param(value = "password") String password);
+
+    void resetPassword(CKLibraryUserReq user);
 }

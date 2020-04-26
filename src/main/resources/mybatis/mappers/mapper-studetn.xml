@@ -22,4 +22,9 @@
             from students
             where students.student_id = #{account} and students.password = #{password}
     </select>
+
+    <update id="resetPassword" parameterType="cn.cqucc.library.model.student.req.CKLibraryUserReq">
+        update students set password = #{password}
+            where student_id = #{account}
+    </update>
 </mapper>

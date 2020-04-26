@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.student.api;
 
 import cn.cqucc.library.model.student.Student;
+import cn.cqucc.library.model.student.req.CKLibraryUserReq;
 
 /**
  * @author JianfeiChen
@@ -22,4 +23,10 @@ public interface ICKStudentApi {
      * @param password
      */
     Student getUserInfo(String account, String password);
+
+    /**
+     * 重置密码
+     * @param user
+     */
+    void resetPassword(CKLibraryUserReq user);
 }
