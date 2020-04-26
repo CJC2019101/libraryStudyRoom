@@ -109,17 +109,19 @@
                     <!--                    模态框（Modal）标题-->
                 </h4>
             </div>
+            <div id="statusDiv">
+                <label style="margin-left: 15px; margin-right: 16px; margin-top: 10px;">状态:</label>
+                <input type="checkbox" value="0" class="check_view_state"
+                       id="checkbox-1" checked="true" style="display: none;">
+                <label for="checkbox-1"></label>
+                <span class="status">已选</span>
 
-            <label style="margin-left: 15px; margin-right: 16px; margin-top: 10px;">状态:</label>
-            <input type="checkbox" value="0" class="check_view_state"
-                   id="checkbox-1" checked="true" style="display: none;">
-            <label for="checkbox-1"></label>
-            <span class="status">已选</span>
+                <input type="checkbox" value="1" class="check_view_state"
+                       id="checkbox-2" checked="true" style="display: none;">
+                <label for="checkbox-2"></label>
+                <span class="status">未选</span>
+            </div>
 
-            <input type="checkbox" value="1" class="check_view_state"
-                   id="checkbox-2" checked="true" style="display: none;">
-            <label for="checkbox-2"></label>
-            <span class="status">未选</span>
 
             <div class="modal-body " id="roomDiv">
                 <table class="table table-striped" id="roomTable">
@@ -245,6 +247,31 @@
     });
 
 
+    // userInfo按钮点击事件
+    $('#userInfo').on('click',
+        function () {
+            // 修改statusDiv状态提示框的display属性
+            $("#statusDiv").css('display', 'none');
+            $("#myModalLabel").html("修改密码")
+            // 用户信息表单
+            document.getElementById("roomTable").innerHTML = "";
+            $("#roomTable").append("<tr><td>" +
+                "<label for=\"name\">原密码：</label>\n" +
+                "<input type=\"text\" class=\"form-control\" placeholder=\"请输入原密码\">\n" +
+                "</td></tr>");
+            $("#roomTable").append("<tr><td>" +
+                "<label for=\"name\">新密码：</label>\n" +
+                "<input type=\"text\" class=\"form-control\" placeholder=\"请输入新密码\">\n" +
+                "</td></tr>");
+            $("#roomTable").append("<tr><td>" +
+                "<label for=\"name\">确认新密码：</label>\n" +
+                "<input type=\"text\" class=\"form-control\" placeholder=\"请输入新密码\">\n" +
+                "</td></tr>");
+
+            // 显示模态框
+            $('#myModal').modal('show')
+        });
+
     // 创建表格
     function buildTable($el, cells, rows, floorNumber, roomId) {
         var chairData = {
@@ -268,6 +295,8 @@
                     var i, j, row,
                         columns = [],
                         data = [];
+                    // 修改statusDiv状态提示框的display属性
+                    $("#statusDiv").css('display', 'block');
                     $('#myModalLabel').html(roomId + "教室")
                     $('#hideFloorNumber').html(floorNumber)
                     for (i = 1; i <= cells; i++) {
@@ -328,7 +357,7 @@
         if (chairInfo.length > 4) {
             alert("您选择的座位太多，我规定最多只能选择4个。而您选中了" + chairInfo.length + "个")
             return
-        }else if (chairInfo.length === 0){
+        } else if (chairInfo.length === 0) {
             alert("请至少选择一个座位")
             return
         }
