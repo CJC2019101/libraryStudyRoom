@@ -254,6 +254,9 @@
             $("#statusDiv").css('display', 'none');
             $("#myModalLabel").html("修改密码")
             // 用户信息表单
+            $("#roomTable").bootstrapTable('destroy').bootstrapTable({
+                search: false
+            });
             document.getElementById("roomTable").innerHTML = "";
             $("#roomTable").append("<tr><td>" +
                 "<label for=\"name\">原密码：</label>\n" +
@@ -267,7 +270,6 @@
                 "<label for=\"name\">确认新密码：</label>\n" +
                 "<input type=\"text\" class=\"form-control\" placeholder=\"请输入新密码\">\n" +
                 "</td></tr>");
-
             // 显示模态框
             $('#myModal').modal('show')
         });
@@ -345,64 +347,69 @@
     }
 
 
-    // 发送选中的座位数据
+    // 发送选中的座位数据、新的密码
     $("body").delegate("#commit", "click", function () {
-        var checkboxs = document.getElementsByName("chair");
-        var chairInfo = new Array();
-        for (var i = 0; i < checkboxs.length; i++) {
-            if (checkboxs[i].checked) {
-                chairInfo.push(checkboxs[i].value)
-            }
-        }
-        if (chairInfo.length > 4) {
-            alert("您选择的座位太多，我规定最多只能选择4个。而您选中了" + chairInfo.length + "个")
-            return
-        } else if (chairInfo.length === 0) {
-            alert("请至少选择一个座位")
-            return
-        }
-
-        var chairData = new Array();
-        // 处理座位信息为行、列
-        for (var i = 0; i < chairInfo.length; i++) {
-            var strs = chairInfo[i].split("-");
-
-            // 封装座位信息
-            var ajaxData = {
-                "roomId": $('#myModalLabel').text().replace("教室", ""),
-                "floorNumber": $('#hideFloorNumber').text(),
-                "row": strs[0],
-                "cell": strs[1],
-                "userId": $.cookie("account"),
-                "isValid": true,
-                "isOccupy": true
-            };
-            chairData[i] = ajaxData;
-        }
-
-        // alert(JSON.stringify(chairData))
-        // 发送数据
-        $.ajax({
-            type: 'POST',
-            url: '/selectChair',
-            data: JSON.stringify(chairData),
-            dataType: 'JSON',
-            contentType: "application/json",
-            error: function (data) {
-                // 后台返回错误信息
-                alert(data.msg);
-            },
-            success: function (data) {
-                if (data.code === 502) {
-                    alert(data.msg)
-                } else {
-                    alert("选座成功，三秒后跳转回主页")
-                    setTimeout(function () {
-                        window.location.href = "/main.html", 2000
-                    });
+        if ($("#statusDiv").css("display") === 'block') {
+            var checkboxs = document.getElementsByName("chair");
+            var chairInfo = new Array();
+            for (var i = 0; i < checkboxs.length; i++) {
+                if (checkboxs[i].checked) {
+                    chairInfo.push(checkboxs[i].value)
                 }
             }
-        });
+            if (chairInfo.length > 4) {
+                alert("您选择的座位太多，我规定最多只能选择4个。而您选中了" + chairInfo.length + "个")
+                return
+            } else if (chairInfo.length === 0) {
+                alert("请至少选择一个座位")
+                return
+            }
+
+            var chairData = new Array();
+            // 处理座位信息为行、列
+            for (var i = 0; i < chairInfo.length; i++) {
+                var strs = chairInfo[i].split("-");
+
+                // 封装座位信息
+                var ajaxData = {
+                    "roomId": $('#myModalLabel').text().replace("教室", ""),
+                    "floorNumber": $('#hideFloorNumber').text(),
+                    "row": strs[0],
+                    "cell": strs[1],
+                    "userId": $.cookie("account"),
+                    "isValid": true,
+                    "isOccupy": true
+                };
+                chairData[i] = ajaxData;
+            }
+
+            // alert(JSON.stringify(chairData))
+            // 发送数据
+            $.ajax({
+                type: 'POST',
+                url: '/selectChair',
+                data: JSON.stringify(chairData),
+                dataType: 'JSON',
+                contentType: "application/json",
+                error: function (data) {
+                    // 后台返回错误信息
+                    alert(data.msg);
+                },
+                success: function (data) {
+                    if (data.code === 502) {
+                        alert(data.msg)
+                    } else {
+                        alert("选座成功，三秒后跳转回主页")
+                        setTimeout(function () {
+                            window.location.href = "/main.html", 2000
+                        });
+                    }
+                }
+            });
+        }
+        if ($("#statusDiv").css("display") === 'none') {
+
+        }
 
     })
 
