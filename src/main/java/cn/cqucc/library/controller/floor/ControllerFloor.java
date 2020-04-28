@@ -26,7 +26,7 @@ public class ControllerFloor {
 
     @RequestMapping(value = "/firstFloor")
     public String firstFloor(){
-        return "firstFloor";
+        return "main";
     }
 
     @RequestMapping(value = "/findRooms",method = RequestMethod.GET)
