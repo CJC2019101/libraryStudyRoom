@@ -4,6 +4,7 @@ import cn.cqucc.library.model.room.Room;
 import cn.cqucc.library.service.room.bo.CKRoomBO;
 import cn.cqucc.library.status.BaseResponse;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,31 @@ public class ControllerRoom {
 
     @Autowired
     CKRoomBO roomBO;
+
+
+    @RequestMapping(value = "/morning")
+    @ApiOperation(value = "座位状态：上午")
+    public String morning(){
+        return "morning";
+    }
+
+    @RequestMapping(value = "/afternoon")
+    @ApiOperation(value = "座位状态：下午")
+    public String afternoon(){
+        return "afternoon";
+    }
+
+    @RequestMapping(value = "/night")
+    @ApiOperation(value = "座位状态：晚上")
+    public String night(){
+        return "night";
+    }
+
+    @RequestMapping(value = "/allDay")
+    @ApiOperation(value = "座位状态：整天")
+    public String allDay(){
+        return "allDay";
+    }
 
     @RequestMapping(value = "/findAllRooms")
     @ResponseBody

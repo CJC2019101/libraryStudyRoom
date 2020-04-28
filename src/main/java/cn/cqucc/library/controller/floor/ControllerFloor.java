@@ -24,11 +24,6 @@ public class ControllerFloor {
     @Autowired
     CKFloorBO floorBO;
 
-    @RequestMapping(value = "/firstFloor")
-    public String firstFloor(){
-        return "main";
-    }
-
     @RequestMapping(value = "/findRooms",method = RequestMethod.GET)
     @ResponseBody
     public List<Floor> findRooms(@RequestParam String floorNumber){
