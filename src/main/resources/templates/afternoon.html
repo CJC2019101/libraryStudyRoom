@@ -306,7 +306,7 @@
                     for (j = 1; j <= cells; j++) {
                         var checkboxValue = i + "-" + j;
                         row['field' + j] = "<input type='checkbox' value=" + checkboxValue + " class='check_view_state' name='chair' id=checkbox-" + checkboxValue + " style='display: none;'>\n" +
-                            "<label for=checkbox-" + checkboxValue + ">" + i + " - " + j + "</label>"
+                            "<label style='font-size:19px; font-weight: normal; color: white' for=checkbox-" + checkboxValue + ">" + i + " - " + j + "</label>"
                         for (var k = 0; k < chairs.length; k++) {
                             if (i === chairs[k].crow && j === chairs[k].cell) {
                                 row['field' + j] = "<button type='button' class='btn btn-success' title='" + chairs[k].processionGrade +
@@ -400,30 +400,30 @@
             var oldPassword = $("#oldPassword");
             var newPassword = $("#newPassword");
             var confirmPassword = $("#confirmPassword");
-            // if (oldPassword.val() !== $.cookie("password")) {
-            //     oldPassword.val("");
-            //     alert("您输入的原密码错误，请重新输入。")
-            //     return;
-            // }
-            // if (newPassword.val() === $.cookie("password")) {
-            //     oldPassword.val("");
-            //     newPassword.val("");
-            //     confirmPassword.val("");
-            //     alert("您输入的密码与新密码重复，请重新输入。");
-            //     return;
-            // }
-            // if (newPassword.val() === confirmPassword.val("")) {
-            //     newPassword.val("");
-            //     confirmPassword.val("");
-            //     alert("您两次输入的新密码不一致，请重新输入。");
-            //     return;
-            // }
-            // if ( newPassword.val().length < 6){
-            //     newPassword.val("");
-            //     confirmPassword.val("");
-            //     alert("您输入的密码长度不够，必须是6位")
-            //     return;
-            // }
+            if (oldPassword.val() !== $.cookie("password")) {
+                oldPassword.val("");
+                alert("您输入的原密码错误，请重新输入。")
+                return;
+            }
+            if (newPassword.val() === $.cookie("password")) {
+                oldPassword.val("");
+                newPassword.val("");
+                confirmPassword.val("");
+                alert("您输入的密码与新密码重复，请重新输入。");
+                return;
+            }
+            if (newPassword.val() === confirmPassword.val("")) {
+                newPassword.val("");
+                confirmPassword.val("");
+                alert("您两次输入的新密码不一致，请重新输入。");
+                return;
+            }
+            if ( newPassword.val().length < 6){
+                newPassword.val("");
+                confirmPassword.val("");
+                alert("您输入的密码长度不够，必须是6位")
+                return;
+            }
             $.cookie("password", newPassword.val());
             var jsonData = {
                 "account": $.cookie("account"),
