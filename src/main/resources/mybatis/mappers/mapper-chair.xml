@@ -54,4 +54,23 @@
         update chairs set is_valid = false ,is_occupy = false;
     </update>
 
+    <update id="cancelChairs"  parameterType="java.util.List">
+        <foreach collection="list" index="0" separator=";" item="chair">
+            update chairs set is_valid = false ,is_occupy = false
+            where user_id = #{chair.userId}
+            <if test="chair.roomId != null and chair.roomId != ''">
+                 and room_id = #{chair.roomId}
+            </if>
+            <if test="chair.floorNumber !=null">
+                and floor_number = #{chair.floorNumber}
+            </if>
+            <if test="chair.cell != null">
+                and chair_cell = #{chair.cell}
+            </if>
+            <if test="chair.crow != null">
+                and chair_row = #{chair.crow}
+            </if>
+        </foreach>
+    </update>
+
 </mapper>

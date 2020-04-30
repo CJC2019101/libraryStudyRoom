@@ -1,7 +1,6 @@
 package cn.cqucc.library.service.chair.bo;
 
 import cn.cqucc.library.model.chair.Chair;
-import cn.cqucc.library.model.chair.req.CKSelectedChair;
 import cn.cqucc.library.service.chair.api.ICKChairAPI;
 import cn.cqucc.library.service.chair.dao.ICKChairDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +39,12 @@ public class CKChairBO implements ICKChairAPI {
             chairDAO.selectChair(chair);
         }
         return 200;
+    }
+
+    @Override
+    public void cancelChairs(List<Chair> chairs) {
+//        for (Chair chair : chairs) {
+            chairDAO.cancelChairs(chairs);
+//        }
     }
 }

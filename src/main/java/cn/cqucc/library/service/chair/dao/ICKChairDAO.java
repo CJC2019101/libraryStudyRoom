@@ -26,4 +26,6 @@ public interface ICKChairDAO {
     void updateChairNightStatus(int night);
 
     void updateAllChairsStatus(int allDay);
+
+    void cancelChairs(List<Chair> chair);
 }

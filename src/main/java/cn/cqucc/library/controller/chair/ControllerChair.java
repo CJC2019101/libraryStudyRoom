@@ -1,7 +1,6 @@
 package cn.cqucc.library.controller.chair;
 
 import cn.cqucc.library.model.chair.Chair;
-import cn.cqucc.library.model.chair.req.CKSelectedChair;
 import cn.cqucc.library.service.chair.bo.CKChairBO;
 import cn.cqucc.library.status.BaseResponse;
 import io.swagger.annotations.ApiImplicitParam;
@@ -61,6 +60,24 @@ public class ControllerChair {
             response.setMsg("每个人最多选中四个座位，您选择的过多了");
             return response;
         }
+        response.setCode(200);
+        return response;
+    }
+
+    @RequestMapping(value = "/cancelChair", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "update", name = "roomId", value = "教室号", required = true),
+            @ApiImplicitParam(paramType = "update", name = "floorNumber", value = "楼层号", required = true),
+            @ApiImplicitParam(paramType = "update", name = "cell", value = "列", required = true),
+            @ApiImplicitParam(paramType = "update", name = "crow", value = "行", required = true),
+            @ApiImplicitParam(paramType = "update", name = "account", value = "账户", required = true)
+    })
+    @ApiOperation(value = "取消选中座位")
+    @ResponseBody
+    // TODO 后续添加事务的回滚
+    public BaseResponse cancelChairs(@RequestBody List<Chair> chair) {
+        BaseResponse response = new BaseResponse();
+        chairBO.cancelChairs(chair);
         response.setCode(200);
         return response;
     }

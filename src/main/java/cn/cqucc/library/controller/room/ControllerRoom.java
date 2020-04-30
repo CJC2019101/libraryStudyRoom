@@ -50,6 +50,13 @@ public class ControllerRoom {
         return "allDay";
     }
 
+    @RequestMapping(value = "/cancel")
+    @ApiOperation(value = "取消选座")
+    public String cancel(){
+        return "cancel";
+    }
+
+
     @RequestMapping(value = "/findAllRooms")
     @ResponseBody
     public BaseResponse findAll() {
