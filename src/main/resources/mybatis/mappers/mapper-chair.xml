@@ -28,9 +28,9 @@
 
     <insert id="selectChair" parameterType="cn.cqucc.library.model.chair.Chair">
         insert into
-            chairs (chair_id, chair_row, chair_cell, room_id, floor_number, is_occupy, user_id, is_valid)
+            chairs (chair_id, chair_row, chair_cell, room_id, floor_number, is_occupy, user_id, is_valid, chair_status)
                 values (
-               #{id}, #{crow}, #{cell}, #{roomId}, #{floorNumber}, #{isOccupy}, #{userId}, #{isValid}
+               #{id}, #{crow}, #{cell}, #{roomId}, #{floorNumber}, #{isOccupy}, #{userId}, #{isValid}, #{status}
                 );
     </insert>
 

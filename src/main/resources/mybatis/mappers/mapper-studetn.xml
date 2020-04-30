@@ -9,6 +9,7 @@
         <result column="student_id_card" property="studentIdCard"/>
         <result column="procession_grade" property="processionGrade"/>
         <result column="password" property="password"/>
+        <result column="student_sex" property="sex"/>
     </resultMap>
 
     <select id="isExist" resultType="java.lang.Integer">
@@ -22,6 +23,15 @@
             from students
             where students.student_id = #{account} and students.password = #{password}
     </select>
+
+    <select id="getDetailUserInfo" parameterType="java.lang.String" resultType="cn.cqucc.library.model.student.resp.StudentInfoResp">
+        select stu.student_id userId, stu.student_name userName, stu.procession_grade processionGrade,
+            stu.student_age userAge, stu.student_sex userSex,
+            (select count(1) from chairs ch where ch.user_id = #{account}) totalCount
+                from students stu
+                where stu.student_id = #{account}
+    </select>
+
 
     <update id="resetPassword" parameterType="cn.cqucc.library.model.student.req.CKLibraryUserReq">
         update students set password = #{password}

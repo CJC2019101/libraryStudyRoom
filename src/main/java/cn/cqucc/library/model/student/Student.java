@@ -34,4 +34,7 @@ public class Student implements Serializable {
 
     @ApiModelProperty("专业年级")
     private String processionGrade;
+
+    @ApiModelProperty("性别：1-男，0-女")
+    private int sex;
 }

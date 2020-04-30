@@ -2,6 +2,7 @@ package cn.cqucc.library.service.student.dao;
 
 import cn.cqucc.library.model.student.Student;
 import cn.cqucc.library.model.student.req.CKLibraryUserReq;
+import cn.cqucc.library.model.student.resp.StudentInfoResp;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,4 +18,6 @@ public interface ICKStudentDAO {
     Student getUserInfo(@Param(value = "account") String account, @Param(value = "password") String password);
 
     void resetPassword(CKLibraryUserReq user);
+
+    StudentInfoResp getDetailUserInfo(String account);
 }

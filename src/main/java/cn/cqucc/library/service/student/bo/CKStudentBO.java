@@ -2,6 +2,7 @@ package cn.cqucc.library.service.student.bo;
 
 import cn.cqucc.library.model.student.Student;
 import cn.cqucc.library.model.student.req.CKLibraryUserReq;
+import cn.cqucc.library.model.student.resp.StudentInfoResp;
 import cn.cqucc.library.service.student.api.ICKStudentApi;
 import cn.cqucc.library.service.student.dao.ICKStudentDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,10 @@ public class CKStudentBO implements ICKStudentApi {
     @Override
     public void resetPassword(CKLibraryUserReq user) {
         studentDAO.resetPassword(user);
+    }
+
+    @Override
+    public StudentInfoResp getDetailUserInfo(String account) {
+        return studentDAO.getDetailUserInfo(account);
     }
 }

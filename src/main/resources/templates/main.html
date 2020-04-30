@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.js"></script>
     <style>
 
         html, body {
@@ -31,29 +32,180 @@
             right: 10px;
         }
 
+        #userTable {
+            width: 60%;
+            height: 100%;
+            margin-top: 110px;
+            padding: 0;
+            border: 2px groove #6a6665;
+        }
+
+        #chairRecord {
+            width: 35%;
+            height: 100%;
+            margin-top: 110px;
+            padding: 0;
+            border: 2px groove #6a6665;
+        }
+
+
     </style>
 </head>
-<body class="text-center">
+
+<body class="text-center" style="border: 2px groove #6a6665;">
 <h1 class="text-center">城科图书馆座位管理系统</h1>
 <div id="loginALabel">
     <a href="/login">学生后台入口</a>&emsp;
     <a href="/adminLogin">管理员后台入口</a>
 </div>
 
-<div class="btn-group, text-center btnSelect">
-    <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            选&emsp;&emsp;座
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="btn btn-default" href="/morning" role="button">上午</a></li>
-            <li><a class="btn btn-default" href="/afternoon" role="button">下午</a></li>
-            <li><a class="btn btn-default" href="/night" role="button">晚上</a></li>
-            <li><a class="btn btn-default" href="/allDay" role="button">整天</a></li>
-        </ul>
+
+<div id="pageContent" class="btnSelect">
+
+    <!--用户信息模块-->
+    <div id="userTable" style="display: inline">
+
+        <table style="border: 1px;margin: 0 auto;background: snow" width="100%" height="73%" cellpadding="5"
+               cellspacing="0">
+            <caption class="text-center"><h4 style="font-weight: bold; color: #333333"> 用户信息</h4></caption>
+            <tr>
+                <td>姓名：</td>
+                <td id="userName">用户姓名</td>
+                <td>性别：</td>
+                <td id="userSex">男或女</td>
+            </tr>
+
+            <tr>
+                <td>学号：</td>
+                <td id="userId">用户ID</td>
+                <td>专业年级：</td>
+                <td id="processionGrade">用户专业年级</td>
+
+            </tr>
+            <tr>
+
+                <td colspan="2">选座次数：</td>
+
+                <td colspan="2" id="totalCount">总共的选中次数</td>
+
+            </tr>
+
+            <tr>
+
+                <td colspan="2">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            选&emsp;&emsp;座
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="btn btn-default" href="/morning" role="button">上午</a></li>
+                            <li><a class="btn btn-default" href="/afternoon" role="button">下午</a></li>
+                            <li><a class="btn btn-default" href="/night" role="button">晚上</a></li>
+                            <li><a class="btn btn-default" href="/allDay" role="button">整天</a></li>
+                        </ul>
+                    </div>
+                </td>
+
+                <td colspan="2">
+                    <a class="btn btn-default" href="/morning" role="button">取消选座</a>
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+    <!--选座记录信息模块-->
+    <div id="chairRecord" style="display: inline">
+        <table class="table">
+            <caption class="text-center"><h4 style="font-weight: bold; color: #333333"> 记录信息</h4></caption>
+            <thead>
+            <tr>
+                <!-- 1楼B001 -->
+                <th class="text-center">教室</th>
+                <!--10/11/2013上午-->
+                <th class="text-center">选座日期</th>
+                <!-- 3行4列 -->
+                <th class="text-center">行列</th>
+                <!-- 过期：红色，未过期：绿色 -->
+                <th class="text-center">状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="active">
+                <td>产品1</td>
+                <td>23/11/2013</td>
+                <td>待发货</td>
+                <td>上午</td>
+            </tr>
+            <tr class="success">
+                <td>产品2</td>
+                <td>10/11/2013</td>
+                <td>发货中</td>
+                <td>下午</td>
+            </tr>
+            <tr class="warning">
+                <td>产品3</td>
+                <td>20/10/2013</td>
+                <td>待确认</td>
+                <td>晚上</td>
+            </tr>
+            <tr class="danger">
+                <td>产品4</td>
+                <td>20/10/2013</td>
+                <td>已退货</td>
+                <td>一天</td>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="pager">
+                        <li><a href="#">Previous</a></li>
+                    </ul>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                    <ul class="pager">
+                        <li><a href="#">Next</a></li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
 </div>
+
+<script type="text/javascript">
+    //一加载就执行填充信息  用于记住登录信息
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: "/getDetailUserInfo",
+            data: "account=" + $.cookie("account"),
+            dataType: 'JSON',
+            error: function (response) {
+                alert(response.msg)
+            },
+            success: function (response) {
+                var jsonData = response.data;
+                if (response.code === 200) {
+                    $("#userId").text(jsonData.userId)
+                    $("#userName").text(jsonData.userName)
+                    $("#userAge").text(jsonData.userAge)
+                    if (jsonData.userSex === 1) {
+                        $("#userSex").text("男")
+                    } else {
+                        $("#userSex").text("女")
+                    }
+                    $("#processionGrade").text(jsonData.processionGrade)
+                    $("#totalCount").text(jsonData.totalCount + "次")
+                }
+            }
+        })
+    })
+</script>
 </body>
 </html>
