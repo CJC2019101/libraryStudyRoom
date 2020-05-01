@@ -74,15 +74,25 @@
             border: 1px solid #5cb85c;
         }
 
+        /*已选*/
         [id ="checkbox-1"]:checked + label {
             background-color: #5cb85c;
             border: 1px solid #5cb85c;
         }
 
+        /*未选*/
         [id="checkbox-2"]:checked + label {
             background-color: #337ab7;
             border: 1px solid #337ab7;
         }
+
+        /*所属*/
+        [id="checkbox-3"]:checked + label {
+            padding: 9px;
+            background-color: #ec971f;
+            border: 1px solid #ec971f;
+        }
+
 
 
     </style>
@@ -109,6 +119,11 @@
             </div>
             <div id="statusDiv">
                 <label style="margin-left: 15px; margin-right: 16px; margin-top: 10px;">状态:</label>
+                <input type="checkbox" value="0" class="check_view_state"
+                       id="checkbox-3" checked="true" style="display: none;">
+                <label for="checkbox-3"></label>
+                <span class="status">所属</span>
+
                 <input type="checkbox" value="0" class="check_view_state"
                        id="checkbox-1" checked="true" style="display: none;">
                 <label for="checkbox-1"></label>
@@ -148,6 +163,16 @@
     </thead>
 </table>
 
+<!--页面底部导航栏-->
+<div class="footer" style="position: fixed; bottom: 6px; ">
+    <div class=" btn-group btn-group-justified"
+         style="width: 70%; margin: 0 auto;">
+        <a href="/morning" class="btn btn-primary">上午</a>
+        <a href="/afternoon" class="btn btn-primary" style="background-color: #5cb85c;">下午</a>
+        <a href="/night" class="btn btn-primary">晚上</a>
+        <a href="/allDay" class="btn btn-primary">整天</a>
+    </div>
+</div>
 
 <script type="text/javascript">
 
@@ -308,8 +333,15 @@
                         row['field' + j] = "<input type='checkbox' value=" + checkboxValue + " class='check_view_state' name='chair' id=checkbox-" + checkboxValue + " style='display: none;'>\n" +
                             "<label style='font-size:19px; font-weight: normal; color: white' for=checkbox-" + checkboxValue + ">" + i + " - " + j + "</label>"
                         for (var k = 0; k < chairs.length; k++) {
-                            if (i === chairs[k].crow && j === chairs[k].cell) {
+                            // 非本人所属
+                            if (i === chairs[k].crow && j === chairs[k].cell && chairs[k].userId !== $.cookie("account")) {
                                 row['field' + j] = "<button type='button' class='btn btn-success' title='" + chairs[k].processionGrade +
+                                    "' data-container= 'body' data-toggle= 'popover' data-placement='bottom'" +
+                                    " data-content= '" + chairs[k].userId + "' > " + chairs[k].userName + " </button>"
+                                break;
+                            } // 所属
+                            else if (i === chairs[k].crow && j === chairs[k].cell && chairs[k].userId === $.cookie("account")) {
+                                row['field' + j] = "<button type='button' class='btn btn-warning' title='" + chairs[k].processionGrade +
                                     "' data-container= 'body' data-toggle= 'popover' data-placement='bottom'" +
                                     " data-content= '" + chairs[k].userId + "' > " + chairs[k].userName + " </button>"
                                 break;
