@@ -32,6 +32,9 @@ public class StudentInfoResp implements Serializable {
     @ApiModelProperty("选座总次数")
     int totalCount;
 
+    @ApiModelProperty("当前已选中的座位数量")
+    int validCount;
+
     @ApiModelProperty("性别：1-男，0-女")
     int userSex;
 }

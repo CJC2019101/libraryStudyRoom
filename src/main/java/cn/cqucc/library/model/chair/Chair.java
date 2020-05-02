@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author JianfeiChen
@@ -46,4 +47,11 @@ public class Chair implements Serializable {
 
     @ApiModelProperty(value = "座位选中状态：0-全天，1-上午，2-下午，3-晚上")
     private Integer status;
+
+    @ApiModelProperty(value = "创建时间")
+    private Date creatAt;
+
+    @ApiModelProperty(value = "更新时间")
+    private Date updateAt;
+
 }

@@ -52,7 +52,7 @@
     </style>
 </head>
 
-<body class="text-center" style="border: 2px groove #6a6665;">
+<body class="text-center">
 <h1 class="text-center">城科图书馆座位管理系统</h1>
 <div id="loginALabel">
     <a href="/login">学生后台入口</a>&emsp;
@@ -108,7 +108,7 @@
                 </td>
 
                 <td colspan="2">
-                    <a class="btn btn-default" href="/cancel" role="button">取消选座</a>
+                    <a id="cancel" class="btn btn-default" href="/cancel" role="button">取消选座</a>
                 </td>
 
             </tr>
@@ -200,12 +200,22 @@
                     } else {
                         $("#userSex").text("女")
                     }
-                    $("#processionGrade").text(jsonData.processionGrade)
-                    $("#totalCount").text(jsonData.totalCount + "次")
+                    $("#processionGrade").text(jsonData.processionGrade);
+                    $("#totalCount").text(jsonData.totalCount + "次");
+                    // 未选中座位绑定点击事件弹出提示框
+                    if (jsonData.validCount === 0) {
+                        $("#cancel").on("click", function () {
+                            alert("您还没有选中座位");
+                            // 返回值为false <a>不跳转
+                            return false;
+                        });
+                    }
                 }
             }
         })
     })
+
+
 </script>
 </body>
 </html>

@@ -27,7 +27,8 @@
     <select id="getDetailUserInfo" parameterType="java.lang.String" resultType="cn.cqucc.library.model.student.resp.StudentInfoResp">
         select stu.student_id userId, stu.student_name userName, stu.procession_grade processionGrade,
             stu.student_age userAge, stu.student_sex userSex,
-            (select count(1) from chairs ch where ch.user_id = #{account} and is_valid = false) totalCount
+            (select count(1) from chairs ch where ch.user_id = #{account} and is_valid = false) totalCount,
+            (select count(1) from chairs ch where ch.user_id= #{account} and is_valid = true and is_occupy = true) validCount
                 from students stu
                 where stu.student_id = #{account}
     </select>

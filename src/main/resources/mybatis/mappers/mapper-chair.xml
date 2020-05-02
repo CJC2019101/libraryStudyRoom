@@ -11,6 +11,8 @@
         <result column="is_occupy" property="isOccupy"/>
         <result column="is_valid" property="isValid"/>
         <result column="chair_status" property="status"/>
+        <result column="creat_at" property="creatAt"/>
+        <result column="update_at" property="updateAt"/>
     </resultMap>
 
     <select id="occupyChairs" resultType="cn.cqucc.library.model.chair.resp.CKStudentChairInfo">
