@@ -119,60 +119,20 @@
 
     <!--选座记录信息模块-->
     <div id="chairRecord" style="display: inline">
-        <table class="table">
+        <table class="table" id="recordInfo">
             <caption class="text-center"><h4 style="font-weight: bold; color: #333333"> 记录信息</h4></caption>
             <thead>
             <tr>
                 <!-- 1楼B001 -->
                 <th class="text-center">教室</th>
-                <!--10/11/2013上午-->
-                <th class="text-center">选座日期</th>
                 <!-- 3行4列 -->
-                <th class="text-center">行列</th>
+                <th class="text-center">行-列</th>
                 <!-- 过期：红色，未过期：绿色 -->
                 <th class="text-center">状态</th>
+                <!--10/11/2013上午-->
+                <th class="text-center">选座日期</th>
             </tr>
             </thead>
-            <tbody>
-            <tr class="active">
-                <td>产品1</td>
-                <td>23/11/2013</td>
-                <td>待发货</td>
-                <td>上午</td>
-            </tr>
-            <tr class="success">
-                <td>产品2</td>
-                <td>10/11/2013</td>
-                <td>发货中</td>
-                <td>下午</td>
-            </tr>
-            <tr class="warning">
-                <td>产品3</td>
-                <td>20/10/2013</td>
-                <td>待确认</td>
-                <td>晚上</td>
-            </tr>
-            <tr class="danger">
-                <td>产品4</td>
-                <td>20/10/2013</td>
-                <td>已退货</td>
-                <td>一天</td>
-            </tr>
-            <tr>
-                <td>
-                    <ul class="pager">
-                        <li><a href="#">Previous</a></li>
-                    </ul>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                    <ul class="pager">
-                        <li><a href="#">Next</a></li>
-                    </ul>
-                </td>
-            </tr>
-            </tbody>
         </table>
     </div>
 
@@ -213,8 +173,71 @@
                 }
             }
         })
+
+        // 填写用户选座信息
+        getUserInfoOfSelectedChair()
     })
 
+
+    // 用户记录信息表
+    function getUserInfoOfSelectedChair() {
+        $.ajax({
+            url: "/getUserInfoOfSelectedChair",
+            type: "GET",
+            data: "account=" + $.cookie("account"),
+            dataType: "JSON",
+            error: function () {
+                alert("渲染用户选座信息失败");
+            },
+            success: function (data) {
+                var chairInfo = data.data;
+                var status = "";
+                // 过期、未过期
+                var isValid = "过期";
+                var info;
+                for (var i = 0; i < chairInfo.length; i++) {
+                    info = chairInfo[i];
+                    // 全天
+                    if (info.status === 0) {
+                        status = "danger";
+                    }// 上午
+                    else if (info.status === 1) {
+                        status = "success";
+                    }// 下午
+                    else if (info.status === 2) {
+                        status = "active";
+                    } // 晚上
+                    else if (info.status === 3) {
+                        status = "warning";
+                    }
+                    if (info.isValid) {
+                        isValid = "未过期";
+                    }
+                    $("#recordInfo").append("<tr class='" + status + "'>\n" +
+                        "<td>" + info.floorNumber + "楼" + info.roomId +
+                        "<td>" + info.crow + "-" + info.cell + "</td>" +
+                        "<td>" + isValid + "</td>" +
+                        "<td>"+ info.createAtStr+ "</td>" +
+                        "</td></tr>"
+                    )
+                }
+                $("#recordInfo").append("<tr>\n" +
+                    "                <td>\n" +
+                    "                    <ul class='pager'>\n" +
+                    "                        <li><a href='#'>Previous</a></li>\n" +
+                    "                    </ul>\n" +
+                    "                </td>\n" +
+                    "                <td></td>\n" +
+                    "                <td></td>\n" +
+                    "                <td>\n" +
+                    "                    <ul class='pager'>\n" +
+                    "                        <li><a href='#'>Next</a></li>\n" +
+                    "                    </ul>\n" +
+                    "                </td>\n" +
+                    "            </tr>")
+            }
+        })
+    }
 
 </script>
 </body>

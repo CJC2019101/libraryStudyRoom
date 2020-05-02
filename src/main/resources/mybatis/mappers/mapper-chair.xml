@@ -11,7 +11,7 @@
         <result column="is_occupy" property="isOccupy"/>
         <result column="is_valid" property="isValid"/>
         <result column="chair_status" property="status"/>
-        <result column="creat_at" property="creatAt"/>
+        <result column="create_at" property="createAt"/>
         <result column="update_at" property="updateAt"/>
     </resultMap>
 
@@ -28,11 +28,18 @@
             where user_id = #{account} and is_valid =true;
     </select>
 
+    <select id="getUserInfoOfSelectedChair" resultType="java.util.List" resultMap="BaseResultMap">
+        select * from chairs
+        where user_id = #{account} and is_occupy =false and is_valid =false
+    </select>
+
     <insert id="selectChair" parameterType="cn.cqucc.library.model.chair.Chair">
         insert into
-            chairs (chair_id, chair_row, chair_cell, room_id, floor_number, is_occupy, user_id, is_valid, chair_status)
+            chairs (chair_id, chair_row, chair_cell, room_id, floor_number, is_occupy, user_id, is_valid, chair_status,
+                create_at)
                 values (
-               #{id}, #{crow}, #{cell}, #{roomId}, #{floorNumber}, #{isOccupy}, #{userId}, #{isValid}, #{status}
+               #{id}, #{crow}, #{cell}, #{roomId}, #{floorNumber}, #{isOccupy}, #{userId}, #{isValid}, #{status},
+                #{createAt}
                 );
     </insert>
 
@@ -56,12 +63,12 @@
         update chairs set is_valid = false ,is_occupy = false;
     </update>
 
-    <update id="cancelChairs"  parameterType="java.util.List">
+    <update id="cancelChairs" parameterType="java.util.List">
         <foreach collection="list" index="0" separator=";" item="chair">
-            update chairs set is_valid = false ,is_occupy = false
+            update chairs set is_valid = false ,is_occupy = false ,update_at = #{chair.updateAt}
             where user_id = #{chair.userId}
             <if test="chair.roomId != null and chair.roomId != ''">
-                 and room_id = #{chair.roomId}
+                and room_id = #{chair.roomId}
             </if>
             <if test="chair.floorNumber !=null">
                 and floor_number = #{chair.floorNumber}

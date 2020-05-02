@@ -28,4 +28,6 @@ public interface ICKChairDAO {
     void updateAllChairsStatus(int allDay);
 
     void cancelChairs(List<Chair> chair);
+
+    List<Chair> getUserInfoOfSelectedChair(String account);
 }

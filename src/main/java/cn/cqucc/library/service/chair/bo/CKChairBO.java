@@ -6,6 +6,7 @@ import cn.cqucc.library.service.chair.dao.ICKChairDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +37,7 @@ public class CKChairBO implements ICKChairAPI {
         }
         for (Chair chair : chairs) {
             chair.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+            chair.setCreateAt(new Date());
             chairDAO.selectChair(chair);
         }
         return 200;
@@ -43,8 +45,15 @@ public class CKChairBO implements ICKChairAPI {
 
     @Override
     public void cancelChairs(List<Chair> chairs) {
-//        for (Chair chair : chairs) {
-            chairDAO.cancelChairs(chairs);
-//        }
+        for (Chair chair : chairs) {
+            chair.setUpdateAt(new Date());
+        }
+        System.out.println("chairs = " + chairs.toString());
+        chairDAO.cancelChairs(chairs);
+    }
+
+    @Override
+    public List<Chair> getUserInfoOfSelectedChair(String account) {
+        return chairDAO.getUserInfoOfSelectedChair(account);
     }
 }

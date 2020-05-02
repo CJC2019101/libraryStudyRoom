@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -81,4 +82,18 @@ public class ControllerChair {
         response.setCode(200);
         return response;
     }
+
+    @RequestMapping(value = "/getUserInfoOfSelectedChair", method = RequestMethod.GET)
+    @ApiOperation(value = "获取用户曾经的选座信息")
+    @ResponseBody
+    // TODO 后续添加事务回滚
+    public BaseResponse getUserInfoOfSelectedChair(@RequestParam String account) {
+        BaseResponse response = new BaseResponse();
+        List<Chair> chairs = chairBO.getUserInfoOfSelectedChair(account);
+        response.setData(chairs);
+        response.setCode(200);
+        return response;
+    }
+
+
 }

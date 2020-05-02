@@ -1,9 +1,9 @@
 package cn.cqucc.library.model.chair;
 
+import cn.cqucc.library.utils.timeformat.DateUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -49,9 +49,17 @@ public class Chair implements Serializable {
     private Integer status;
 
     @ApiModelProperty(value = "创建时间")
-    private Date creatAt;
+    private Date createAt;
 
     @ApiModelProperty(value = "更新时间")
     private Date updateAt;
+
+    public String getCreateAtStr() {
+        return DateUtil.formatDate(createAt);
+    }
+
+    public String getUpdateAtStr(){
+        return DateUtil.formatDate(updateAt);
+    }
 
 }

@@ -15,4 +15,6 @@ public interface ICKChairAPI {
     int selectChair(List<Chair> chairs);
 
     void cancelChairs(List<Chair> chairs);
+
+    List<Chair> getUserInfoOfSelectedChair(String account);
 }
