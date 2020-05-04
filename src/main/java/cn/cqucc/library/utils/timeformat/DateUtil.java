@@ -16,7 +16,7 @@ public class DateUtil {
     /**
      * 标准时间格式
      */
-    private static String NORM_DATE_PATTERN = "yyyy年MM月dd日 hh时mm分";
+    private static String NORM_DATE_PATTERN = "yyyy年MM月dd日 HH时mm分";
 
     /**
      * 格式化日期,默认为："yyyy年MM月dd日 hh时mm分"

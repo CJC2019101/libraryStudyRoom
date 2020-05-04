@@ -3,6 +3,9 @@ package cn.cqucc.library.service.chair.bo;
 import cn.cqucc.library.model.chair.Chair;
 import cn.cqucc.library.service.chair.api.ICKChairAPI;
 import cn.cqucc.library.service.chair.dao.ICKChairDAO;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +56,9 @@ public class CKChairBO implements ICKChairAPI {
     }
 
     @Override
-    public List<Chair> getUserInfoOfSelectedChair(String account) {
-        return chairDAO.getUserInfoOfSelectedChair(account);
+    public PageInfo getUserInfoOfSelectedChair(String account,Integer pageNumber) {
+        PageHelper.startPage(pageNumber,10);
+        List<Chair> chairs = chairDAO.getUserInfoOfSelectedChair(account);
+        return new PageInfo(chairs);
     }
 }

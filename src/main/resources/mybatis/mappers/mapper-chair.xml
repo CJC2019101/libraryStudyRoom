@@ -30,7 +30,8 @@
 
     <select id="getUserInfoOfSelectedChair" resultType="java.util.List" resultMap="BaseResultMap">
         select * from chairs
-        where user_id = #{account} and is_occupy =false and is_valid =false
+        where user_id = #{account}
+            order by create_at desc
     </select>
 
     <insert id="selectChair" parameterType="cn.cqucc.library.model.chair.Chair">

@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.chair.api;
 
 import cn.cqucc.library.model.chair.Chair;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface ICKChairAPI {
 
     void cancelChairs(List<Chair> chairs);
 
-    List<Chair> getUserInfoOfSelectedChair(String account);
+    PageInfo getUserInfoOfSelectedChair(String account, Integer pageNumber);
 }

@@ -3,6 +3,9 @@ package cn.cqucc.library.controller.chair;
 import cn.cqucc.library.model.chair.Chair;
 import cn.cqucc.library.service.chair.bo.CKChairBO;
 import cn.cqucc.library.status.BaseResponse;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -87,10 +92,11 @@ public class ControllerChair {
     @ApiOperation(value = "获取用户曾经的选座信息")
     @ResponseBody
     // TODO 后续添加事务回滚
-    public BaseResponse getUserInfoOfSelectedChair(@RequestParam String account) {
+    public BaseResponse getUserInfoOfSelectedChair(@RequestParam String account,@RequestParam(defaultValue = "0") Integer pageNumber) {
         BaseResponse response = new BaseResponse();
-        List<Chair> chairs = chairBO.getUserInfoOfSelectedChair(account);
-        response.setData(chairs);
+        PageInfo pageInfo = chairBO.getUserInfoOfSelectedChair(account,pageNumber);
+        System.out.println("pageInfo = " + pageInfo.toString());
+        response.setData(pageInfo);
         response.setCode(200);
         return response;
     }
