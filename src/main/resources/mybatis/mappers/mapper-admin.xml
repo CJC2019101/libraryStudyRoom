@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.cqucc.library.service.admin.dao.ICKAdminDAO">
+
+    <resultMap id="BaseResultMap" type="cn.cqucc.library.model.admin.Admin">
+        <id column="id" property="id"/>
+        <id column="admin_name" property="name"/>
+        <id column="account" property="account"/>
+        <id column="password" property="password"/>
+    </resultMap>
+
     <select id="isExist" resultType="java.lang.Integer">
         select count(*)
             from admins
             where admins.account = #{account} and admins.password = #{password}
+    </select>
+
+    <select id="getAdminInfo" resultMap="BaseResultMap">
+        select *
+            from admins
+            where admins.account = #{account}
     </select>
 </mapper>

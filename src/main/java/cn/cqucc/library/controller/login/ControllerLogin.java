@@ -1,5 +1,6 @@
 package cn.cqucc.library.controller.login;
 
+import cn.cqucc.library.model.admin.Admin;
 import cn.cqucc.library.model.student.Student;
 import cn.cqucc.library.model.student.req.CKLibraryUserReq;
 import cn.cqucc.library.service.admin.api.ICKAdminAPI;
@@ -102,6 +103,26 @@ public class ControllerLogin {
         studentBO.resetPassword(user);
         response.setCode(200);
         response.setData(true);
+        return response;
+    }
+
+    @RequestMapping(value = "/getAdminInfo",method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "query",name = "account",value = "账号",required = true),
+            @ApiImplicitParam(type = "query",name = "password",value = "密码",required = true)
+    })
+    @ApiOperation(value = "获取管理员用户信息")
+    @ResponseBody
+    public BaseResponse getAdminInfo(@RequestParam String account){
+        BaseResponse response = new BaseResponse();
+        Admin admin = adminBO.getAdminInfo(account);
+        if (admin==null){
+            response.setCode(502);
+            response.setMsg("查询管理员用户信息失败");
+        }else {
+            response.setCode(200);
+            response.setData(admin);
+        }
         return response;
     }
 

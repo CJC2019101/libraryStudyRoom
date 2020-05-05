@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class Admin implements Serializable {
     private static final long serialVersionUID = 6773008101902867903L;
 
-    @ApiModelProperty("管理员主键")
+    @ApiModelProperty("管理员职工号")
     private String id;
 
     @ApiModelProperty("管理员姓名")
