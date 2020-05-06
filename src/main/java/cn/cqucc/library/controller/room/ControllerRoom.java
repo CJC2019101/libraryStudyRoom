@@ -4,9 +4,11 @@ import cn.cqucc.library.model.room.Room;
 import cn.cqucc.library.service.room.bo.CKRoomBO;
 import cn.cqucc.library.status.BaseResponse;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -108,4 +110,26 @@ public class ControllerRoom {
         }
         return response;
     }
+
+
+    @RequestMapping(value = "/setRoomIsValid", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "update", name = "roomId", value = "教室ID", required = true),
+            @ApiImplicitParam(type = "update", name = "floorNumber", value = "楼层号", required = true)
+    })
+    @ApiOperation(value = "管理员修改教室启用状态")
+    @ResponseBody
+    // TODO 后续添加事务回滚
+    public BaseResponse setRoomIsValid(@RequestBody Room room) {
+        BaseResponse response = new BaseResponse();
+        int statusCode = roomBO.setRoomIsValid(room);
+        response.setCode(statusCode);
+        if (statusCode==200){
+            response.setMsg("教室状态变更");
+        }else {
+            response.setMsg("教室座位有人选中无法变更状态。");
+        }
+        return response;
+    }
+
 }

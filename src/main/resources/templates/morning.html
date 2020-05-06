@@ -204,7 +204,7 @@
                         $("#rooms").append("<tr><td>" + rooms[i].id +
                             "</td><td>" + rooms[i].floorNumber +
                             "楼</td><td>" + rooms[i].roomLong + "x" + rooms[i].roomWidth +
-                            "</td><td class='tableButton'><button  class=\"btn btn-primary \" data-toggle=\"modal\" data-target=\"#myModal\">" +
+                            "</td><td><button  class=\"btn btn-primary \" data-toggle=\"modal\" data-target=\"#myModal\">" +
                             "座位</button>"
                             // <!-- 按钮触发模态框 -->
                             +
@@ -241,9 +241,9 @@
     // 座位按钮点击事件
     $("#rooms").delegate(".tableButton ", "click", function () {
         // 行位置
-        var row = $(this).parent().index() + 1;
+        var row = $(this).parent().parent().index() + 1;
         // 列位置
-        var col = $(this).index() + 1;
+        var col = $(this).parent().index() + 1;
         var x = document.getElementById('rooms').rows[row].cells;
         // 教室号
         var roomId = x[0].innerHTML
@@ -453,7 +453,7 @@
                 alert("您输入的密码与新密码重复，请重新输入。");
                 return;
             }
-            if (newPassword.val() === confirmPassword.val("")) {
+            if (newPassword.val() === confirmPassword.val()) {
                 newPassword.val("");
                 confirmPassword.val("");
                 alert("您两次输入的新密码不一致，请重新输入。");
@@ -474,7 +474,7 @@
             $.ajax(
                 {
                     type: "POST",
-                    url: "/resetPassword",
+                    url: "/userResetPassword",
                     data: JSON.stringify(jsonData),
                     dataType: 'JSON',
                     contentType: "application/json",

@@ -1,5 +1,6 @@
 package cn.cqucc.library.model.room;
 
+import cn.cqucc.library.utils.timeformat.DateUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -36,5 +37,13 @@ public class Room implements Serializable {
 
     @ApiModelProperty(value = "更新时间")
     private Date updateAt;
+
+    public String getCreateAtStr(){
+        return DateUtil.formatDate(createAt);
+    }
+
+    public String getUpdateAtStr(){
+        return DateUtil.formatDate(updateAt);
+    }
 
 }

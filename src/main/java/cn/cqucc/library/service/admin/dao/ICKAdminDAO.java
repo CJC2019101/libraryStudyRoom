@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.admin.dao;
 
 import cn.cqucc.library.model.admin.Admin;
+import cn.cqucc.library.model.student.req.CKLibraryUserReq;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,4 +15,6 @@ public interface ICKAdminDAO {
     int isExist(@Param(value = "account")String account, @Param(value = "password")String password);
 
     Admin getAdminInfo(@Param(value = "account") String account);
+
+    void resetPassword(CKLibraryUserReq user);
 }

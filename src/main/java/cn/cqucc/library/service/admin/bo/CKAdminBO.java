@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.admin.bo;
 
 import cn.cqucc.library.model.admin.Admin;
+import cn.cqucc.library.model.student.req.CKLibraryUserReq;
 import cn.cqucc.library.service.admin.api.ICKAdminAPI;
 import cn.cqucc.library.service.admin.dao.ICKAdminDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,10 @@ public class CKAdminBO implements ICKAdminAPI {
     @Override
     public Admin getAdminInfo(String account) {
         return adminDAO.getAdminInfo(account);
+    }
+
+    @Override
+    public void resetPassword(CKLibraryUserReq user) {
+        adminDAO.resetPassword(user);
     }
 }

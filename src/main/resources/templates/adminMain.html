@@ -277,15 +277,22 @@
                 if (data.code === 200) {
                     var rooms = data.data
                     for (var i = 0; i < rooms.length; i++) {
+                        var roomStatus = "";
+                        if (rooms[i].isValid) {
+                            roomStatus = "<button id='roomStatus' class='btn btn-primary ' >禁用</button> &nbsp;"
+                        } else {
+                            roomStatus = "<button id='roomStatus' class='btn btn-primary ' >启动</button> &nbsp;"
+                        }
+
                         $("#rooms").append("<tr><td>" + rooms[i].id +
                             "</td><td>" + rooms[i].floorNumber +
                             "楼</td><td>" + rooms[i].roomLong + "x" + rooms[i].roomWidth +
-                            "</td><td class='tableButton'><button class='btn btn-primary ' data-toggle='modal' data-target='#myModal'>启动</button> &nbsp;" +
-                            "<button class='btn btn-primary ' data-toggle='modal' data-target='#myModal'>禁用</button> &nbsp;" +
-                            "<button class='btn btn-primary ' data-toggle='modal' data-target='#myModal'>座位</button>&nbsp;" +
-                            "<button class='btn btn-primary ' data-toggle='modal' data-target='#myModal'>修改</button>" +
+                            "</td><td><button class='btn btn-primary tableButton' data-toggle='modal' data-target='#myModal'>座位</button>&nbsp;" +
+                            "<button class='btn btn-primary ' data-toggle='modal' data-target='#myModal'>修改</button>&nbsp;" +
+                            roomStatus +
                             // <!-- 按钮触发模态框 -->
-                            "</td></tr>")
+                            "</td></tr>"
+                        )
                     }
                 } else {
                     alert(data.msg())
@@ -297,6 +304,42 @@
         getAdminInfo();
     })
 
+    // 教室“禁用/启用”
+    $("#rooms").delegate('#roomStatus', 'click', function () {
+        // 行位置
+        var row = $(this).parent().parent().index() + 1;
+        // 列位置
+        var col = $(this).parent().index() + 1;
+        var x = document.getElementById('rooms').rows[row].cells;
+        // 教室号
+        var roomId = x[0].innerHTML
+        // 楼层号
+        var floorNumber = x[1].innerHTML.substr(0, 1);
+        alert("楼层号：" + floorNumber + "楼，教室号：" + roomId);
+        var requestData = {
+            "id": roomId,
+            "floorNumber": floorNumber
+        };
+        $.ajax({
+            type: "POST",
+            url: "/setRoomIsValid",
+            data: JSON.stringify(requestData),
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function (data) {
+                // alert(data.msg)  -- 当前未添加事务回滚
+                alert("数据查询失败")
+            },
+            success: function (data) {
+                alert(data.msg);
+                if (data.code === 200) {
+                    window.location.href = '/adminMain.html';
+                }
+            }
+        })
+
+
+    })
 
     function getAdminInfo() {
         // 发送ajax请求 -- 获取用户信息
@@ -318,15 +361,15 @@
     // 座位按钮点击事件
     $("#rooms").delegate(".tableButton ", "click", function () {
         // 行位置
-        var row = $(this).parent().index() + 1;
+        var row = $(this).parent().parent().index() + 1;
         // 列位置
-        var col = $(this).index() + 1;
+        var col = $(this).parent().index() + 1;
         var x = document.getElementById('rooms').rows[row].cells;
         // 教室号
         var roomId = x[0].innerHTML
         // 楼层号
-        var floorNumber = x[1].innerHTML.substr(0, 1)
-        alert("楼层号：" + floorNumber + "楼，教室号：" + roomId)
+        var floorNumber = x[1].innerHTML.substr(0, 1);
+        alert("楼层号：" + floorNumber + "楼，教室号：" + roomId);
         //发送ajax请求
         $.ajax({
             type: 'GET',
@@ -467,7 +510,7 @@
                 alert("您选择的座位太多，我规定最多只能选择4个。而您选中了" + chairInfo.length + "个")
                 return
             } else if (chairInfo.length === 0) {
-                alert("请至少选择一个座位")
+                alert("请至少选择一个座位");
                 return
             }
 
@@ -530,16 +573,10 @@
                 alert("您输入的密码与新密码重复，请重新输入。");
                 return;
             }
-            if (newPassword.val() === confirmPassword.val("")) {
+            if (newPassword.val() === confirmPassword.val()) {
                 newPassword.val("");
                 confirmPassword.val("");
                 alert("您两次输入的新密码不一致，请重新输入。");
-                return;
-            }
-            if (newPassword.val().length < 6) {
-                newPassword.val("");
-                confirmPassword.val("");
-                alert("您输入的密码长度不够，必须是6位")
                 return;
             }
             $.cookie("password", newPassword.val());
@@ -551,7 +588,7 @@
             $.ajax(
                 {
                     type: "POST",
-                    url: "/resetPassword",
+                    url: "/adminResetPassword",
                     data: JSON.stringify(jsonData),
                     dataType: 'JSON',
                     contentType: "application/json",
@@ -561,14 +598,14 @@
                     success: function (data) {
                         if (data.code === 200) {
                             alert("密码已经修改成功，请重新登录")
-                            window.location.href = "/login"
+                            window.location.href = "/adminLogin"
                         }
                     }
                 }
             );
         }
 
-    })
+    });
 
 
 </script>

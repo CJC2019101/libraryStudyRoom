@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.chair.dao;
 
 import cn.cqucc.library.model.chair.Chair;
+import cn.cqucc.library.model.room.Room;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -30,4 +31,6 @@ public interface ICKChairDAO {
     void cancelChairs(List<Chair> chair);
 
     List<Chair> getUserInfoOfSelectedChair(String account);
+
+    int getUnvalidChairCount(Room room);
 }

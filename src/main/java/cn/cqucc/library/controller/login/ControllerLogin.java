@@ -89,13 +89,13 @@ public class ControllerLogin {
         return response;
     }
 
-    @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
+    @RequestMapping(value = "/userResetPassword", method = RequestMethod.POST)
     @ApiImplicitParams({
             @ApiImplicitParam(type = "update", value = "password", name = "新密码", required = true),
             @ApiImplicitParam(type = "update", value = "account", name = "账号", required = true),
             @ApiImplicitParam(type = "update", value = "userType", name = "用户类型", required = true)
     })
-    @ApiOperation(value = "重置用户密码")
+    @ApiOperation(value = "普通用户重置密码")
     @ResponseBody
     //TODO 后续添加事务的回滚功能。
     public BaseResponse resetPassword(@RequestBody CKLibraryUserReq user) {

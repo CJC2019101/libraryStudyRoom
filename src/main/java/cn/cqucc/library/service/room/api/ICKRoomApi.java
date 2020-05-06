@@ -15,4 +15,6 @@ public interface ICKRoomApi {
     Room findRoom(String roomId);
 
     List<Room> findValidRooms();
+
+    int setRoomIsValid(Room room);
 }

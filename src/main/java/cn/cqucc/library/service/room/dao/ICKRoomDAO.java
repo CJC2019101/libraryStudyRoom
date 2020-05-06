@@ -3,6 +3,7 @@ package cn.cqucc.library.service.room.dao;
 import cn.cqucc.library.model.room.Room;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,4 +18,6 @@ public interface ICKRoomDAO {
     Room findRoom(String roomId);
 
     List<Room> findValidRooms();
+
+    void setRoomIsValid(Room room);
 }

@@ -25,4 +25,9 @@
         select * from rooms
             where rooms.id = #{roomId}
     </select>
+
+    <update id="setRoomIsValid" parameterType="cn.cqucc.library.model.room.Room">
+        update rooms set is_valid = not is_valid , update_at = #{updateAt}
+            where id = #{id} and floor_number = #{floorNumber}
+    </update>
 </mapper>

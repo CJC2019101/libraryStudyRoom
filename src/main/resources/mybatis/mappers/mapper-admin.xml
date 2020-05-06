@@ -20,4 +20,11 @@
             from admins
             where admins.account = #{account}
     </select>
+
+
+    <update id="resetPassword" parameterType="cn.cqucc.library.model.student.req.CKLibraryUserReq">
+        update admins set password = #{password}
+            where account = #{account}
+    </update>
+
 </mapper>

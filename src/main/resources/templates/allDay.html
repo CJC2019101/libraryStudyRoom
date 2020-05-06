@@ -195,7 +195,7 @@
                         $("#rooms").append("<tr><td>" + rooms[i].id +
                             "</td><td>" + rooms[i].floorNumber +
                             "楼</td><td>" + rooms[i].roomLong + "x" + rooms[i].roomWidth +
-                            "</td><td class='tableButton'><button  class=\"btn btn-primary \" data-toggle=\"modal\" data-target=\"#myModal\">" +
+                            "</td><td><button  class=\"btn btn-primary \" data-toggle=\"modal\" data-target=\"#myModal\">" +
                             "座位</button>"
                             // <!-- 按钮触发模态框 -->
                             +
@@ -232,9 +232,9 @@
     // 座位按钮点击事件
     $("#rooms").delegate(".tableButton ", "click", function () {
         // 行位置
-        var row = $(this).parent().index() + 1;
+        var row = $(this).parent().parent().index() + 1;
         // 列位置
-        var col = $(this).index() + 1;
+        var col = $(this).parent().index() + 1;
         var x = document.getElementById('rooms').rows[row].cells;
         // 教室号
         var roomId = x[0].innerHTML
@@ -465,7 +465,7 @@
             $.ajax(
                 {
                     type: "POST",
-                    url: "/resetPassword",
+                    url: "/userResetPassword",
                     data: JSON.stringify(jsonData),
                     dataType: 'JSON',
                     contentType: "application/json",
