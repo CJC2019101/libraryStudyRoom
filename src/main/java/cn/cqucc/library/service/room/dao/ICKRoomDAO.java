@@ -15,4 +15,6 @@ public interface ICKRoomDAO {
     List<Room> findAll();
 
     Room findRoom(String roomId);
+
+    List<Room> findValidRooms();
 }

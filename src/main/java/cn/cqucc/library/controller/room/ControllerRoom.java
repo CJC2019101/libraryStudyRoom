@@ -28,31 +28,31 @@ public class ControllerRoom {
 
     @RequestMapping(value = "/morning")
     @ApiOperation(value = "座位状态：上午")
-    public String morning(){
+    public String morning() {
         return "morning";
     }
 
     @RequestMapping(value = "/afternoon")
     @ApiOperation(value = "座位状态：下午")
-    public String afternoon(){
+    public String afternoon() {
         return "afternoon";
     }
 
     @RequestMapping(value = "/night")
     @ApiOperation(value = "座位状态：晚上")
-    public String night(){
+    public String night() {
         return "night";
     }
 
     @RequestMapping(value = "/allDay")
     @ApiOperation(value = "座位状态：整天")
-    public String allDay(){
+    public String allDay() {
         return "allDay";
     }
 
     @RequestMapping(value = "/cancel")
     @ApiOperation(value = "取消选座")
-    public String cancel(){
+    public String cancel() {
         return "cancel";
     }
 
@@ -62,29 +62,46 @@ public class ControllerRoom {
     public BaseResponse findAll() {
         List<Room> allRooms = roomBO.findAll();
         BaseResponse<List> response = new BaseResponse<List>();
-        if (allRooms.size() == 0){
+        if (allRooms.size() == 0) {
             response.setCode(502);
             response.setMsg("数据库没有数据显示");
-        }else {
+        } else {
             response.setCode(200);
             response.setMsg("成功");
             response.setData(allRooms);
         }
 
-            return response;
+        return response;
+    }
+
+    @RequestMapping(value = "/findValidRooms")
+    @ApiOperation(value = "查找可用教室")
+    @ResponseBody
+    public BaseResponse findValidRooms() {
+        List<Room> allRooms = roomBO.findValidRooms();
+        BaseResponse response = new BaseResponse();
+        if (allRooms.size() == 0) {
+            response.setCode(502);
+            response.setMsg("数据库没有数据显示");
+        } else {
+            response.setCode(200);
+            response.setMsg("成功");
+            response.setData(allRooms);
+        }
+        return response;
     }
 
 
-    @RequestMapping(value = "/findRoom",method = RequestMethod.GET)
+    @RequestMapping(value = "/findRoom", method = RequestMethod.GET)
     @ApiImplicitParam(paramType = "query", name = "roomId", value = "教室号", required = true)
     @ResponseBody
-    public BaseResponse findRoom(@RequestParam(value = "roomId")String roomId){
+    public BaseResponse findRoom(@RequestParam(value = "roomId") String roomId) {
         Room room = roomBO.findRoom(roomId);
         BaseResponse<Room> response = new BaseResponse<Room>();
-        if (room == null){
+        if (room == null) {
             response.setCode(502);
             response.setMsg("数据库没有数据显示");
-        }else {
+        } else {
             response.setCode(200);
             response.setMsg("成功");
             response.setData(room);

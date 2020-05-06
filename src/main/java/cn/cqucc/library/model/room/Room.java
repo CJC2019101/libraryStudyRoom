@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author JianfeiChen
@@ -26,5 +27,14 @@ public class Room implements Serializable {
 
     @ApiModelProperty(value = "教室宽度")
     private int roomWidth;
+
+    @ApiModelProperty(value = "教室是否启用")
+    private Boolean isValid;
+
+    @ApiModelProperty(value = "创建时间")
+    private Date createAt;
+
+    @ApiModelProperty(value = "更新时间")
+    private Date updateAt;
 
 }

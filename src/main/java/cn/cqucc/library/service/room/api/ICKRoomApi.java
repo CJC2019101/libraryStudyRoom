@@ -13,4 +13,6 @@ public interface ICKRoomApi {
     List<Room> findAll();
 
     Room findRoom(String roomId);
+
+    List<Room> findValidRooms();
 }

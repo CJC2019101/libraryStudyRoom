@@ -7,10 +7,18 @@
         <id column="floor_number" property="floorNumber"/>
         <result column="long" property="roomLong"/>
         <result column="width" property="roomWidth"/>
+        <result column="is_valid" property="isValid"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_at" property="updateAt"/>
     </resultMap>
 
     <select id="findAll" resultMap="BaseResultMap">
         select * from rooms
+    </select>
+
+    <select id="findValidRooms" resultMap="BaseResultMap">
+        select * from rooms
+            where is_valid = true
     </select>
 
     <select id="findRoom" resultMap="BaseResultMap">

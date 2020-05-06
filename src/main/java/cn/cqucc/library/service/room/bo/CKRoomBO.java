@@ -28,4 +28,9 @@ public class CKRoomBO implements ICKRoomApi {
     public Room findRoom(String roomId) {
         return roomDAO.findRoom(roomId);
     }
+
+    @Override
+    public List<Room> findValidRooms() {
+        return roomDAO.findValidRooms();
+    }
 }
