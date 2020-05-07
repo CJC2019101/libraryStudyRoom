@@ -30,4 +30,23 @@
         update rooms set is_valid = not is_valid , update_at = #{updateAt}
             where id = #{id} and floor_number = #{floorNumber}
     </update>
+
+    <update id="modifyRoomSize" parameterType="cn.cqucc.library.model.room.req.RoomUpdateReq">
+        update rooms
+        <set>
+            <if test="updateAt!=null">
+                update_at = #{updateAt},
+            </if>
+            <if test="roomWidth!=null">
+                width = #{roomWidth},
+            </if>
+            <if test="roomLong!=null">
+                long=#{roomLong},
+            </if>
+            <if test="newRoomId!=null and newRoomId!=''">
+                id =#{newRoomId},
+            </if>
+        </set>
+        where id = #{oldRoomId} and floor_number = #{floorNumber}
+    </update>
 </mapper>

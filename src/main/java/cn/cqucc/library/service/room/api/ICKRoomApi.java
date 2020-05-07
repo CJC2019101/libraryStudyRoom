@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.room.api;
 
 import cn.cqucc.library.model.room.Room;
+import cn.cqucc.library.model.room.req.RoomUpdateReq;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface ICKRoomApi {
     List<Room> findValidRooms();
 
     int setRoomIsValid(Room room);
+
+    int modifyRoomSize(RoomUpdateReq room);
 }

@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.room.dao;
 
 import cn.cqucc.library.model.room.Room;
+import cn.cqucc.library.model.room.req.RoomUpdateReq;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
@@ -20,4 +21,6 @@ public interface ICKRoomDAO {
     List<Room> findValidRooms();
 
     void setRoomIsValid(Room room);
+
+    void modifyRoomSize(RoomUpdateReq room);
 }

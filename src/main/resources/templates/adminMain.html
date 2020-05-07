@@ -247,15 +247,18 @@
                 <span style="float: right;">2019年05月12日15时36分</span>
             </li>
         </ul>
-        <ul class='pager'>
-            <li><a href='#' id='previous'>&laquo;</a></li>
-        </ul>
-        <ul class='pager'>
-            <li><a href='#' id='addNotification'>&oplus;</a></li>
-        </ul>
-        <ul class='pager'>
-            <li><a href='#' id='next'>&raquo;</a></li>
-        </ul>
+        <div class="footer" style="position: fixed; bottom: 6px; width: 26%;">
+            <ul class='pager'>
+                <li><a href='#' id='previous'>&laquo;</a></li>
+            </ul>
+            <ul class='pager'>
+                <li><a href='#' id='addNotification'>&oplus;</a></li>
+            </ul>
+            <ul class='pager'>
+                <li><a href='#' id='next'>&raquo;</a></li>
+            </ul>
+        </div>
+
     </div>
 </div>
 
@@ -288,21 +291,31 @@
                             "</td><td>" + rooms[i].floorNumber +
                             "楼</td><td>" + rooms[i].roomLong + "x" + rooms[i].roomWidth +
                             "</td><td><button class='btn btn-primary tableButton' data-toggle='modal' data-target='#myModal'>座位</button>&nbsp;" +
-                            "<button class='btn btn-primary ' data-toggle='modal' data-target='#myModal'>修改</button>&nbsp;" +
+                            "<button id='modifyRoomSize' class='btn btn-primary '>修改</button>&nbsp;" +
                             roomStatus +
                             // <!-- 按钮触发模态框 -->
                             "</td></tr>"
                         )
                     }
+                    $("#rooms").append("<div class='footer'  style=\"position: fixed; bottom: 6px; width: 67%;\">" +
+                        "           <ul class='pager'>\n" +
+                        "               <li><a href='#' id='previous'>&laquo;Previous</a></li>\n" +
+                        "           </ul>\n" +
+                        "           <ul class='pager'>\n" +
+                        "               <li><a href='#' id='addNotification'>&oplus;Add</a></li>\n" +
+                        "           </ul>\n" +
+                        "           <ul class='pager'>\n" +
+                        "               <li><a href='#' id='next'>Next&raquo;</a></li>\n" +
+                        "           </ul></div>")
                 } else {
-                    alert(data.msg())
+                    alert(data.msg());
                     window.location.href = "/main.html"
                 }
             }
         });
         // 获取用户信息
         getAdminInfo();
-    })
+    });
 
     // 教室“禁用/启用”
     $("#rooms").delegate('#roomStatus', 'click', function () {
@@ -339,7 +352,54 @@
         })
 
 
-    })
+    });
+
+    // 修改“教室长或宽”
+    $("#rooms").delegate('#modifyRoomSize', 'click', function () {
+        // 行位置
+        var row = $(this).parent().parent().index() + 1;
+        // 列位置
+        var col = $(this).parent().index() + 1;
+        var x = document.getElementById('rooms').rows[row].cells;
+        // 教室号
+        var roomId = x[0].innerHTML;
+        // 楼层号
+        var floorNumber = x[1].innerHTML.replace("楼", "");
+        // 教室大小
+        var roomSize = x[2].innerHTML.split("x");
+        // 修改statusDiv状态提示框的display属性
+        $("#statusDiv").css('display', 'none');
+        $("#myModalLabel").html("修改教室大小");
+        // 取消用户信息表单搜索框
+        $("#roomTable").bootstrapTable('destroy').bootstrapTable({
+            search: false
+        });
+        document.getElementById("roomTable").innerHTML = "";
+        $("#roomTable").append("<tr><td>" +
+            "<label for='name'>教室编号：</label>\n" +
+            "<input onkeyup=\"value=value.replace(/[\\W]/g,'')\" " +
+            " type='text' id='newRoomId' maxlength='6' class=\"form-control\" value=" + roomId +
+            " placeholder=\"请输入新的教室编号\">\n" +
+            "</td></tr>"
+        );
+        $("#roomTable").append("<input id='oldRoomId' type='hidden' value='" + roomId + "'/>");
+        $("#roomTable").append("<tr><td>" +
+            "<label for=\"name\">长度：</label>\n" +
+            "<input type=\"number\" id='newRoomWidth' maxlength='6' class=\"form-control\" " +
+            "oninput='if (value<=0) value = 1; if (value>99) value=99;  '" +
+            " placeholder=\"请输入修改后的教室长度\" value=" + roomSize[0] + ">\n" +
+            "</td></tr>");
+        $("#roomTable").append("<tr><td>" +
+            "<label for=\"name\">宽度：</label>\n" +
+            "<input type=\"number\" id='newRoomLength' maxlength='6' class=\"form-control\"" +
+            " oninput='if (value>99)value=99; if (value<=0) value=1; '" +
+            " placeholder=\"请输入修改后的教室宽度\" value=" + roomSize[1] + ">\n" +
+            "</td></tr>");
+        $("#roomTable").append("<input id='floorNumber' type='hidden' value='" + floorNumber + "'/>");
+        // 显示模态框
+        $('#myModal').modal('show');
+
+    });
 
     function getAdminInfo() {
         // 发送ajax请求 -- 获取用户信息
@@ -496,9 +556,41 @@
     }
 
 
-    // 发送选中的座位数据、新的密码
+    // 发送选中的座位数据、新的密码、修改后教室长宽
     $("body").delegate("#commit", "click", function () {
-        if ($("#statusDiv").css("display") === 'block') {
+        var modalTitle = $("#myModalLabel").text();
+        // 修改教室大小
+        if (modalTitle.indexOf("修改教室大小") !== -1) {
+            var floorNumber = $("#floorNumber").val();
+            var newRoomId = $("#newRoomId").val();
+            var oldRoomId = $("#oldRoomId").val();
+            var newRoomWidth = $("#newRoomWidth").val();
+            var newRoomLength = $("#newRoomLength").val();
+            var requestData = {
+                "floorNumber": floorNumber,
+                "oldRoomId": oldRoomId,
+                "newRoomId": newRoomId,
+                "roomWidth": newRoomWidth,
+                "roomLong": newRoomLength
+            };
+            alert(JSON.stringify(requestData));
+            $.ajax({
+                type: "POST",
+                url: "modifyRoomSize",
+                data: JSON.stringify(requestData),
+                dataType: "JSON",
+                contentType: "application/json",
+                error: function (data) {
+                    alert(data.msg);
+                }, success: function (data) {
+                    alert(data.msg);
+                    if (data.code===200){
+                        window.location.href = "/adminMain.html";
+                    }
+                }
+            })
+        }// 选座
+        else if (modalTitle.indexOf("教室") !== -1) {
             var checkboxs = document.getElementsByName("chair");
             var chairInfo = new Array();
             for (var i = 0; i < checkboxs.length; i++) {
@@ -556,8 +648,8 @@
                     }
                 }
             });
-        }
-        if ($("#statusDiv").css("display") === 'none') {
+        } // 修改密码
+        else if (modalTitle.indexOf("修改密码") !== -1) {
             var oldPassword = $("#oldPassword");
             var newPassword = $("#newPassword");
             var confirmPassword = $("#confirmPassword");

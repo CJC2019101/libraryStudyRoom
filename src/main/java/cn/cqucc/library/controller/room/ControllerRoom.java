@@ -1,6 +1,7 @@
 package cn.cqucc.library.controller.room;
 
 import cn.cqucc.library.model.room.Room;
+import cn.cqucc.library.model.room.req.RoomUpdateReq;
 import cn.cqucc.library.service.room.bo.CKRoomBO;
 import cn.cqucc.library.status.BaseResponse;
 import io.swagger.annotations.ApiImplicitParam;
@@ -124,10 +125,32 @@ public class ControllerRoom {
         BaseResponse response = new BaseResponse();
         int statusCode = roomBO.setRoomIsValid(room);
         response.setCode(statusCode);
-        if (statusCode==200){
+        if (statusCode == 200) {
             response.setMsg("教室状态变更");
-        }else {
+        } else {
             response.setMsg("教室座位有人选中无法变更状态。");
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/modifyRoomSize", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "update", name = "oldRoomId", value = "旧的教室号", required = true),
+            @ApiImplicitParam(type = "update", name = "newRoomId", value = "新的教室号", required = true),
+            @ApiImplicitParam(type = "update", name = "floorNumber", value = "楼层号", required = true),
+            @ApiImplicitParam(type = "update", name = "roomWidth", value = "教室宽度", required = true),
+            @ApiImplicitParam(type = "update", name = "roomLong", value = "教室长度", required = true)
+    })
+    @ApiOperation(value = "修改教室大小")
+    @ResponseBody
+    public BaseResponse modifyRoomSize(@RequestBody RoomUpdateReq room) {
+        BaseResponse response = new BaseResponse();
+        int statusCode = roomBO.modifyRoomSize(room);
+        response.setCode(statusCode);
+        if (statusCode == 200) {
+            response.setMsg("修改成功");
+        } else {
+            response.setMsg("教室编号重复，请重新操作");
         }
         return response;
     }

@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.room.bo;
 
 import cn.cqucc.library.model.room.Room;
+import cn.cqucc.library.model.room.req.RoomUpdateReq;
 import cn.cqucc.library.service.chair.bo.CKChairBO;
 import cn.cqucc.library.service.chair.dao.ICKChairDAO;
 import cn.cqucc.library.service.room.api.ICKRoomApi;
@@ -50,6 +51,18 @@ public class CKRoomBO implements ICKRoomApi {
             return 200;
         }
 
+    }
+
+    @Override
+    public int modifyRoomSize(RoomUpdateReq room) {
+        Room duplicate = roomDAO.findRoom(room.getNewRoomId());
+        if (duplicate == null || duplicate.getId() == null || "".equals(duplicate.getId())) {
+            room.setUpdateAt(new Date());
+            roomDAO.modifyRoomSize(room);
+            return 200;
+        } else {
+            return 406;
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-package cn.cqucc.library.model.room;
+package cn.cqucc.library.model.room.req;
 
 import cn.cqucc.library.utils.timeformat.DateUtil;
 import io.swagger.annotations.ApiModel;
@@ -10,15 +10,20 @@ import java.util.Date;
 
 /**
  * @author JianfeiChen
- * @date 2020/4/16 18:47
- * @Description 教室实体类
+ * @date 2020/5/7 16:20
+ * @Description cn.cqucc.library.model.room.req
  */
-@ApiModel(value = "教室实体类")
+
 @Data
-public class Room implements Serializable {
-    private static final long serialVersionUID = -6097602359034132286L;
-    @ApiModelProperty(value = "教室编号")
-    private String id;
+@ApiModel(value = "教室更新封装实体类")
+public class RoomUpdateReq implements Serializable {
+    private static final long serialVersionUID = -10736252585473755L;
+
+    @ApiModelProperty(value = "新的教室编号")
+    private String newRoomId;
+
+    @ApiModelProperty(value = "旧的教室编号")
+    private String oldRoomId;
 
     @ApiModelProperty(value = "楼层编号")
     private int floorNumber;
@@ -45,5 +50,4 @@ public class Room implements Serializable {
     public String getUpdateAtStr() {
         return DateUtil.formatDate(updateAt);
     }
-
 }
