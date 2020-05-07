@@ -9,6 +9,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -26,17 +27,24 @@ public class CKChairBO implements ICKChairAPI {
 
     @Override
     public List<Chair> occupyChairs(Chair chair) {
-        return chairDAO.occupyChairs(chair);
+        List<Chair> chairs = new ArrayList<>();
+        List<Chair> adminChairs = chairDAO.adminOccupyChairs(chair);
+        List<Chair> studentChairs = chairDAO.occupyChairs(chair);
+        chairs.addAll(adminChairs);
+        chairs.addAll(studentChairs);
+        return chairs;
     }
 
     @Override
     public int selectChair(List<Chair> chairs) {
-        // 被选中的座位数
-        int selectedChairCount = chairs.size();
-        // 已经选中的座位数
-        int chairCount = chairDAO.selectChairAmount(chairs.get(0).getUserId());
-        if ((selectedChairCount + chairCount) > 4) {
-            return 502;
+        if (!chairs.get(0).getUserId().equals("admin")) {
+            // 被选中的座位数
+            int selectedChairCount = chairs.size();
+            // 已经选中的座位数
+            int chairCount = chairDAO.selectChairAmount(chairs.get(0).getUserId());
+            if ((selectedChairCount + chairCount) > 4) {
+                return 502;
+            }
         }
         for (Chair chair : chairs) {
             chair.setId(UUID.randomUUID().toString().replaceAll("-", ""));
@@ -56,8 +64,8 @@ public class CKChairBO implements ICKChairAPI {
     }
 
     @Override
-    public PageInfo getUserInfoOfSelectedChair(String account,Integer pageNumber) {
-        PageHelper.startPage(pageNumber,10);
+    public PageInfo getUserInfoOfSelectedChair(String account, Integer pageNumber) {
+        PageHelper.startPage(pageNumber, 10);
         List<Chair> chairs = chairDAO.getUserInfoOfSelectedChair(account);
         return new PageInfo(chairs);
     }

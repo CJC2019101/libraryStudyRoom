@@ -24,5 +24,8 @@ public class CKChairDirectory {
         @Description(description = "晚上")
         public static int night = 3;
 
+        @Description(description = "永远")
+        public static int forever = 4;
+
     }
 }

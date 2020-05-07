@@ -299,13 +299,13 @@
                     }
                     $("#rooms").append("<div class='footer'  style=\"position: fixed; bottom: 6px; width: 67%;\">" +
                         "           <ul class='pager'>\n" +
-                        "               <li><a href='#' id='previous'>&laquo;Previous</a></li>\n" +
+                        "               <li><a href='#' id='roomPrevious'>&laquo;Previous</a></li>\n" +
                         "           </ul>\n" +
                         "           <ul class='pager'>\n" +
-                        "               <li><a href='#' id='addNotification'>&oplus;Add</a></li>\n" +
+                        "               <li><a href='#' id='roomAddNotification'>&oplus;Add</a></li>\n" +
                         "           </ul>\n" +
                         "           <ul class='pager'>\n" +
-                        "               <li><a href='#' id='next'>Next&raquo;</a></li>\n" +
+                        "               <li><a href='#' id='roomNext'>Next&raquo;</a></li>\n" +
                         "           </ul></div>")
                 } else {
                     alert(data.msg());
@@ -598,12 +598,9 @@
                     chairInfo.push(checkboxs[i].value)
                 }
             }
-            if (chairInfo.length > 4) {
-                alert("您选择的座位太多，我规定最多只能选择4个。而您选中了" + chairInfo.length + "个")
-                return
-            } else if (chairInfo.length === 0) {
+            if (chairInfo.length === 0) {
                 alert("请至少选择一个座位");
-                return
+                return;
             }
 
             var chairData = new Array();
@@ -620,7 +617,7 @@
                     "userId": $.cookie("account"),
                     "isValid": true,
                     "isOccupy": true,
-                    "status": 1
+                    "status": 4
                 };
                 chairData[i] = ajaxData;
             }
@@ -643,7 +640,7 @@
                     } else {
                         alert("选座成功，三秒后跳转回主页")
                         setTimeout(function () {
-                            window.location.href = "/main.html", 2000
+                            window.location.href = "/adminMain.html", 2000
                         });
                     }
                 }

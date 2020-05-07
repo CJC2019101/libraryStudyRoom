@@ -23,6 +23,14 @@
                          room_id = #{roomId} and is_occupy = true and is_valid = true
     </select>
 
+    <select id="adminOccupyChairs" resultType="cn.cqucc.library.model.chair.resp.CKStudentChairInfo">
+        select ch.floor_number floorNumber ,ch.room_id roomId ,ch.chair_row crow ,ch.chair_cell cell,
+            chair_status status, admins.admin_name userName, admins.id userId
+            from chairs ch join admins on  ch.user_id = admins.account
+                where floor_number = #{floorNumber} and
+                         room_id = #{roomId} and is_occupy = true and is_valid = true
+    </select>
+
     <select id="selectChairAmount" parameterType="java.lang.String" resultType="java.lang.Integer">
         select count(*) from chairs
             where user_id = #{account} and is_valid =true;
@@ -36,7 +44,7 @@
 
     <select id="getUnvalidChairCount" parameterType="cn.cqucc.library.model.room.Room" resultType="java.lang.Integer">
         select count(1) from chairs
-            where room_id = #{id} and floor_number = #{floorNumber} and is_valid = true
+            where room_id = #{id} and floor_number = #{floorNumber} and is_valid = true and chair_status!=4
     </select>
 
     <insert id="selectChair" parameterType="cn.cqucc.library.model.chair.Chair">

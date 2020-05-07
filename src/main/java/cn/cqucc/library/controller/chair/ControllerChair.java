@@ -50,6 +50,7 @@ public class ControllerChair {
             @ApiImplicitParam(paramType = "insert", name = "教室号", value = "roomId", required = true),
             @ApiImplicitParam(paramType = "insert", name = "行", value = "rows", required = true),
             @ApiImplicitParam(paramType = "insert", name = "列", value = "cells", required = true),
+            @ApiImplicitParam(paramType = "insert", name = "0-一天，1-上午，2-下午，3-晚上，4-永久", value = "status", required = true),
             @ApiImplicitParam(paramType = "insert", name = "账户", value = "account", required = true)
     })
     @ApiOperation(value = "选中座位")

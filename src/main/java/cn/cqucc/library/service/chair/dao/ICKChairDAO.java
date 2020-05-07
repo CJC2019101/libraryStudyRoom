@@ -16,6 +16,8 @@ public interface ICKChairDAO {
 
     List<Chair> occupyChairs(Chair chair);
 
+    List<Chair> adminOccupyChairs(Chair chair);
+
     void selectChair(Chair chairs);
 
     int selectChairAmount(String account);
