@@ -14,6 +14,7 @@
 
     <select id="findAll" resultMap="BaseResultMap">
         select * from rooms
+            order by floor_number asc,id asc
     </select>
 
     <select id="findValidRooms" resultMap="BaseResultMap">

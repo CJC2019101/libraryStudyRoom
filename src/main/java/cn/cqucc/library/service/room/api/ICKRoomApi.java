@@ -2,6 +2,7 @@ package cn.cqucc.library.service.room.api;
 
 import cn.cqucc.library.model.room.Room;
 import cn.cqucc.library.model.room.req.RoomUpdateReq;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @Description cn.cqucc.library.service.room.api
  */
 public interface ICKRoomApi {
-    List<Room> findAll();
+    PageInfo<List> findAll(Integer pageNumber);
 
     Room findRoom(String roomId);
 

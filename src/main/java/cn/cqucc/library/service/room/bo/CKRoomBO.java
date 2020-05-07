@@ -6,6 +6,8 @@ import cn.cqucc.library.service.chair.bo.CKChairBO;
 import cn.cqucc.library.service.chair.dao.ICKChairDAO;
 import cn.cqucc.library.service.room.api.ICKRoomApi;
 import cn.cqucc.library.service.room.dao.ICKRoomDAO;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +28,10 @@ public class CKRoomBO implements ICKRoomApi {
     ICKChairDAO chairDAO;
 
     @Override
-    public List<Room> findAll() {
-        return roomDAO.findAll();
+    public PageInfo<List> findAll(Integer pageNumber) {
+        PageHelper.startPage(pageNumber, 10);
+        List<Room> allRooms = roomDAO.findAll();
+        return new PageInfo(allRooms);
     }
 
     @Override

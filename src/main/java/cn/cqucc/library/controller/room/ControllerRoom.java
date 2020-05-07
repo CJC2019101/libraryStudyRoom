@@ -4,6 +4,7 @@ import cn.cqucc.library.model.room.Room;
 import cn.cqucc.library.model.room.req.RoomUpdateReq;
 import cn.cqucc.library.service.room.bo.CKRoomBO;
 import cn.cqucc.library.status.BaseResponse;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -60,20 +61,16 @@ public class ControllerRoom {
     }
 
 
-    @RequestMapping(value = "/findAllRooms")
+    @RequestMapping(value = "/findAllRooms", method = RequestMethod.GET)
+    @ApiImplicitParam(type = "query", name = "pageNumber", value = "查询指定页", required = true)
+    @ApiOperation(value = "查询所有教室")
     @ResponseBody
-    public BaseResponse findAll() {
-        List<Room> allRooms = roomBO.findAll();
-        BaseResponse<List> response = new BaseResponse<List>();
-        if (allRooms.size() == 0) {
-            response.setCode(502);
-            response.setMsg("数据库没有数据显示");
-        } else {
-            response.setCode(200);
-            response.setMsg("成功");
-            response.setData(allRooms);
-        }
-
+    public BaseResponse findAll(@RequestParam Integer pageNumber) {
+        PageInfo allRooms = roomBO.findAll(pageNumber);
+        BaseResponse response = new BaseResponse();
+        response.setCode(200);
+        response.setMsg("成功");
+        response.setData(allRooms);
         return response;
     }
 
