@@ -74,7 +74,8 @@
     </update>
 
     <update id="updateAllChairsStatus" parameterType="java.lang.Integer">
-        update chairs set is_valid = false ,is_occupy = false;
+        update chairs set is_valid = false ,is_occupy = false
+            where chair_status!=4;
     </update>
 
     <update id="cancelChairs" parameterType="java.util.List">

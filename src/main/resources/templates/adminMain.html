@@ -140,6 +140,13 @@
             margin: 20px auto;;
         }
 
+        .modalHeader {
+            padding: 15px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center; /*定义body的元素垂直居中*/
+            justify-content: center; /*定义body的里的元素水平居中*/
+        }
     </style>
 
 </head>
@@ -151,6 +158,98 @@
 </div>
 
 <button id="userInfo" type="button" class="btn btn-warning"></button>
+
+<!-- 添加教室、添加管理员 -->
+<div class="modal fade" id="adminModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modalHeader">
+                <button id="addRoomButton" class='btn ' style=" width: 50%; color: white; background-color: #539d38;">
+                    添加教室
+                </button>&nbsp;
+                <button id="addAdminButton" class='btn ' style=" width: 50%; color: white; background-color: #286090;">
+                    添加管理员
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="addRoomBody">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>
+                                <label>教室号：</label>
+                                <input type="text" class="form-control" id="createRoomId"
+                                       onkeyup="value = value.replace(/[\W]/g,'')"
+                                       maxlength="6"
+                                       placeholder="请输入教室号">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>楼层数：</label>
+                                <input type="number" class="form-control" id="createFloorNumber"
+                                       oninput="if (value >= 10) value = 9; if (value <= 0) value = 1;  "
+                                       placeholder="请输入楼层数">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>教室宽度：</label>
+                                <input type="number" class="form-control" id="createRoomWidth"
+                                       oninput="if (value > 100) value = 100; if (value <= 0) value = 1;  "
+                                       placeholder="请输入教室宽度">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>教室长度：</label>
+                                <input type="number" class="form-control" id="createRoomLong"
+                                       oninput="if (value <= 0) value=1; if (value > 100) value =100;  "
+                                       placeholder="请输入教室长度">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="addAdminBody" style="display: none;">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>
+                                <label>管理员姓名：</label>
+                                <input type="text" class="form-control" id="createAdminName"
+                                       placeholder="请输入管理员姓名">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>管理员账号：</label>
+                                <input type="text" class="form-control" id="createAdminAccount"
+                                       onkeyup="value = value.replace(/[\W]/g,'')"
+                                       maxlength="8"
+                                       placeholder="请输入管理员账号">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>管理员密码：</label>
+                                <input type="text" class="form-control" id="createAdminPassword"
+                                       onkeyup="value = value.replace(/[\W]/g,'')"
+                                       maxlength="8"
+                                       placeholder="请输入管理员密码">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+                <button id="adminCommit" type="button" class="btn btn-primary">
+                    提交更改
+                </button>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
 
 <!-- 教室座位模态框 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -164,6 +263,7 @@
                 <h4 class="modal-title" align="center" id="myModalLabel">
                     <!--                    模态框（Modal）标题-->
                 </h4>
+
             </div>
             <div id="statusDiv">
                 <label style="margin-left: 15px; margin-right: 16px; margin-top: 10px;">状态:</label>
@@ -279,13 +379,20 @@
 
     //发送ajax请求 -- 教室表格的创建
     function createRoomTable(pageNum) {
-
+        var addRoom = "";
         if (pageNum <= 0) {
             pageNum = 1;
         } else if (pageNum > roomPageMax) {
             pageNum = roomPageMax;
         }
-        $("#rooms").empty("tbody");
+        $("#rooms").find("tbody").remove();
+        $("#rooms").find(".footer").remove();
+        if ($.cookie("account") === 'admin') {
+            addRoom = "<ul class='pager'>\n" +
+                "<li><a class='btn btn-primary btn-lg'style='color: #286090;' data-toggle='modal' data-target='#adminModal' id='roomAdd'>&oplus;Add</a></li>\n" +
+                "</ul>\n";
+            // alert("超级管理员用户")
+        }
         $.ajax({
             type: 'GET',
             url: '/findAllRooms',
@@ -320,12 +427,11 @@
                         "           <ul class='pager'>\n" +
                         "               <li><a href='#' id='roomPrevious'>&laquo;Previous</a></li>\n" +
                         "           </ul>\n" +
-                        "           <ul class='pager'>\n" +
-                        "               <li><a href='#' id='roomAddNotification'>&oplus;Add</a></li>\n" +
-                        "           </ul>\n" +
+                        addRoom +
                         "           <ul class='pager'>\n" +
                         "               <li><a href='#' id='roomNext'>Next&raquo;</a></li>\n" +
-                        "           </ul></div>")
+                        "           </ul></div>"
+                    )
                 } else {
                     alert(data.msg());
                     window.location.href = "/main.html"
@@ -481,13 +587,74 @@
         createRoomTable(roomPageNumber);
     });
 
+    // 添加教室、普通管理员
+    $("body").delegate('#addRoomButton', 'click', function () {
+        $(this).css({'background-color': '#539d38'});
+        $("#addRoomBody").css({'display': 'block'});
+        $("#addAdminButton").css({'background-color': '#286090'});
+        $("#addAdminBody").css({'display': 'none'});
+    });
+    $("body").delegate('#addAdminButton', 'click', function () {
+        $(this).css({'background-color': '#539d38'});
+        $("#addAdminBody").css({'display': 'block'});
+        $("#addRoomButton").css({'background-color': '#286090'});
+        $("#addRoomBody").css({'display': 'none'});
+    });
+    $("body").delegate('#adminCommit', 'click', function () {
+        var requestData = "";
+        if ($("#addRoomBody").css("display") === 'block') {   // 判断visibility样式属性
+            var createRoomId = $("#createRoomId").val();
+            var createFloorNumber = $("#createFloorNumber").val();
+            var createRoomWidth = $("#createRoomWidth").val();
+            var createRoomLong = $("#createRoomLong").val();
+            requestData = {
+                "id": createRoomId,
+                "floorNumber": createFloorNumber,
+                "roomWidth": createRoomWidth,
+                "roomLong": createRoomLong,
+                "isValid": false
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/createRoom",
+                data: JSON.stringify(requestData),
+                dataType: "JSON",
+                contentType: "application/json",
+                error: function (data) {
+                    alert(data.msg);
+                },
+                success: function (data) {
+                    alert(data.msg);
+                    if (data.code === 200) {
+                        $("#createRoomId").val("");
+                        $("#createFloorNumber").val("");
+                        $("#createRoomWidth").val("");
+                        $("#createRoomLong").val("");
+                        // 关闭模态框
+                        $('#adminModal').modal('hide');
+                        createRoomTable(roomPageNumber);
+                    }
+
+                }
+            })
+
+        } else if ($("#addAdminBody").css("display") === 'block') {
+            var sure = confirm("管理员账户无法修改请谨慎提交");
+            if (sure) {
+                alert("确定")
+            } else {
+                alert("我想想")
+            }
+        }
+    });
 
     // userInfo按钮点击事件
     $('#userInfo').on('click',
         function () {
             // 修改statusDiv状态提示框的display属性
             $("#statusDiv").css('display', 'none');
-            $("#myModalLabel").html("修改密码")
+            $("#myModalLabel").html("修改密码");
             // 用户信息表单
             $("#roomTable").bootstrapTable('destroy').bootstrapTable({
                 search: false

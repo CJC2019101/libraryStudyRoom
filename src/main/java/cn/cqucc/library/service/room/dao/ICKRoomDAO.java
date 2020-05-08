@@ -23,4 +23,6 @@ public interface ICKRoomDAO {
     void setRoomIsValid(Room room);
 
     void modifyRoomSize(RoomUpdateReq room);
+
+    void createRoom(Room room);
 }

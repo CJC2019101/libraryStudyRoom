@@ -152,4 +152,27 @@ public class ControllerRoom {
         return response;
     }
 
+    @RequestMapping(value = "/createRoom", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "insert", name = "id", value = "教室编号", required = true),
+            @ApiImplicitParam(type = "insert", name = "floorNumber", value = "楼层数", required = true),
+            @ApiImplicitParam(type = "insert", name = "roomWidth", value = "教室宽度", required = true),
+            @ApiImplicitParam(type = "insert", name = "roomLong", value = "教室长度", required = true)
+    })
+    @ApiOperation(value = "创建教室")
+    @ResponseBody
+    // TODO 添加事务的回滚
+    public BaseResponse createRoom(@RequestBody Room room) {
+        BaseResponse response = new BaseResponse();
+        int statusCode = roomBO.createRoom(room);
+        if (statusCode==200){
+            response.setMsg("创建教室成功");
+        }else {
+            response.setMsg("存有重复的教室，请修改教室编号");
+        }
+        response.setCode(statusCode);
+        return response;
+    }
+
+
 }

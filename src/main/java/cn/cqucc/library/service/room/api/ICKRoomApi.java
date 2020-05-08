@@ -21,4 +21,6 @@ public interface ICKRoomApi {
     int setRoomIsValid(Room room);
 
     int modifyRoomSize(RoomUpdateReq room);
+
+    int createRoom(Room room);
 }

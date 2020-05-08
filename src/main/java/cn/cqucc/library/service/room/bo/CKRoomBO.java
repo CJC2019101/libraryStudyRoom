@@ -29,7 +29,7 @@ public class CKRoomBO implements ICKRoomApi {
 
     @Override
     public PageInfo<List> findAll(Integer pageNumber) {
-        PageHelper.startPage(pageNumber, 10);
+        PageHelper.startPage(pageNumber, 9);
         List<Room> allRooms = roomDAO.findAll();
         return new PageInfo(allRooms);
     }
@@ -66,6 +66,18 @@ public class CKRoomBO implements ICKRoomApi {
             return 200;
         } else {
             return 406;
+        }
+    }
+
+    @Override
+    public int createRoom(Room room) {
+        Room duplicate = roomDAO.findRoom(room.getId());
+        if (duplicate==null|| duplicate.getId()==null||("".equals(duplicate.getId()))){
+            room.setCreateAt(new Date());
+            roomDAO.createRoom(room);
+            return 200;
+        }else {
+            return 502;
         }
     }
 

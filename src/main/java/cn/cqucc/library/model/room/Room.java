@@ -17,6 +17,7 @@ import java.util.Date;
 @Data
 public class Room implements Serializable {
     private static final long serialVersionUID = -6097602359034132286L;
+
     @ApiModelProperty(value = "教室编号")
     private String id;
 

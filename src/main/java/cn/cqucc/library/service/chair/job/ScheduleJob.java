@@ -40,7 +40,7 @@ public class ScheduleJob {
     }
 
     @Scheduled(cron = "40 59 23  * * ? ")
-    @Description(description = "晚上时间：“23:55:40”时更新所有被选中的座位状态")
+    @Description(description = "晚上时间：“23:55:40”时更新所有被学生选中的座位状态")
     public void updateAllChairsStatus() {
         System.out.println("更新座位状态啦！！！！");
         chairDAO.updateAllChairsStatus(CKChairDirectory.ChairStatus.allDay);

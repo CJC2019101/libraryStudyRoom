@@ -50,4 +50,15 @@
         </set>
         where id = #{oldRoomId} and floor_number = #{floorNumber}
     </update>
+
+    <insert id="createRoom" parameterType="cn.cqucc.library.model.room.Room">
+        insert into rooms(id, floor_number, width, long, is_valid, create_at) values(
+            #{id},
+            #{floorNumber},
+            #{roomWidth},
+            #{roomLong},
+            false,
+            #{createAt}
+        )
+    </insert>
 </mapper>
