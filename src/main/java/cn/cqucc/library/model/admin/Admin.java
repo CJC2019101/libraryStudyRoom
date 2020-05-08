@@ -1,10 +1,12 @@
 package cn.cqucc.library.model.admin;
 
+import cn.cqucc.library.utils.timeformat.DateUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author JianfeiChen
@@ -27,4 +29,21 @@ public class Admin implements Serializable {
 
     @ApiModelProperty("管理员密码")
     private String password;
+
+    @ApiModelProperty("账户是否有效可用")
+    private Boolean isValid;
+
+    @ApiModelProperty("创建时间")
+    private Date createAt;
+
+    @ApiModelProperty("最近变更时间")
+    private Date updateAt;
+
+    public String getCreateAtStr(){
+        return DateUtil.formatDate(createAt,"yy-MM-dd");
+    }
+
+    public String getUpdateAtStr(){
+        return DateUtil.formatDate(updateAt,"yy-MM-dd");
+    }
 }

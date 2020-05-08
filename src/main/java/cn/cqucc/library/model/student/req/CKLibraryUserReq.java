@@ -17,6 +17,9 @@ public class CKLibraryUserReq implements Serializable {
 
     private static final long serialVersionUID = 3207624320911396425L;
 
+    @ApiModelProperty(value = "用户名称")
+    String name;
+
     @ApiModelProperty(value = "用户账号")
     String account;
 

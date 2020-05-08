@@ -453,7 +453,7 @@
                 alert("您输入的密码与新密码重复，请重新输入。");
                 return;
             }
-            if (newPassword.val() === confirmPassword.val()) {
+            if (newPassword.val() !== confirmPassword.val()) {
                 newPassword.val("");
                 confirmPassword.val("");
                 alert("您两次输入的新密码不一致，请重新输入。");

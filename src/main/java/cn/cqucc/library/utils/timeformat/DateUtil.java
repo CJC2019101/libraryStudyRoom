@@ -35,7 +35,7 @@ public class DateUtil {
      */
     public static String formatDate(Date date, String format) {
         if (date == null) {
-            return null;
+            return "暂无时间显示";
         }
         if (StringUtils.isEmpty(format)) {
             format = NORM_DATE_PATTERN;

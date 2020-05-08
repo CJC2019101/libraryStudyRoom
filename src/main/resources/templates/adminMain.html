@@ -169,6 +169,9 @@
                 </button>&nbsp;
                 <button id="addAdminButton" class='btn ' style=" width: 50%; color: white; background-color: #286090;">
                     添加管理员
+                </button>&nbsp;
+                <button id="viewAdmins" class='btn ' style=" width: 50%; color: white; background-color: #286090;">
+                    普通管理员表格
                 </button>
             </div>
             <div class="modal-body">
@@ -233,13 +236,26 @@
                                 <input type="text" class="form-control" id="createAdminPassword"
                                        onkeyup="value = value.replace(/[\W]/g,'')"
                                        maxlength="8"
-                                       placeholder="请输入管理员密码">
+                                       placeholder="请输入管理员密码,默认为:admin">
                             </td>
                         </tr>
                     </table>
                 </div>
+                <div id="adminsBody" style="display: none;">
+                    <table id="adminTable" class="table table-striped text-center">
+                        <thead>
+                        <tr>
+                            <td>姓名</td>
+                            <td>账户</td>
+                            <td>密码</td>
+                            <td>创建时间</td>
+                            <td>更新时间</td>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" id="adminModal-footer">
                 <button type="button" class="btn btn-default"
                         data-dismiss="modal">关闭
                 </button>
@@ -368,6 +384,8 @@
     var roomPageMax;
     var notificationPageNumber = 1;
     var notificationPageMax;
+    var adminPageNumber = 1;
+    var adminPageMax;
     //一加载就执行填充信息  用于记住登录信息
     $(document).ready(function () {
 
@@ -587,19 +605,72 @@
         createRoomTable(roomPageNumber);
     });
 
-    // 添加教室、普通管理员
     $("body").delegate('#addRoomButton', 'click', function () {
         $(this).css({'background-color': '#539d38'});
         $("#addRoomBody").css({'display': 'block'});
         $("#addAdminButton").css({'background-color': '#286090'});
         $("#addAdminBody").css({'display': 'none'});
+        $("#viewAdmins").css({'background-color': '#286090'});
+        $("#adminsBody").css({'display': 'none'});
+        $("#adminModal-footer").css({'display': 'block'});
     });
     $("body").delegate('#addAdminButton', 'click', function () {
         $(this).css({'background-color': '#539d38'});
         $("#addAdminBody").css({'display': 'block'});
         $("#addRoomButton").css({'background-color': '#286090'});
         $("#addRoomBody").css({'display': 'none'});
+        $("#viewAdmins").css({'background-color': '#286090'});
+        $("#adminsBody").css({'display': 'none'});
+        $("#adminModal-footer").css({'display': 'block'});
     });
+    $("body").delegate('#viewAdmins', 'click', function () {
+        $(this).css({'background-color': '#539d38'});
+        $("#adminsBody").css({'display': 'block'});
+        $("#addRoomButton").css({'background-color': '#286090'});
+        $("#addRoomBody").css({'display': 'none'});
+        $("#addAdminButton").css({'background-color': '#286090'});
+        $("#addAdminBody").css({'display': 'none'});
+        $("#adminModal-footer").css({'display': 'none'});
+        findAllAdmins(adminPageNumber)
+    });
+
+    // 查看普通管理员账户信息
+    function findAllAdmins(pageNumber) {
+        var adminTable = $("#adminTable");
+        adminTable.find("tbody").remove();
+        if (pageNumber <= 0) {
+            pageNumber = 1;
+        } else if (adminPageNumber > adminPageMax) {
+            alert("管理员用户当前页以越界");
+            pageNumber = adminPageMax;
+        }
+        $.ajax({
+            type: "GET",
+            url: "findAllAdmins",
+            data: "pageNumber=" + pageNumber,
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function (responseData) {
+                alert(responseData.msg)
+            },
+            success: function (responseData) {
+                var admins = responseData.data.list;
+                adminTable.append("<tbody>");
+                for (var i = 0; i < admins.length; i++) {
+                    adminTable.append("<tr><td>" + admins[i].name +
+                        "</td><td>" + admins[i].account +
+                        "</td><td>" + admins[i].password +
+                        "</td><td>" + admins[i].createAtStr +
+                        "</td><td>" + admins[i].updateAtStr +
+                        "</td></tr>"
+                    );
+                }
+                adminTable.append("</tbody>");
+            }
+        })
+    };
+
+    // 添加教室、普通管理员
     $("body").delegate('#adminCommit', 'click', function () {
         var requestData = "";
         if ($("#addRoomBody").css("display") === 'block') {   // 判断visibility样式属性
@@ -607,6 +678,10 @@
             var createFloorNumber = $("#createFloorNumber").val();
             var createRoomWidth = $("#createRoomWidth").val();
             var createRoomLong = $("#createRoomLong").val();
+            if (createRoomId === '' || createRoomLong === '' || createRoomWidth === '' || createFloorNumber === '') {
+                alert("请检查您填写的数据是否完善");
+                return;
+            }
             requestData = {
                 "id": createRoomId,
                 "floorNumber": createFloorNumber,
@@ -639,15 +714,49 @@
                 }
             })
 
-        } else if ($("#addAdminBody").css("display") === 'block') {
+        }// 添加教室
+        else if ($("#addAdminBody").css("display") === 'block') {
+            var createAdminName = $("#createAdminName").val();
+            var createAdminAccount = $("#createAdminAccount").val();
+            var createAdminPassword = $("#createAdminPassword").val();
+            if (createAdminAccount === '' || createAdminName === '') {
+                alert("请检查您填写的数据是否完善");
+                return;
+            }
+            if (createAdminPassword === '') {
+                createAdminPassword = "admin";
+            }
+            requestData = {
+                "name": createAdminName,
+                "account": createAdminAccount,
+                "password": createAdminPassword,
+                "isValid": false
+            };
             var sure = confirm("管理员账户无法修改请谨慎提交");
             if (sure) {
-                alert("确定")
-            } else {
-                alert("我想想")
+                $.ajax({
+                    type: "POST",
+                    url: "/addAdmin",
+                    data: JSON.stringify(requestData),
+                    dataType: "JSON",
+                    contentType: "application/json",
+                    error: function (responseData) {
+                        alert(responseData.msg);
+                    },
+                    success: function (responseData) {
+                        alert(responseData.msg)
+                        if (responseData.code === 200) {
+                            $("#createAdminName").val("");
+                            $("#createAdminAccount").val("");
+                            $("#createAdminPassword").val("");
+                            $("#adminModal").modal('hide');
+                        }
+                    }
+                })
             }
         }
     });
+
 
     // userInfo按钮点击事件
     $('#userInfo').on('click',
@@ -660,6 +769,10 @@
                 search: false
             });
             document.getElementById("roomTable").innerHTML = "";
+            $("#roomTable").append("<tr><td>" +
+                "<label for=\"name\">新的账户名称：</label>\n" +
+                "<input type=\"text\" id='newAdminName' maxlength='6'value='" + $(this).text() + "' class=\"form-control\" placeholder=\"请输入新的账户名称，默认不改变\">\n" +
+                "</td></tr>");
             $("#roomTable").append("<tr><td>" +
                 "<label for=\"name\">原密码：</label>\n" +
                 "<input type=\"password\" id='oldPassword' maxlength='6' class=\"form-control\" placeholder=\"请输入原密码\">\n" +
@@ -839,8 +952,9 @@
                     }
                 }
             });
-        } // 修改密码
+        } // 修改密码、账户名称
         else if (modalTitle.indexOf("修改密码") !== -1) {
+            var newAdminName = $("#newAdminName");
             var oldPassword = $("#oldPassword");
             var newPassword = $("#newPassword");
             var confirmPassword = $("#confirmPassword");
@@ -856,7 +970,7 @@
                 alert("您输入的密码与新密码重复，请重新输入。");
                 return;
             }
-            if (newPassword.val() === confirmPassword.val()) {
+            if (newPassword.val() !== confirmPassword.val()) {
                 newPassword.val("");
                 confirmPassword.val("");
                 alert("您两次输入的新密码不一致，请重新输入。");
@@ -864,6 +978,7 @@
             }
             $.cookie("password", newPassword.val());
             var jsonData = {
+                "name": newAdminName.val(),
                 "account": $.cookie("account"),
                 "password": newPassword.val(),
                 "userType": 1

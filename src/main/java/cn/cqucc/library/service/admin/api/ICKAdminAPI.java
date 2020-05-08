@@ -2,6 +2,9 @@ package cn.cqucc.library.service.admin.api;
 
 import cn.cqucc.library.model.admin.Admin;
 import cn.cqucc.library.model.student.req.CKLibraryUserReq;
+import com.github.pagehelper.PageInfo;
+
+import java.util.List;
 
 /**
  * @author JianfeiChen
@@ -14,4 +17,8 @@ public interface ICKAdminAPI {
     Admin getAdminInfo(String account);
 
     void resetPassword(CKLibraryUserReq user);
+
+    PageInfo<List> findAllAdmins(Integer pageNumber);
+
+    int addAdmin(Admin admin);
 }
