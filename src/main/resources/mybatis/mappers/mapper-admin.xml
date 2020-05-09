@@ -21,7 +21,7 @@
     <select id="isExist" resultType="java.lang.Integer">
         select count(*)
             from admins
-            where admins.account = #{account} and admins.password = #{password} and is_valid =ture
+            where admins.account = #{account} and admins.password = #{password} and is_valid =true
     </select>
 
     <select id="getAdminInfo" resultMap="BaseResultMap">
@@ -34,6 +34,7 @@
         select *
             from admins
             where admins.account != 'admin'
+            order by admins.admin_name desc,admins.create_at desc
     </select>
 
     <update id="resetPassword" parameterType="cn.cqucc.library.model.student.req.CKLibraryUserReq">
@@ -47,6 +48,12 @@
             </if>
         </set>
         where account = #{account}
+    </update>
+
+    <update id="setAdminIsValid" parameterType="cn.cqucc.library.model.admin.Admin">
+        update admins
+            set update_at = #{updateAt}, is_valid = not is_valid
+            where account = #{account}
     </update>
 
 </mapper>

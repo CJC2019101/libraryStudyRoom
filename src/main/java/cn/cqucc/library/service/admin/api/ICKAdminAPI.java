@@ -21,4 +21,6 @@ public interface ICKAdminAPI {
     PageInfo<List> findAllAdmins(Integer pageNumber);
 
     int addAdmin(Admin admin);
+
+    public void setAdminIsValid(String account);
 }

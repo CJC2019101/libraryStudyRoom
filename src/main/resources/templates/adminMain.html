@@ -242,14 +242,15 @@
                     </table>
                 </div>
                 <div id="adminsBody" style="display: none;">
-                    <table id="adminTable" class="table table-striped text-center">
+                    <table id="adminTable" class="table table-striped">
                         <thead>
-                        <tr>
+                        <tr class="text-center">
                             <td>姓名</td>
                             <td>账户</td>
                             <td>密码</td>
                             <td>创建时间</td>
                             <td>更新时间</td>
+                            <td>操作</td>
                         </tr>
                         </thead>
                     </table>
@@ -446,7 +447,7 @@
                         "               <li><a href='#' id='roomPrevious'>&laquo;Previous</a></li>\n" +
                         "           </ul>\n" +
                         addRoom +
-                        "           <ul class='pager'>\n" +
+                        "           <ul class='pager' style='float: right;'>\n" +
                         "               <li><a href='#' id='roomNext'>Next&raquo;</a></li>\n" +
                         "           </ul></div>"
                     )
@@ -488,6 +489,36 @@
                 alert(data.msg);
                 if (data.code === 200) {
                     window.location.href = '/adminMain.html';
+                }
+            }
+        })
+
+
+    });
+
+    // 管理员“禁用/启用”
+    $("#adminTable").delegate('#adminStatus', 'click', function () {
+        // 行位置
+        var row = $(this).parent().parent().index() + 1;
+        // 列位置
+        var col = $(this).parent().index() + 1;
+        var x = document.getElementById('adminTable').rows[row].cells;
+        // 教室号
+        var adminAccount = x[1].innerHTML;
+        $.ajax({
+            type: "GET",
+            url: "/setAdminIsValid",
+            data: "account="+adminAccount,
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function (data) {
+                // alert(data.msg)  -- 当前未添加事务回滚
+                alert("数据查询失败")
+            },
+            success: function (data) {
+                alert(data.msg);
+                if (data.code === 200) {
+                    findAllAdmins(adminPageNumber);
                 }
             }
         })
@@ -640,9 +671,10 @@
         adminTable.find("tbody").remove();
         if (pageNumber <= 0) {
             pageNumber = 1;
+            adminPageNumber = 1;
         } else if (adminPageNumber > adminPageMax) {
-            alert("管理员用户当前页以越界");
             pageNumber = adminPageMax;
+            adminPageNumber = adminPageMax;
         }
         $.ajax({
             type: "GET",
@@ -655,20 +687,50 @@
             },
             success: function (responseData) {
                 var admins = responseData.data.list;
+                adminPageMax=responseData.data.pages;
+                var adminStatus;
                 adminTable.append("<tbody>");
                 for (var i = 0; i < admins.length; i++) {
+                    if (admins[i].isValid) {
+                        adminStatus = "<button id='adminStatus' class='btn btn-primary ' >禁用</button>";
+                    } else {
+                        adminStatus = "<button id='adminStatus' class='btn btn-primary ' >启用</button>"
+                    }
                     adminTable.append("<tr><td>" + admins[i].name +
                         "</td><td>" + admins[i].account +
                         "</td><td>" + admins[i].password +
                         "</td><td>" + admins[i].createAtStr +
                         "</td><td>" + admins[i].updateAtStr +
+                        "</td><td>" + adminStatus +
                         "</td></tr>"
                     );
                 }
-                adminTable.append("</tbody>");
+                adminTable.append("<tr><td colspan='3'>" +
+                    "   <ul class='pager'>\n" +
+                    "       <li><a href='#' id='adminPrevious'>&laquo;Previous</a></li>\n" +
+                    "   </ul></td>" +
+                    "<td colspan='3'>" +
+                    "   <ul class='pager' style='float: right;'>\n" +
+                    "       <li><a href='#' id='adminNext'>Next&raquo;</a></li>\n" +
+                    "   </ul></td>" +
+                    "</tr></tbody>");
             }
         })
     };
+
+    // 管理员用户表上下翻页
+    $("#adminTable").delegate('#adminPrevious', 'click', function () {
+        // alert("管理员用户上一页");
+        // return;
+        adminPageNumber = adminPageNumber - 1;
+        findAllAdmins(adminPageNumber);
+    });
+    $("#adminTable").delegate('#adminNext', 'click', function () {
+        // alert("管理员用户下一页");
+        // return;
+        adminPageNumber = adminPageNumber + 1;
+        findAllAdmins(adminPageNumber);
+    });
 
     // 添加教室、普通管理员
     $("body").delegate('#adminCommit', 'click', function () {
@@ -757,7 +819,6 @@
         }
     });
 
-
     // userInfo按钮点击事件
     $('#userInfo').on('click',
         function () {
@@ -789,7 +850,7 @@
             $('#myModal').modal('show')
         });
 
-    // 创建表格
+    // 创建座位表格
     function buildTable($el, cells, rows, floorNumber, roomId) {
         var chairData = {
             "roomId": roomId,

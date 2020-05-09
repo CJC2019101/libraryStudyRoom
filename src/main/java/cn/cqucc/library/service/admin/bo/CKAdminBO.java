@@ -57,4 +57,12 @@ public class CKAdminBO implements ICKAdminAPI {
             return 502;
         }
     }
+
+    @Override
+    public void setAdminIsValid(String account) {
+        Admin admin = new Admin();
+        admin.setUpdateAt(new Date());
+        admin.setAccount(account);
+        adminDAO.setAdminIsValid(admin);
+    }
 }

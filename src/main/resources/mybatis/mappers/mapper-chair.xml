@@ -28,7 +28,7 @@
             chair_status status, admins.admin_name userName, admins.id userId
             from chairs ch join admins on  ch.user_id = admins.account
                 where floor_number = #{floorNumber} and
-                         room_id = #{roomId} and is_occupy = true and is_valid = true
+                         room_id = #{roomId} and ch.is_occupy = true and ch.is_valid = true
     </select>
 
     <select id="selectChairAmount" parameterType="java.lang.String" resultType="java.lang.Integer">

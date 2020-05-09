@@ -61,23 +61,37 @@ public class ControllerAdmin {
         return response;
     }
 
-    @RequestMapping(value = "/addAdmin",method = RequestMethod.POST)
+    @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "insert",name = "name",value = "管理员名称",required = true),
-            @ApiImplicitParam(type = "insert",name = "account",value = "管理员密码：为空则为默认密码admin",required = true),
-            @ApiImplicitParam(type = "insert",name = "password",value = "管理员密码",required = true),
+            @ApiImplicitParam(type = "insert", name = "name", value = "管理员名称", required = true),
+            @ApiImplicitParam(type = "insert", name = "account", value = "管理员密码：为空则为默认密码admin", required = true),
+            @ApiImplicitParam(type = "insert", name = "password", value = "管理员密码", required = true),
     })
     @ApiOperation(value = "添加普通管理员")
     @ResponseBody
-    public BaseResponse addAdmin(@RequestBody Admin admin){
+    public BaseResponse addAdmin(@RequestBody Admin admin) {
         BaseResponse response = new BaseResponse();
         int statusCode = adminBO.addAdmin(admin);
-        if (statusCode==200){
+        if (statusCode == 200) {
             response.setMsg("添加成功");
-        }else if (statusCode==502){
+        } else if (statusCode == 502) {
             response.setMsg("添加失败，存在相同的管理员账户");
         }
         response.setCode(statusCode);
         return response;
     }
+
+    @RequestMapping(value = "/setAdminIsValid", method = RequestMethod.GET)
+    @ApiImplicitParam(type = "update", name = "account", value = "管理员账户", required = true)
+    @ApiOperation(value = "修改普通管理员是否可用")
+    @ResponseBody
+    // TODO 后续添加事务控制
+    public BaseResponse setAdminIsValid(@RequestParam String account) {
+        BaseResponse response = new BaseResponse();
+        adminBO.setAdminIsValid(account);
+        response.setCode(200);
+        response.setMsg("修改成功");
+        return response;
+    }
+
 }

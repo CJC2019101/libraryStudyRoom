@@ -23,4 +23,6 @@ public interface ICKAdminDAO {
     List<Admin> findAllAdmins();
 
     void addAdmin(Admin admin);
+
+    void setAdminIsValid(Admin admin);
 }
