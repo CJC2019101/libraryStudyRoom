@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cqucc.library.service.notify.dao.ICKNotifyDAO">
+
+    <resultMap id="BaseResultMap" type="cn.cqucc.library.model.notify.Notify">
+        <id column="id" property="id"/>
+        <result column="admin_account" property="account"/>
+        <result column="create_at" property="createAt"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="is_valid" property="isValid"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <insert id="addNotify" parameterType="cn.cqucc.library.model.notify.Notify">
+        insert into notify(id, title, content, admin_account, is_valid, status, create_at) values (
+            #{id}, #{title}, #{content}, #{account}, #{isValid}, #{status}, #{createAt}
+        )
+    </insert>
+
+    <select id="hasDubiousNotify" resultMap="BaseResultMap" parameterType="cn.cqucc.library.model.notify.Notify">
+        select * from notify
+            where admin_account = #{account} and status = 2
+    </select>
+</mapper>

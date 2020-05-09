@@ -1,0 +1,45 @@
+package cn.cqucc.library.model.notify;
+
+import cn.cqucc.library.utils.timeformat.DateUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * @author JianfeiChen
+ * @date 2020/5/9 21:41
+ * @Description cn.cqucc.library.model.notify.req
+ */
+@ApiModel(value = "添加公告")
+@Data
+public class Notify implements Serializable {
+    private static final long serialVersionUID = -1131706633544772087L;
+
+    @ApiModelProperty(value = "主键ID")
+    private String id;
+
+    @ApiModelProperty(value = "操作账户")
+    private String account;
+
+    @ApiModelProperty(value = "主键ID")
+    private String title;
+
+    @ApiModelProperty(value = "主键ID")
+    private String content;
+
+    @ApiModelProperty(value = "是否有效")
+    private Boolean isValid;
+
+    @ApiModelProperty(value = "公告状态：0-过期，1-已发布，2-草稿")
+    private Integer status;
+
+    @ApiModelProperty(value = "主键ID")
+    private Date createAt;
+
+    public String getCreateAtStr() {
+        return DateUtil.formatDate(createAt);
+    }
+}
