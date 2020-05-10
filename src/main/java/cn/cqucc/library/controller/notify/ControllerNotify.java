@@ -2,6 +2,7 @@ package cn.cqucc.library.controller.notify;
 
 import cn.cqucc.library.model.notify.Notify;
 import cn.cqucc.library.service.notify.bo.CKNotifyBO;
+import cn.cqucc.library.service.notify.dao.ICKNotifyDAO;
 import cn.cqucc.library.status.BaseResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -13,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.swing.text.StyledEditorKit;
+import org.springframework.web.servlet.DispatcherServlet;
 
 /**
  * @author JianfeiChen
@@ -27,8 +27,12 @@ public class ControllerNotify {
     @Autowired
     CKNotifyBO notifyBO;
 
+    @Autowired
+    ICKNotifyDAO notifyDAO;
+
     @RequestMapping(value = "/addNotify", method = RequestMethod.POST)
     @ApiImplicitParams({
+            @ApiImplicitParam(type = "insert", name = "id", value = "公告Id", required = true),
             @ApiImplicitParam(type = "insert", name = "title", value = "公告标题", required = true),
             @ApiImplicitParam(type = "insert", name = "content", value = "公告内容", required = true),
             @ApiImplicitParam(type = "insert", name = "account", value = "操作账户", required = true),
@@ -45,22 +49,34 @@ public class ControllerNotify {
         return response;
     }
 
-    @RequestMapping(value = "/hasDubiousNotify",method = RequestMethod.GET)
-    @ApiImplicitParam(type = "query",name = "account",value = "管理员账户",required = true)
+    @RequestMapping(value = "/hasDubiousNotify", method = RequestMethod.GET)
+    @ApiImplicitParam(type = "query", name = "account", value = "管理员账户", required = true)
     @ApiOperation(value = "当前账户是否有草稿公告")
     @ResponseBody
-    public BaseResponse hasDubiousNotify(@RequestParam String account){
+    public BaseResponse hasDubiousNotify(@RequestParam String account) {
         BaseResponse response = new BaseResponse();
         Notify notify = notifyBO.hasDubiousNotify(account);
-        if (notify==null){
+        if (notify == null) {
             response.setCode(406);
             response.setMsg("当前用户没有草稿公告存留");
-        }else {
+        } else {
             response.setCode(200);
             response.setMsg("您有草稿存留是否需要重新加载，如果取消会丢失当前草稿");
             response.setData(notify);
         }
         return response;
     }
+
+    @RequestMapping(value = "/updateNotifyStatus", method = RequestMethod.GET)
+    @ApiImplicitParam(type = "query", name = "account", value = "当前管理员账户", required = true)
+    @ApiOperation(value = "更新公告状态")
+    @ResponseBody
+    public BaseResponse updateNotifyStatus(@RequestParam String account) {
+        notifyDAO.updateNotifyStatus(account);
+        BaseResponse response = new BaseResponse();
+        return response;
+    }
+
+
 
 }

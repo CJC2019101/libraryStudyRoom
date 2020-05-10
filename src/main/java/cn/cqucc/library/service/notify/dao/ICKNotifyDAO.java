@@ -2,6 +2,7 @@ package cn.cqucc.library.service.notify.dao;
 
 import cn.cqucc.library.model.notify.Notify;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author JianfeiChen
@@ -13,4 +14,8 @@ public interface ICKNotifyDAO {
     void addNotify(Notify notify);
 
     Notify hasDubiousNotify(String account);
+
+    void updateNotifyStatus(String account);
+
+    void updateNotify(Notify notify);
 }

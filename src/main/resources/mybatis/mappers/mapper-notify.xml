@@ -20,6 +20,33 @@
 
     <select id="hasDubiousNotify" resultMap="BaseResultMap" parameterType="cn.cqucc.library.model.notify.Notify">
         select * from notify
-            where admin_account = #{account} and status = 2
+            where admin_account = #{account} and status = 2 and is_valid = true
     </select>
+
+    <update id="updateNotifyStatus">
+        update notify set is_valid = false
+            where admin_account = #{account} and status = 2
+    </update>
+
+    <update id="updateNotify" parameterType="cn.cqucc.library.model.notify.Notify">
+        update notify
+            <set>
+                <if test="title !=null and title != ''">
+                    title = #{title},
+                </if>
+                <if test="content !=null and content !=''">
+                    content = #{content},
+                </if>
+                <if test="createAt != null">
+                    create_at = #{createAt},
+                </if>
+                <if test="isValid != null">
+                    is_valid = #{isValid},
+                </if>
+                <if test="status !=null ">
+                    status = #{status},
+                </if>
+            </set>
+        where id = #{id} and admin_account = #{account}
+    </update>
 </mapper>

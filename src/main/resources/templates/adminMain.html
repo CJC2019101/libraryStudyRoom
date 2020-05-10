@@ -165,6 +165,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <input id="notify-title" type="text" class="form-control" placeholder="请输入公告标题"/>
+                <input id="notify-id" type="hidden" value=""/>
             </div>
             <div class="modal-body">
                 <textarea id="notify-content" class="form-control" rows="20" placeholder="请输入公告内容"></textarea>
@@ -860,9 +861,12 @@
                     var sure = confirm(responseData.msg);
                     if (sure) {
                         $("#notify-title").val(notify.title);
-                        var notifyContent = notify.content + "\n&emsp;                                  -----重庆大学城市科技学院" +
-                            "\n                              " + notify.createAtStr;
+                        var notifyContent = notify.content + "\n                                  -----重庆大学城市科技学院" +
+                            "\n                                  " + notify.createAtStr;
                         $("#notify-content").val(notifyContent);
+                        $("#notify-id").val(notify.id);
+                    } else {
+                        updateNotifyStatus()
                     }
                 }
             }
@@ -879,6 +883,7 @@
             return;
         }
         requestData = {
+            "id": $("#notify-id").val(),
             "account": $.cookie('account'),
             "title": notifyTitle,
             "content": notifyContent,
@@ -914,11 +919,12 @@
             return;
         }
         requestData = {
+            "id": $("#notify-id").val(),
             "account": $.cookie('account'),
             "title": notifyTitle,
             "content": notifyContent,
             "status": 2,
-            "isValid": false
+            "isValid": true
         };
         $.ajax({
             type: "POST",
@@ -939,6 +945,23 @@
             }
         })
     });
+
+    // 删除管理员草稿状态的公共
+    function updateNotifyStatus() {
+        $.ajax({
+            type: "GET",
+            url: "/updateNotify",
+            data: "account=" + $.cookie('account'),
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function () {
+                alert("服务器端错误");
+            },
+            success: function () {
+                alert("成功");
+            }
+        });
+    }
 
     // userInfo按钮点击事件
     $('#userInfo').on('click',

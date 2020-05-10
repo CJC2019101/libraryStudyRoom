@@ -23,8 +23,12 @@ public class CKNotifyBO implements ICKNotifyApi {
     @Override
     public void addNotify(Notify notify) {
         notify.setCreateAt(new Date());
-        notify.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-        notifyDAO.addNotify(notify);
+        if (notify.getId() == null || ("".equals(notify.getId()))) {
+            notify.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+            notifyDAO.addNotify(notify);
+        } else {
+            notifyDAO.updateNotify(notify);
+        }
     }
 
     @Override
