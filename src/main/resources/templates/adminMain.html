@@ -567,6 +567,9 @@
                         contentType: "application/json",
                         error: function (responseData) {
                             alert("查看公告失败");
+                        },
+                        success:function () {
+                            createNotifyModule(notificationPageNumber);
                         }
                     })
                 // }

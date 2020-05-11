@@ -122,7 +122,6 @@ public class ControllerNotify {
     @ApiOperation(value = "查看公告")
     @ResponseBody
     public BaseResponse lookNotify(@RequestBody Notify notify){
-        System.out.println("lookedUserId = " + notify.toString());
         BaseResponse response = new BaseResponse();
         notifyBO.lookNotify(notify);
         response.setCode(200);
