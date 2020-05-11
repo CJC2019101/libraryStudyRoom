@@ -163,17 +163,33 @@
 <div class="modal fade" id="notify" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <input id="notify-title" type="text" class="form-control" placeholder="请输入公告标题"/>
-                <input id="notify-id" type="hidden" value=""/>
+            <!--添加公告-->
+            <div id="addModule">
+                <div class="modal-header">
+                    <input id="notify-title" type="text" class="form-control" placeholder="请输入公告标题"/>
+                    <input id="notify-id" type="hidden" value=""/>
+                </div>
+                <div class="modal-body">
+                    <textarea id="notify-content" class="form-control" rows="20" placeholder="请输入公告内容"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id="dubious" type="button" class="btn btn-primary">存为草稿</button>
+                    <button id="valid" type="button" class="btn btn-primary">提交更改</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <textarea id="notify-content" class="form-control" rows="20" placeholder="请输入公告内容"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button id="dubious" type="button" class="btn btn-primary">存为草稿</button>
-                <button id="valid" type="button" class="btn btn-primary">提交更改</button>
+            <!--展示公共-->
+            <div id="showModule" style="display: none;">
+                <div class="modal-header">
+                    <input id="notify-title-show" type="text" class="form-control" readonly='readonly'/>
+                    <input id="notify-id-show" type="hidden" value=""/>
+                </div>
+                <div class="modal-body">
+                    <textarea id="notify-content-show" class="form-control" rows="20" readonly="readonly"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -357,33 +373,7 @@
     <!--告示信息模块-->
     <div id="notification">
         <h4 class="text-center">公告</h4>
-        <ul class="list-group">
-            <!-- 详细信息其他页面显示-->
-            <li class="list-group-item">
-                <span class="badge">新</span>
-                <a>五一劳动节假>>></a>
-                <span style="float: right;">2019年05月12日15时36分</span>
-            </li>
-            <li class="list-group-item">
-                <a>快来买啊</a>
-                <span style="float: right;">2019年05月12日15时36分</span>
-            </li>
-            <li class="list-group-item">
-                <a>测试标题</a>
-                <span style="float: right;">2019年05月12日15时36分</span>
-            </li>
-            <li class="list-group-item">
-                <a>我能行</a>
-                <span style="float: right;">2019年05月12日15时36分</span>
-            </li>
-            <li class="list-group-item">
-                <a>字数显示后端解决</a>
-                <span style="float: right;">2019年05月12日15时36分</span>
-            </li>
-            <li class="list-group-item">
-                <a>免费域名注册>>></a>
-                <span style="float: right;">2019年05月12日15时36分</span>
-            </li>
+        <ul id="notify-group" class="list-group">
         </ul>
         <div class="footer" style="position: fixed; bottom: 6px; width: 26%;">
             <ul class='pager'>
@@ -410,7 +400,8 @@
     var adminPageMax;
     //一加载就执行填充信息  用于记住登录信息
     $(document).ready(function () {
-
+        // 公告栏的创建
+        createNotifyModule(notificationPageNumber);
         //发送ajax请求 -- 教室表格的创建
         createRoomTable(1);
         // 获取用户信息
@@ -422,8 +413,10 @@
         var addRoom = "";
         if (pageNum <= 0) {
             pageNum = 1;
+            roomPageNumber = 1;
         } else if (pageNum > roomPageMax) {
             pageNum = roomPageMax;
+            roomPageNumber = roomPageMax;
         }
         $("#rooms").find("tbody").remove();
         $("#rooms").find(".footer").remove();
@@ -479,6 +472,107 @@
             }
         });
     }
+
+    // 公告栏的创建
+    function createNotifyModule(pageNum) {
+        if (pageNum <= 0) {
+            pageNum = 1;
+            notificationPageNumber = 1;
+        } else if (pageNum > notificationPageMax) {
+            pageNum = notificationPageMax;
+            notificationPageNumber = notificationPageMax;
+        }
+        $("#notification").find("#notify-group").empty();
+        var requestData = {
+            "account": $.cookie('account'),
+            "pageNumber": pageNum
+        };
+        $.ajax({
+            type: "POST",
+            url: "/findAllNotify",
+            data: JSON.stringify(requestData),
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function (responseData) {
+                alert(responseData.msg);
+            },
+            success: function (responseData) {
+                var notifies = responseData.data.list;
+                var notifyModule = $("#notify-group");
+                notificationPageMax = notifies.length;
+                for (var i = 0; i < notifies.length; i++) {
+                    var isLooked = "none";
+                    if (!notifies[i].looked) {
+                        isLooked = "block";
+                    }
+                    notifyModule.append("<li class=\"list-group-item\">\n" +
+                        "                <span style='display:" + isLooked + ";' class='badge'>新</span>\n" +
+                        "                <a id='short-title'>" + notifies[i].shortTitle + "</a>\n" +
+                        "                <input id='notify-id' type='hidden' value='" + notifies[i].id + "'>\n" +
+                        "                <span style=\"float: right;\">" + notifies[i].createAtStr + "</span>\n" +
+                        "            </li>");
+                }
+            }
+        })
+    };
+
+    // 公共栏的上下翻页
+    $("#notification").delegate('#notify-previous', 'click', function () {
+        notificationPageNumber = notificationPageNumber - 1;
+        createNotifyModule(notificationPageNumber);
+    });
+    $("#notification").delegate('#notify-next', 'click', function () {
+        notificationPageNumber = notificationPageNumber + 1;
+        createNotifyModule(notificationPageNumber);
+    });
+
+    // 公共信息的展示
+    $("#notification").delegate('#short-title', 'click', function () {
+        // $(this).next()下一个节点元素
+        var notifyId = $(this).next().val();
+        var isLooked = $(this).prev().css("display");
+        $("#addModule").css({'display': 'none'});
+        $("#showModule").css({'display': 'block'});
+        if (notifyId === null || notifyId === '' || notifyId === 'undefined') {
+            return;
+        }
+        $.ajax({
+            type: "GET",
+            url: "findNotify",
+            data: "id=" + notifyId,
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function (responseData) {
+                alert(responseData.msg);
+            },
+            success: function (responseData) {
+                var notify = responseData.data;
+                $("#notify-id-show").val(notify.id);
+                $("#notify-title-show").val(notify.title);
+                $("#notify-content-show").text(notify.content + "\n                                  -----重庆大学城市科技学院" +
+                    "\n                                  " + notify.createAtStr);
+                $("#notify").modal('show');
+                // if (isLooked === 'block') {
+                    var lookedUserId = notify.lookedUserId;
+                    lookedUserId[lookedUserId.length]=$.cookie('account');
+                    var requestData = {
+                        "id":notify.id,
+                        "lookedUserId":lookedUserId.toString().split(',')
+                    };
+                    $.ajax({
+                        type: "POST",
+                        url: "/lookNotify",
+                        data: JSON.stringify(requestData),
+                        dataType: "JSON",
+                        contentType: "application/json",
+                        error: function (responseData) {
+                            alert("查看公告失败");
+                        }
+                    })
+                // }
+            }
+        })
+    });
 
     // 教室“禁用/启用”
     $("#rooms").delegate('#roomStatus', 'click', function () {
@@ -840,8 +934,11 @@
         }
     });
 
+    // 添加公告
     $("#notification").delegate('#notify-add', 'click', function () {
         $("#notify").modal('show');
+        $("#addModule").css({'display': 'block'});
+        $("#showModule").css({'display': 'none'});
         if ($("#notify-title").val() !== '' || $("#notify-title").val() === ' ' || $("#notify-content").val() !== '' || $("#notify-content").val() === ' ') {
             return;
         }
@@ -923,7 +1020,7 @@
             "account": $.cookie('account'),
             "title": notifyTitle,
             "content": notifyContent,
-            "status": 2,
+            "status": 0,
             "isValid": true
         };
         $.ajax({

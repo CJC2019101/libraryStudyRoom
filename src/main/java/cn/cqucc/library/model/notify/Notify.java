@@ -6,7 +6,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author JianfeiChen
@@ -15,7 +19,7 @@ import java.util.Date;
  */
 @ApiModel(value = "添加公告")
 @Data
-public class Notify implements Serializable {
+public class Notify implements Serializable, Comparable<Notify> {
     private static final long serialVersionUID = -1131706633544772087L;
 
     @ApiModelProperty(value = "主键ID")
@@ -39,7 +43,34 @@ public class Notify implements Serializable {
     @ApiModelProperty(value = "主键ID")
     private Date createAt;
 
+    @ApiModelProperty(value = "查阅的用户ID")
+    private String[] lookedUserId;
+
+    // 当前用户是否阅读该公共
+    public Boolean isLooked() {
+        return Arrays.asList(lookedUserId).contains(account);
+    }
+
     public String getCreateAtStr() {
         return DateUtil.formatDate(createAt);
+    }
+
+    public String getShortTitle() {
+        if (title.length() > 6) {
+            return title.substring(0, 6) + ">>>";
+        } else {
+            return title;
+        }
+    }
+
+    @Override
+    public int compareTo(Notify that) {
+        if (that.isLooked() && (!this.isLooked())) {
+            return 1;
+        } else if (this.isLooked() && (!that.isLooked())) {
+            return -1;
+        } else {
+            return this.createAt.compareTo(that.createAt);
+        }
     }
 }

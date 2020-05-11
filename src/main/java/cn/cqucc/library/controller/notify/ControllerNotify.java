@@ -1,9 +1,11 @@
 package cn.cqucc.library.controller.notify;
 
 import cn.cqucc.library.model.notify.Notify;
+import cn.cqucc.library.model.notify.req.NotifyFindAllReq;
 import cn.cqucc.library.service.notify.bo.CKNotifyBO;
 import cn.cqucc.library.service.notify.dao.ICKNotifyDAO;
 import cn.cqucc.library.status.BaseResponse;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.DispatcherServlet;
+
+import java.util.List;
 
 /**
  * @author JianfeiChen
@@ -77,6 +81,53 @@ public class ControllerNotify {
         return response;
     }
 
+    @RequestMapping(value = "/findAllNotify", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "query", name = "account", value = "当前账户", required = true),
+            @ApiImplicitParam(type = "query", name = "pageNumber", value = "当前查询页", required = true)
+    })
+    @ApiOperation(value = "查询所有发布公共")
+    @ResponseBody
+    public BaseResponse findAllNotify(@RequestBody NotifyFindAllReq account) {
+        BaseResponse response = new BaseResponse();
+        PageInfo pageInfo = notifyBO.findAllNotify(account);
+        response.setData(pageInfo);
+        response.setCode(200);
+        response.setMsg("success");
+        return response;
+    }
 
+    @RequestMapping(value = "/findNotify", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "query", name = "id", value = "公共ID", required = true)
+    })
+    @ApiOperation(value = "查询发布公共")
+    @ResponseBody
+    public BaseResponse findNotify(@RequestParam(value = "id") String  id) {
+        BaseResponse response = new BaseResponse();
+        Notify notify = notifyBO.findNotify(id);
+        response.setData(notify);
+        response.setCode(200);
+        response.setMsg("success");
+        return response;
+    }
+
+
+
+    @RequestMapping(value = "/lookNotify",method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "update",name = "id",value = "公共id",required = true),
+            @ApiImplicitParam(type = "update",name = "lookedUserId",value = "查看的用户ID",required = true)
+    })
+    @ApiOperation(value = "查看公告")
+    @ResponseBody
+    public BaseResponse lookNotify(@RequestBody Notify notify){
+        System.out.println("lookedUserId = " + notify.toString());
+        BaseResponse response = new BaseResponse();
+        notifyBO.lookNotify(notify);
+        response.setCode(200);
+        response.setMsg("success");
+        return response;
+    }
 
 }

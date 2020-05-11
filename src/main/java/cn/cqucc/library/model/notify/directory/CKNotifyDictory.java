@@ -12,13 +12,11 @@ public class CKNotifyDictory {
     @Description(description = "公共状态")
     public static class Status {
 
-        @Description(description = "过期")
+        @Description(description = "草稿")
         public static int useless = 0;
 
-        @Description(description = "有效")
+        @Description(description = "发布")
         public static int valid = 1;
 
-        @Description(description = "不确定的")
-        public static int dubious = 2;
     }
 }

@@ -10,6 +10,8 @@
         <result column="content" property="content"/>
         <result column="is_valid" property="isValid"/>
         <result column="status" property="status"/>
+        <result column="looked_user_id" typeHandler="cn.cqucc.library.utils.ArrayTypeHandler"
+                property="lookedUserId"/>
     </resultMap>
 
     <insert id="addNotify" parameterType="cn.cqucc.library.model.notify.Notify">
@@ -18,14 +20,24 @@
         )
     </insert>
 
+    <select id="findNotify" resultMap="BaseResultMap">
+        select * from notify
+            where id = #{id}
+    </select>
+
     <select id="hasDubiousNotify" resultMap="BaseResultMap" parameterType="cn.cqucc.library.model.notify.Notify">
         select * from notify
-            where admin_account = #{account} and status = 2 and is_valid = true
+            where admin_account = #{account} and status = 0 and is_valid = true
+    </select>
+
+    <select id="findAllNotify" resultMap="BaseResultMap">
+        select id, title, create_at, looked_user_id from notify
+            where status = 1
     </select>
 
     <update id="updateNotifyStatus">
         update notify set is_valid = false
-            where admin_account = #{account} and status = 2
+            where admin_account = #{account} and status = 0
     </update>
 
     <update id="updateNotify" parameterType="cn.cqucc.library.model.notify.Notify">
@@ -48,5 +60,13 @@
                 </if>
             </set>
         where id = #{id} and admin_account = #{account}
+    </update>
+
+    <update id="lookNotify" >
+        update notify set looked_user_id = ARRAY
+            <foreach collection="lookedUserId" separator="," item="userId" index="1" close="]" open="[">
+                #{userId}
+            </foreach>
+            where id = #{id}
     </update>
 </mapper>

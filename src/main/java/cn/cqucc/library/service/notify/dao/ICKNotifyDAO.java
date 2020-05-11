@@ -4,6 +4,8 @@ import cn.cqucc.library.model.notify.Notify;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author JianfeiChen
  * @date 2020/5/9 21:31
@@ -18,4 +20,10 @@ public interface ICKNotifyDAO {
     void updateNotifyStatus(String account);
 
     void updateNotify(Notify notify);
+
+    List<Notify> findAllNotify();
+
+    void lookNotify(Notify notify);
+
+    Notify findNotify(String id);
 }
