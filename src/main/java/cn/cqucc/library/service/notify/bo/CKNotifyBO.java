@@ -31,6 +31,7 @@ public class CKNotifyBO implements ICKNotifyApi {
         if (notify.getId() == null || ("".equals(notify.getId()))) {
             notify.setId(UUID.randomUUID().toString().replaceAll("-", ""));
             notifyDAO.addNotify(notify);
+            notifyDAO.lookNotify(notify);
         } else {
             notifyDAO.updateNotify(notify);
         }

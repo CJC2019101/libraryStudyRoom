@@ -16,7 +16,7 @@
 
     <insert id="addNotify" parameterType="cn.cqucc.library.model.notify.Notify">
         insert into notify(id, title, content, admin_account, is_valid, status, create_at) values (
-            #{id}, #{title}, #{content}, #{account}, #{isValid}, #{status}, #{createAt}
+            #{id}, #{title}, #{content}, #{account}, #{isValid}, #{status}, now()
         )
     </insert>
 

@@ -549,29 +549,28 @@
                 var notify = responseData.data;
                 $("#notify-id-show").val(notify.id);
                 $("#notify-title-show").val(notify.title);
-                $("#notify-content-show").text(notify.content + "\n                                  -----重庆大学城市科技学院" +
-                    "\n                                  " + notify.createAtStr);
+                $("#notify-content-show").text(notify.content);
                 $("#notify").modal('show');
                 // if (isLooked === 'block') {
-                    var lookedUserId = notify.lookedUserId;
-                    lookedUserId[lookedUserId.length]=$.cookie('account');
-                    var requestData = {
-                        "id":notify.id,
-                        "lookedUserId":lookedUserId.toString().split(',')
-                    };
-                    $.ajax({
-                        type: "POST",
-                        url: "/lookNotify",
-                        data: JSON.stringify(requestData),
-                        dataType: "JSON",
-                        contentType: "application/json",
-                        error: function (responseData) {
-                            alert("查看公告失败");
-                        },
-                        success:function () {
-                            createNotifyModule(notificationPageNumber);
-                        }
-                    })
+                var lookedUserId = notify.lookedUserId;
+                lookedUserId[lookedUserId.length] = $.cookie('account');
+                var requestData = {
+                    "id": notify.id,
+                    "lookedUserId": lookedUserId.toString().split(',')
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "/lookNotify",
+                    data: JSON.stringify(requestData),
+                    dataType: "JSON",
+                    contentType: "application/json",
+                    error: function (responseData) {
+                        alert("查看公告失败");
+                    },
+                    success: function () {
+                        createNotifyModule(notificationPageNumber);
+                    }
+                })
                 // }
             }
         })
@@ -961,8 +960,7 @@
                     var sure = confirm(responseData.msg);
                     if (sure) {
                         $("#notify-title").val(notify.title);
-                        var notifyContent = notify.content + "\n                                  -----重庆大学城市科技学院" +
-                            "\n                                  " + notify.createAtStr;
+                        var notifyContent = notify.content;
                         $("#notify-content").val(notifyContent);
                         $("#notify-id").val(notify.id);
                     } else {
@@ -988,7 +986,8 @@
             "title": notifyTitle,
             "content": notifyContent,
             "status": 1,
-            "isValid": true
+            "isValid": true,
+            "lookedUserId": new Array($.cookie('account'))
         };
         $.ajax({
             type: "POST",
@@ -1005,6 +1004,7 @@
                     $("#notify-title").val("");
                     $("#notify-content").val("");
                     $("#notify").modal('hide');
+                    createNotifyModule(notificationPageNumber);
                 }
             }
         })
@@ -1024,7 +1024,8 @@
             "title": notifyTitle,
             "content": notifyContent,
             "status": 0,
-            "isValid": true
+            "isValid": true,
+            "lookedUserId": new Array($.cookie('account'))
         };
         $.ajax({
             type: "POST",
@@ -1050,7 +1051,7 @@
     function updateNotifyStatus() {
         $.ajax({
             type: "GET",
-            url: "/updateNotify",
+            url: "/updateNotifyStatus",
             data: "account=" + $.cookie('account'),
             dataType: "JSON",
             contentType: "application/json",
@@ -1058,7 +1059,7 @@
                 alert("服务器端错误");
             },
             success: function () {
-                alert("成功");
+                // alert("成功");
             }
         });
     }
@@ -1166,7 +1167,6 @@
             }
         });
     }
-
 
     // 发送选中的座位数据、新的密码、修改后教室长宽
     $("body").delegate("#commit", "click", function () {

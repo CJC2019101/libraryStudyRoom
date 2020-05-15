@@ -41,7 +41,8 @@ public class ControllerNotify {
             @ApiImplicitParam(type = "insert", name = "content", value = "公告内容", required = true),
             @ApiImplicitParam(type = "insert", name = "account", value = "操作账户", required = true),
             @ApiImplicitParam(type = "insert", name = "isValid", value = "是否有效", required = true),
-            @ApiImplicitParam(type = "insert", name = "status", value = "公告状态：0-过期，1-有效，2-草稿", required = true)
+            @ApiImplicitParam(type = "insert", name = "lookedUserId", value = "查看的用户ID", required = true),
+            @ApiImplicitParam(type = "insert", name = "status", value = "公告状态：0-草稿，1-发布", required = true)
     })
     @ApiOperation(value = "管理员添加公告")
     @ResponseBody
@@ -60,7 +61,7 @@ public class ControllerNotify {
     public BaseResponse hasDubiousNotify(@RequestParam String account) {
         BaseResponse response = new BaseResponse();
         Notify notify = notifyBO.hasDubiousNotify(account);
-        if (notify == null) {
+        if (notify == null || notify.getId() == null || ("".equals(notify.getId()))) {
             response.setCode(406);
             response.setMsg("当前用户没有草稿公告存留");
         } else {
@@ -103,7 +104,7 @@ public class ControllerNotify {
     })
     @ApiOperation(value = "查询发布公共")
     @ResponseBody
-    public BaseResponse findNotify(@RequestParam(value = "id") String  id) {
+    public BaseResponse findNotify(@RequestParam(value = "id") String id) {
         BaseResponse response = new BaseResponse();
         Notify notify = notifyBO.findNotify(id);
         response.setData(notify);
@@ -113,15 +114,14 @@ public class ControllerNotify {
     }
 
 
-
-    @RequestMapping(value = "/lookNotify",method = RequestMethod.POST)
+    @RequestMapping(value = "/lookNotify", method = RequestMethod.POST)
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "update",name = "id",value = "公共id",required = true),
-            @ApiImplicitParam(type = "update",name = "lookedUserId",value = "查看的用户ID",required = true)
+            @ApiImplicitParam(type = "update", name = "id", value = "公共id", required = true),
+            @ApiImplicitParam(type = "update", name = "lookedUserId", value = "查看的用户ID", required = true)
     })
     @ApiOperation(value = "查看公告")
     @ResponseBody
-    public BaseResponse lookNotify(@RequestBody Notify notify){
+    public BaseResponse lookNotify(@RequestBody Notify notify) {
         BaseResponse response = new BaseResponse();
         notifyBO.lookNotify(notify);
         response.setCode(200);
