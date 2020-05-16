@@ -32,7 +32,7 @@
 
     <select id="findAllNotify" resultMap="BaseResultMap">
         select id, title, create_at, looked_user_id from notify
-            where status = 1
+            where status = 1 order by create_at desc
     </select>
 
     <update id="updateNotifyStatus">

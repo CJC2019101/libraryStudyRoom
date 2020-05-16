@@ -39,8 +39,10 @@ public class CKRoomBO implements ICKRoomApi {
     }
 
     @Override
-    public List<Room> findValidRooms() {
-        return roomDAO.findValidRooms();
+    public PageInfo findValidRooms(Integer pageNumber) {
+        PageHelper.startPage(pageNumber,8);
+        List<Room> rooms = roomDAO.findValidRooms();
+        return new PageInfo(rooms);
     }
 
     @Override

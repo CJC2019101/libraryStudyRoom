@@ -6,11 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author JianfeiChen
@@ -46,7 +43,7 @@ public class Notify implements Serializable, Comparable<Notify> {
     @ApiModelProperty(value = "查阅的用户ID")
     private String[] lookedUserId;
 
-    // 当前用户是否阅读该公共
+    // 当前用户是否阅读该公告
     public Boolean isLooked() {
         return Arrays.asList(lookedUserId).contains(account);
     }
@@ -66,11 +63,11 @@ public class Notify implements Serializable, Comparable<Notify> {
     @Override
     public int compareTo(Notify that) {
         if (that.isLooked() && (!this.isLooked())) {
-            return 1;
-        } else if (this.isLooked() && (!that.isLooked())) {
             return -1;
+        } else if (this.isLooked() && (!that.isLooked())) {
+            return 1;
         } else {
-            return this.createAt.compareTo(that.createAt);
+        return this.createAt.compareTo(that.createAt) * -1;
         }
     }
 }

@@ -94,7 +94,11 @@ public class ControllerNotify {
         PageInfo pageInfo = notifyBO.findAllNotify(account);
         response.setData(pageInfo);
         response.setCode(200);
-        response.setMsg("success");
+        if (pageInfo.getSize() == 0){
+            response.setMsg("数据库没有数据显示");
+        }else {
+            response.setMsg("success");
+        }
         return response;
     }
 

@@ -75,12 +75,13 @@ public class ControllerRoom {
     }
 
     @RequestMapping(value = "/findValidRooms")
+    @ApiImplicitParam(type = "select", name = "pageNumber", value = "页数", required = true)
     @ApiOperation(value = "查找可用教室")
     @ResponseBody
-    public BaseResponse findValidRooms() {
-        List<Room> allRooms = roomBO.findValidRooms();
+    public BaseResponse findValidRooms(@RequestParam Integer pageNumber) {
+        PageInfo allRooms = roomBO.findValidRooms(pageNumber);
         BaseResponse response = new BaseResponse();
-        if (allRooms.size() == 0) {
+        if (allRooms.getSize() == 0) {
             response.setCode(502);
             response.setMsg("数据库没有数据显示");
         } else {
@@ -165,9 +166,9 @@ public class ControllerRoom {
     public BaseResponse createRoom(@RequestBody Room room) {
         BaseResponse response = new BaseResponse();
         int statusCode = roomBO.createRoom(room);
-        if (statusCode==200){
+        if (statusCode == 200) {
             response.setMsg("创建教室成功");
-        }else {
+        } else {
             response.setMsg("存有重复的教室，请修改教室编号");
         }
         response.setCode(statusCode);

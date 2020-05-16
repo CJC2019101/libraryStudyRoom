@@ -44,12 +44,12 @@ public class CKNotifyBO implements ICKNotifyApi {
 
     @Override
     public PageInfo findAllNotify(NotifyFindAllReq notifyInfo) {
+        PageHelper.startPage(notifyInfo.getPageNumber(), 10);
         List<Notify> notifies = notifyDAO.findAllNotify();
-        Collections.sort(notifies);
         for (Notify notify : notifies) {
             notify.setAccount(notifyInfo.getAccount());
         }
-        PageHelper.startPage(notifyInfo.getPageNumber(), 10);
+        Collections.sort(notifies);
         return new PageInfo(notifies);
     }
 

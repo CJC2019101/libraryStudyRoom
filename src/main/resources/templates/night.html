@@ -23,6 +23,15 @@
     <script type="text/javascript" th:src="@{/style/layui/layui.js}"></script>
     <script type="text/javascript" th:src="@{/style/layer/layer.js}"></script>
     <style>
+
+        /*页面填满屏幕*/
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         .text-center {
             font-weight: 700;
         / / 字体加粗
@@ -94,6 +103,43 @@
         }
 
 
+        #pageContent {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center; /*定义body的元素垂直居中*/
+            justify-content: center; /*定义body的里的元素水平居中*/
+        }
+
+        .pager {
+            float: left;
+            width: 33%;
+            margin: 20px auto;;
+        }
+
+        #roomModule{
+            width: 67%;
+            height: 100%;
+            margin-top: 110px;
+            padding: 0;
+            border: 2px groove #6a6665;
+        }
+
+        #notifyModule{
+            width: 26%;
+            height: 100%;
+            margin-top: 110px;
+            padding: 0;
+            border: 2px groove #6a6665;
+        }
+
+        .statusBarButton{
+            margin-top: 10px;
+        }
+
+
     </style>
 
 </head>
@@ -103,6 +149,7 @@
 <div id="loginALabel">
     <button id="userInfo" type="button" class="btn btn-success"></button>
 </div>
+<h3 class="text-center">城科图书管理系统</h3>
 <!-- 教室座位模态框 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -150,28 +197,65 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<h3 class="text-center">城科图书馆</h3>
-<table id="rooms" class="table table-hover" style="margin-top: 10px">
-    <thead>
-    <tr>
-        <th>教室号</th>
-        <th>楼层</th>
-        <th>规格</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-</table>
 
-<!--页面底部导航栏-->
-<div class="footer" style="position: fixed; bottom: 6px; ">
-    <div class=" btn-group btn-group-justified"
-         style="width: 70%; margin: 0 auto;">
-        <a href="/morning" class="btn btn-primary">上午</a>
-        <a href="/afternoon" class="btn btn-primary">下午</a>
-        <a href="/night" class="btn btn-primary" style="background-color: #5cb85c;">晚上</a>
-        <a href="/allDay" class="btn btn-primary">整天</a>
+<div id="pageContent">
+
+    <!--左侧状态栏-->
+    <div id="statusBar" style="margin-right: 8px;">
+        <div class="statusBarButton">
+            <a href="/morning" class="btn btn-primary">上午</a>
+        </div>
+        <div class="statusBarButton">
+            <a href="/afternoon" class="btn btn-primary">下午</a>
+        </div>
+        <div class="statusBarButton">
+            <a href="/night" class="btn btn-primary" style="background-color: #5cb85c;">晚上</a>
+        </div>
+        <div class="statusBarButton">
+            <a href="/allDay" class="btn btn-primary">整天</a>
+        </div>
     </div>
+
+    <!--教室模块-->
+    <div id="roomModule">
+        <h3 class="text-center">教室</h3>
+        <table id="rooms" class="table table-hover" style="margin-top: 10px">
+            <thead>
+            <tr>
+                <th>教室号</th>
+                <th>楼层</th>
+                <th>规格</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="footer" style="position: fixed; bottom: 6px; width: 67%;">
+            <ul class='pager' style="float: left; margin-left: 40px;">
+                <li><a href='#' style="float: left;" id='room-previous'>上一页</a></li>
+            </ul>
+            <ul class='pager' style="float: right;  margin-right: 40px;">
+                <li><a href='#'  style="float: right;" id='room-next'>下一页</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!--公告模块-->
+    <div id="notifyModule">
+        <h4 class="text-center">公告</h4>
+        <ul id="notify-group" class="list-group">
+        </ul>
+        <div class="footer" style="position: fixed; bottom: 6px; width: 26%;">
+            <ul class='pager' style="float: left; margin-left: 40px;">
+                <li><a href='#' style="float: left;" id='notify-previous'>&laquo;</a></li>
+            </ul>
+            <ul class='pager' style="float: right;  margin-right: 40px;">
+                <li><a href='#'  style="float: right;" id='notify-next'>&raquo;</a></li>
+            </ul>
+        </div>
+    </div>
+
 </div>
+
 
 <script type="text/javascript">
 

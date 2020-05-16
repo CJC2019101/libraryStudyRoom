@@ -19,7 +19,7 @@
 
     <select id="findValidRooms" resultMap="BaseResultMap">
         select * from rooms
-            where is_valid = true
+            where is_valid = true order by floor_number asc, id asc
     </select>
 
     <select id="findRoom" resultMap="BaseResultMap">
