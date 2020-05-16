@@ -74,7 +74,7 @@ public class ControllerRoom {
         return response;
     }
 
-    @RequestMapping(value = "/findValidRooms")
+    @RequestMapping(value = "/findValidRooms",method = RequestMethod.GET)
     @ApiImplicitParam(type = "select", name = "pageNumber", value = "页数", required = true)
     @ApiOperation(value = "查找可用教室")
     @ResponseBody

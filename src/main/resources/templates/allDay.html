@@ -23,6 +23,15 @@
     <script type="text/javascript" th:src="@{/style/layui/layui.js}"></script>
     <script type="text/javascript" th:src="@{/style/layer/layer.js}"></script>
     <style>
+
+        /*页面填满屏幕*/
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         .text-center {
             font-weight: 700;
         / / 字体加粗
@@ -93,6 +102,41 @@
             border: 1px solid #ec971f;
         }
 
+        #pageContent {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center; /*定义body的元素垂直居中*/
+            justify-content: center; /*定义body的里的元素水平居中*/
+        }
+
+        .pager {
+            float: left;
+            width: 33%;
+            margin: 20px auto;;
+        }
+
+        #roomModule {
+            width: 67%;
+            height: 100%;
+            margin-top: 110px;
+            padding: 0;
+            border: 2px groove #6a6665;
+        }
+
+        #notifyModule {
+            width: 26%;
+            height: 100%;
+            margin-top: 110px;
+            padding: 0;
+            border: 2px groove #6a6665;
+        }
+
+        .statusBarButton {
+            margin-top: 10px;
+        }
 
     </style>
 
@@ -151,46 +195,122 @@
     </div><!-- /.modal -->
 </div>
 <h3 class="text-center">城科图书馆</h3>
-<table id="rooms" class="table table-hover" style="margin-top: 10px">
-    <thead>
-    <tr>
-        <th>教室号</th>
-        <th>楼层</th>
-        <th>规格</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-</table>
+<!-- 公告显示模态框（Modal） -->
+<div class="modal fade" id="notifyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center" id="notify-title">
+                公告标题
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" rows="20" id="notify-content" readonly="readonly">
+                    公告内容
+                </textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
-<!--页面底部导航栏-->
-<div class="footer" style="position: fixed; bottom: 6px; ">
-    <div class=" btn-group btn-group-justified"
-         style="width: 70%; margin: 0 auto;">
-        <a href="/morning" class="btn btn-primary">上午</a>
-        <a href="/afternoon" class="btn btn-primary">下午</a>
-        <a href="/night" class="btn btn-primary">晚上</a>
-        <a href="/allDay" class="btn btn-primary" style="background-color: #5cb85c;">整天</a>
+<div id="pageContent">
+    <!--左侧状态栏-->
+    <div id="statusBar">
+        <div class="statusBarButton" style="margin-right: 8px;">
+            <a href="/morning" class="btn btn-primary">上午</a>
+        </div>
+        <div class="statusBarButton" style="margin-right: 8px;">
+            <a href="/afternoon" class="btn btn-primary">下午</a>
+        </div>
+        <div class="statusBarButton" style="margin-right: 8px;">
+            <a href="/night" class="btn btn-primary">晚上</a>
+        </div>
+        <div class="statusBarButton" style="margin-right: 8px;">
+            <a href="/allDay" class="btn btn-primary" style="background-color: #5cb85c;">整天</a>
+        </div>
+    </div>
+    <!--教室表格-->
+    <div id="roomModule">
+        <h3 class="text-center">教室</h3>
+        <table id="rooms" class="table table-hover" style="margin-top: 10px">
+            <thead>
+            <tr>
+                <th>教室号</th>
+                <th>楼层</th>
+                <th>规格</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="footer" style="position: fixed; bottom: 6px; width: 67%;">
+            <ul class='pager' style="float: left; margin-left: 40px;">
+                <li><a href='#' style="float: left;" id='room-previous'>上一页</a></li>
+            </ul>
+            <ul class='pager' style="float: right;  margin-right: 40px;">
+                <li><a href='#' style="float: right;" id='room-next'>下一页</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--公告列表-->
+    <div id="notifyModule">
+        <h4 class="text-center">公告</h4>
+        <ul id="notify-group" class="list-group">
+        </ul>
+        <div class="footer" style="position: fixed; bottom: 6px; width: 26%;">
+            <ul class='pager' style="float: left; margin-left: 40px;">
+                <li><a href='#' style="float: left;" id='notify-previous'>&laquo;</a></li>
+            </ul>
+            <ul class='pager' style="float: right;  margin-right: 40px;">
+                <li><a href='#' style="float: right;" id='notify-next'>&raquo;</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 
-
 <script type="text/javascript">
+
+    var roomPageNumber = 1;
+    var roomPageMax;
+    var notifyPageNumber = 1;
+    var notifyPageMax;
 
     //一加载就执行填充信息  用于记住登录信息
     $(document).ready(function () {
 
         //发送ajax请求 -- 教室表格的创建
+        createRoomTable(roomPageNumber);
+        //创建公告列表
+        createNotifyList(notifyPageNumber);
+        // 获取用户信息
+        getUserInfo();
+    })
+
+
+    //发送ajax请求 -- 教室表格的创建
+    function createRoomTable(pageNum) {
+        if (pageNum <= 0) {
+            pageNum = 1;
+            roomPageNumber = 1;
+        } else if (pageNum > roomPageMax) {
+            pageNum = roomPageMax;
+            roomPageNumber = roomPageMax;
+        }
         $.ajax({
             type: 'GET',
             url: '/findValidRooms',
-            // data: 'floorNumber=' + 1,
+            data: 'pageNumber=' + pageNum,
             dataType: 'JSON',
             error: function (data) {
                 alert("连接超时");
             },
             success: function (data) {
                 if (data.code === 200) {
-                    var rooms = data.data
+                    $('#rooms').find("tbody").empty();
+                    var rooms = data.data.list;
+                    roomPageMax = data.data.pages;
                     for (var i = 0; i < rooms.length; i++) {
                         $("#rooms").append("<tr><td>" + rooms[i].id +
                             "</td><td>" + rooms[i].floorNumber +
@@ -207,10 +327,133 @@
                 }
             }
         });
-        // 获取用户信息
-        getUserInfo();
-    })
+    }
 
+    // 教室上下翻页
+    $('#roomModule').delegate('#room-previous', 'click', function () {
+        roomPageNumber = roomPageNumber - 1;
+        createRoomTable(roomPageNumber);
+    });
+    $('#roomModule').delegate('#room-next', 'click', function () {
+        roomPageNumber = roomPageNumber + 1;
+        createRoomTable(roomPageNumber);
+    });
+
+    // 创建公告栏列表
+    function createNotifyList(pageNum) {
+        if (pageNum <= 0) {
+            notifyPageNumber = 1;
+            pageNum = 1;
+        } else if (pageNum > notifyPageMax) {
+            notifyPageNumber = notifyPageMax;
+            pageNum = notifyPageMax;
+        }
+        var requestData = {
+            "account": $.cookie('account'),
+            "pageNumber": pageNum
+        };
+        $.ajax({
+            type: "POST",
+            url: "/findAllNotify",
+            data: JSON.stringify(requestData),
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function (responseData) {
+                alert("连接超时");
+            },
+            success: function (responseData) {
+                if (responseData.code === 200) {
+                    notifyPageMax = responseData.data.pages;
+                    var notifies = responseData.data.list;
+                    $('#notifyModule').find('#notify-group').empty();
+                    for (var i = 0; i < notifies.length; i++) {
+                        var isLooked = "none";
+                        if (!notifies[i].looked) {
+                            isLooked = "block";
+                        }
+                        $('#notify-group').append("<li class=\"list-group-item\">\n" +
+                            "                <span style='display:" + isLooked + ";' class='badge'>新</span>\n" +
+                            "                <a id='short-title'>" + notifies[i].shortTitle + "</a>\n" +
+                            "                <input id='notify-id' type='hidden' value='" + notifies[i].id + "'>\n" +
+                            "                <span style=\"float: right;\">" + notifies[i].createAtStr + "</span>\n" +
+                            "            </li>");
+                    }
+                } else if (responseData.code === 502) {
+                    alert(responseData.msg);
+                }
+            }
+        })
+    }
+
+    // 公告上下翻页
+    $("#notifyModule").delegate('#notify-previous', 'click', function () {
+        notifyPageNumber = notifyPageNumber - 1;
+        createNotifyList(notifyPageNumber);
+    });
+    $("#notifyModule").delegate('#notify-next', 'click', function () {
+        notifyPageNumber = notifyPageNumber + 1;
+        createNotifyList(notifyPageNumber);
+    });
+
+    // 公告显示
+    $('#notify-group').delegate('#short-title', 'click', function () {
+        var notifyId = $(this).next();
+        var isLooked = $(this).prev();
+        $.ajax({
+            type: "GET",
+            url: "/findNotify",
+            data: "id=" + notifyId.val(),
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function (responseData) {
+                alert("连接超时");
+            },
+            success: function (responseData) {
+                var notify = responseData.data;
+                var lookedUserId = notify.lookedUserId;
+                lookedUserId[lookedUserId.length] = $.cookie('account');
+                if (responseData.code === 200) {
+                    $('#notify-title').text(notify.title);
+                    $('#notify-content').text(notify.content);
+                    $('#notifyModal').modal('show');
+                    if (isLooked.css("display") === 'block') {
+                        lookedNotify(notifyId.val(), lookedUserId, isLooked);
+                    }
+
+                } else if (responseData.code === 502) {
+                    alert(responseData.msg);
+                }
+            }
+
+        })
+    });
+
+
+    // 更新公告查看名单
+    function lookedNotify(notifyId, lookedUserId, $isLooked) {
+        var requestData = {
+            "id": notifyId,
+            "lookedUserId": lookedUserId
+        };
+        $.ajax({
+            type: "POST",
+            url: "/lookNotify",
+            data: JSON.stringify(requestData),
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function (responseData) {
+                alert("连接超时");
+            },
+            success: function (responseData) {
+                if (responseData.code === 200) {
+                    // alert(responseData.msg);
+                    $isLooked.css({'display': 'none'});
+                } else if (responseData.code === 502) {
+                    alert(responseData.msg);
+                }
+            }
+        })
+    };
 
     function getUserInfo() {
         // 发送ajax请求 -- 获取用户信息
@@ -339,8 +582,7 @@
                                     "' data-container= 'body' data-toggle= 'popover' data-placement='bottom'" +
                                     " data-content= '" + chairs[k].userId + "' > " + chairs[k].userName + " </button>"
                                 break;
-                            }
-                            else if(i === chairs[k].crow && j === chairs[k].cell && chairs[k].userId === $.cookie("account")){
+                            } else if (i === chairs[k].crow && j === chairs[k].cell && chairs[k].userId === $.cookie("account")) {
                                 row['field' + j] = "<button type='button' class='btn btn-warning' title='" + chairs[k].processionGrade +
                                     "' data-container= 'body' data-toggle= 'popover' data-placement='bottom'" +
                                     " data-content= '" + chairs[k].userId + "' > " + chairs[k].userName + " </button>"
@@ -450,7 +692,7 @@
                 alert("您两次输入的新密码不一致，请重新输入。");
                 return;
             }
-            if ( newPassword.val().length < 6){
+            if (newPassword.val().length < 6) {
                 newPassword.val("");
                 confirmPassword.val("");
                 alert("您输入的密码长度不够，必须是6位")
