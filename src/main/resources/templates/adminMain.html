@@ -499,7 +499,7 @@
             success: function (responseData) {
                 var notifies = responseData.data.list;
                 var notifyModule = $("#notify-group");
-                notificationPageMax = notifies.length;
+                notificationPageMax = responseData.data.pages;
                 for (var i = 0; i < notifies.length; i++) {
                     var isLooked = "none";
                     if (!notifies[i].looked) {

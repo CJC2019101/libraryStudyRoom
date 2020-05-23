@@ -59,7 +59,6 @@ public class CKChairBO implements ICKChairAPI {
         for (Chair chair : chairs) {
             chair.setUpdateAt(new Date());
         }
-        System.out.println("chairs = " + chairs.toString());
         chairDAO.cancelChairs(chairs);
     }
 
