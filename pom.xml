@@ -17,6 +17,8 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <swagger_ui_version>2.9.2</swagger_ui_version>
+        <swagger_version>1.5.22</swagger_version>
     </properties>
 
     <dependencies>
@@ -81,7 +83,27 @@
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.2.10</version>
         </dependency>
-
+        <!--Swagger-UI API文档生产工具-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger_ui_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger_ui_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger_version}</version>
+        </dependency>
     </dependencies>
 
     <build>

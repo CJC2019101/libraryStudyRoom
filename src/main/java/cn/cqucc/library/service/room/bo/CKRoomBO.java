@@ -46,6 +46,13 @@ public class CKRoomBO implements ICKRoomApi {
     }
 
     @Override
+    public PageInfo findValidRooms(Integer pageNumber, Integer pageSize) {
+        PageHelper.startPage(pageNumber,pageSize);
+        List<Room> rooms = roomDAO.findValidRooms();
+        return new PageInfo(rooms);
+    }
+
+    @Override
     public int setRoomIsValid(Room room) {
         Integer count = chairDAO.getUnvalidChairCount(room);
         if (count > 0) {
