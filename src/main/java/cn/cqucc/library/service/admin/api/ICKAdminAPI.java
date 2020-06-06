@@ -12,7 +12,7 @@ import java.util.List;
  * @Description 城科管理员操作API
  */
 public interface ICKAdminAPI {
-    int isExist(String account, String password);
+    int isExist(Admin admin);
 
     Admin getAdminInfo(String account);
 
@@ -23,4 +23,6 @@ public interface ICKAdminAPI {
     int addAdmin(Admin admin);
 
     public void setAdminIsValid(String account);
+
+    int systemAdminLogin(Admin admin);
 }

@@ -8,6 +8,10 @@
         <id column="account" property="account"/>
         <id column="password" property="password"/>
         <id column="is_valid" property="isValid"/>
+        <id column="school_name" property="schoolName"/>
+        <id column="school_code" property="schoolCode"/>
+        <id column="school_location" property="schoolLocation"/>
+        <id column="level" property="level"/>
         <id column="create_at" property="createAt"/>
         <id column="update_at" property="updateAt"/>
     </resultMap>
@@ -18,10 +22,25 @@
         )
     </insert>
 
+    <insert id="addAdmins" parameterType="java.util.List">
+        <foreach collection="list" index="0" item="admin" separator=";">
+            insert into admins(id, admin_name, account, password, is_valid,
+             create_at, school_name, school_code,
+              school_location, level) values (
+              #{admin.id}, #{admin.name}, #{admin.account}, #{admin.password},
+              #{admin.isValid},#{admin.createAt}, #{admin.schoolName},
+              #{admin.schoolCode}, #{admin.schoolLocation}, #{admin.level}
+            )
+        </foreach>
+    </insert>
+
     <select id="isExist" resultType="java.lang.Integer">
         select count(*)
             from admins
-            where admins.account = #{account} and admins.password = #{password} and is_valid =true
+            where admins.account = #{account} and admins.password = #{password} and is_valid = true
+            <if test="level != 0">
+                and admins.level = #{level}
+            </if>
     </select>
 
     <select id="getAdminInfo" resultMap="BaseResultMap">

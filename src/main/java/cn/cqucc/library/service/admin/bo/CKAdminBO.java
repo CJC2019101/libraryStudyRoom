@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.admin.bo;
 
 import cn.cqucc.library.model.admin.Admin;
+import cn.cqucc.library.model.admin.directory.AdminDirectory;
 import cn.cqucc.library.model.student.req.CKLibraryUserReq;
 import cn.cqucc.library.service.admin.api.ICKAdminAPI;
 import cn.cqucc.library.service.admin.dao.ICKAdminDAO;
@@ -24,8 +25,8 @@ public class CKAdminBO implements ICKAdminAPI {
     ICKAdminDAO adminDAO;
 
     @Override
-    public int isExist(String account, String password) {
-        return adminDAO.isExist(account, password);
+    public int isExist(Admin admin) {
+        return adminDAO.isExist(admin);
     }
 
     @Override
@@ -48,6 +49,7 @@ public class CKAdminBO implements ICKAdminAPI {
     @Override
     public int addAdmin(Admin admin) {
         Admin duplicate = adminDAO.getAdminInfo(admin.getAccount());
+        // TODO 所属院校是否存在
         if (duplicate == null || duplicate.getId() == null || ("".equals(duplicate.getId()))) {
             admin.setCreateAt(new Date());
             admin.setId(UUID.randomUUID().toString().replaceAll("-", ""));
@@ -64,5 +66,11 @@ public class CKAdminBO implements ICKAdminAPI {
         admin.setUpdateAt(new Date());
         admin.setAccount(account);
         adminDAO.setAdminIsValid(admin);
+    }
+
+    @Override
+    public int systemAdminLogin(Admin admin) {
+        admin.setLevel(AdminDirectory.AdminLevel.SYSTEM_ADMIN);
+        return adminDAO.isExist(admin);
     }
 }

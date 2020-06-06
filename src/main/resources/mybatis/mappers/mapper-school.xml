@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cqucc.library.service.school.dao.ISchoolDAO">
+    <resultMap id="BaseResultMap" type="cn.cqucc.library.model.school.School">
+        <id column="school_code" property="schoolCode"/>
+        <result column="school_name" property="schoolName"/>
+        <result column="school_location" property="schoolLocation"/>
+        <result column="admin_account" property="adminAccount"/>
+        <result column="is_valid" property="isValid"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_at" property="updateAt"/>
+    </resultMap>
+
+    <insert id="addSchools">
+        <foreach collection="list" index="0" item="school" separator=";">
+            insert into schools(school_code, school_name, school_location, admin_account, is_valid, create_at) values (
+            #{school.schoolCode}, #{school.schoolName}, #{school.schoolLocation}, #{school.adminAccount},
+            #{school.isValid}, #{school.createAt}
+            )
+        </foreach>
+    </insert>
+</mapper>

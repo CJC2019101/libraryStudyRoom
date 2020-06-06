@@ -14,9 +14,27 @@ import java.util.Date;
  * @Description 管理员实体类
  */
 @Data
-@ApiModel("管理员实体类")
+@ApiModel("管理员")
 public class Admin implements Serializable {
     private static final long serialVersionUID = 6773008101902867903L;
+
+    public Admin() {
+    }
+
+    public Admin(String id, String name, String account, String password,
+                 Boolean isValid, Date createAt, String schoolName,
+                 String schoolCode, String schoolLocation, int level) {
+        this.id = id;
+        this.name = name;
+        this.account = account;
+        this.password = password;
+        this.isValid = isValid;
+        this.createAt = createAt;
+        this.schoolName = schoolName;
+        this.schoolCode = schoolCode;
+        this.schoolLocation = schoolLocation;
+        this.level = level;
+    }
 
     @ApiModelProperty("管理员职工号")
     private String id;
@@ -39,11 +57,23 @@ public class Admin implements Serializable {
     @ApiModelProperty("最近变更时间")
     private Date updateAt;
 
-    public String getCreateAtStr(){
-        return DateUtil.formatDate(createAt,"yy-MM-dd");
+    @ApiModelProperty("所属院校")
+    private String schoolName;
+
+    @ApiModelProperty("所属院校码")
+    private String schoolCode;
+
+    @ApiModelProperty("院校归属地名称")
+    private String schoolLocation;
+
+    @ApiModelProperty("管理员级别：1-系统管理员，2-院校超级管理员，3-院校普通管理员")
+    private int level;
+
+    public String getCreateAtStr() {
+        return DateUtil.formatDate(createAt, "yy-MM-dd");
     }
 
-    public String getUpdateAtStr(){
-        return DateUtil.formatDate(updateAt,"yy-MM-dd");
+    public String getUpdateAtStr() {
+        return DateUtil.formatDate(updateAt, "yy-MM-dd");
     }
 }

@@ -64,8 +64,8 @@ public class ControllerLogin {
     })
     @ApiOperation(value = "管理员登录判断")
     @ResponseBody
-    public int adminIsExist(@RequestParam String account, @RequestParam String password) {
-        return adminBO.isExist(account, password);
+    public int adminIsExist(@RequestBody Admin admin) {
+        return adminBO.isExist(admin);
     }
 
 
@@ -124,6 +124,17 @@ public class ControllerLogin {
             response.setData(admin);
         }
         return response;
+    }
+
+    @RequestMapping(value = "/systemAdminLogin",method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "query",name = "account",value = "系统管理员账户",required = true),
+            @ApiImplicitParam(type = "query",name = "password",value = "密码",required = true)
+    })
+    @ApiOperation("系统管理员登录判断")
+    @ResponseBody
+    public int systemAdminLogin(@RequestBody Admin admin){
+        return adminBO.systemAdminLogin(admin);
     }
 
 }
