@@ -68,7 +68,9 @@ public class ControllerAdmin {
             @ApiImplicitParam(type = "insert", name = "password", value = "管理员密码", required = true),
             @ApiImplicitParam(type = "insert", name = "schoolName", value = "所属院校", required = true),
             @ApiImplicitParam(type = "insert", name = "schoolCode", value = "所属院校码", required = true),
-            @ApiImplicitParam(type = "insert", name = "schoolLocation", value = "所属院校归属地", required = true)
+            @ApiImplicitParam(type = "insert", name = "schoolLocation", value = "所属院校归属地", required = true),
+            @ApiImplicitParam(type = "insert", name = "level", value = "管理员等级", required = true),
+            @ApiImplicitParam(type = "insert", name = "isValid", value = "是否有效", required = true)
     })
     @ApiOperation(value = "添加普通管理员")
     @ResponseBody

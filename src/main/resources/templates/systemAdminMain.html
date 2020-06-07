@@ -96,8 +96,85 @@
     <a href="/login">学生后台入口</a>&emsp;
     <a href="/adminLogin">管理员后台入口</a>
 </div>
-
 <button id="userInfo" type="button" class="btn btn-warning"></button>
+<!-- 添加院校信息 -->
+<div class="modal fade" id="add-schools-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--院校信息文件上传-->
+            <div id="fileUploadModule">
+                <div class="modal-header">
+                    <div class="form-group">
+                        <label class="sr-only" for="file-upload">文件输入</label>
+                        <input type="file" id="file-upload">
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <textarea id="backInfo-show" style="color: #c70f12" class="form-control" rows="20"
+                              readonly="readonly"></textarea>
+                </div>
+            </div>
+            <!--手动添加院校信息-->
+            <div id="manualUploadModule">
+                <div class="modal-body">
+                    <table class="table table-striped" id="school-table">
+                        <tr>
+                            <td>
+                                <label for="school-name">院校名称</label>
+                                <input id="school-name" type="text" class="form-control"
+                                       placeholder="请输入院校名称">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="school-code">院校标识码</label>
+                                <input id="school-code" type="text" class="form-control"
+                                       onkeyup="value = value.replace(/[\W]/g,'')"
+                                       placeholder="请输入院校标识码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="school-location">归属地</label>
+                                <input id="school-location" type="text" class="form-control" placeholder="请输入院校归属地">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="admin-name">图书馆管理员</label>
+                                <input id="admin-name" type="text" class="form-control" placeholder="请输入图书馆管理员名称">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="admin-account">管理员账户</label>
+                                <input id="admin-account" type="text" class="form-control"
+                                       onkeyup="value = value.replace(/[\W]/g,'')" maxlength="16"
+                                       placeholder="请输入图书馆管理员账户">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="admin-password">管理员密码</label>
+                                <input id="admin-password" type="text" class="form-control"
+                                       onkeyup="value = value.replace(/[\W]/g,'')" maxlength="16"
+                                       placeholder="默认为：111111">
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="file-commit" type="button" class="btn btn-primary">
+                    提交更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <h3 class="text-center">图书馆座位管理系统</h3>
 <div id="pageContent">
     <!--院校信息统计模块-->
@@ -117,14 +194,10 @@
             </tr>
             <tr>
                 <td>
-                    <div class="form-group">
-                        <label class="sr-only" for="file-upload">文件输入</label>
-                        <input type="file" id="file-upload">
-                    </div>
-                    <button class="btn btn-primary" id="test">上传</button>
+                    <button class="btn btn-primary" id="btn-file-upload">文件导入</button>
                 </td>
                 <td>
-                    <button id='manual-upload' class='btn btn-primary '>手动添加</button>
+                    <button id='btn-manual-upload' class='btn btn-primary '>手动添加</button>
                 </td>
             </tr>
             </tbody>
@@ -185,9 +258,7 @@
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
-
     var roomPageNumber = 1;
     var roomPageMax;
     var adminPageNumber = 1;
@@ -198,36 +269,97 @@
         getAdminInfo();
     });
 
+    // 展示院校信息文件上传模态框
+    $("body").delegate('#btn-file-upload', 'click', function () {
+        $("#fileUploadModule").css({'display': 'block'});
+        $("#manualUploadModule").css({'display': 'none'});
+        $("#add-schools-info").modal('show');
+    });
+    $("body").delegate('#btn-manual-upload', 'click', function () {
+        $("#fileUploadModule").css({'display': 'none'});
+        $("#manualUploadModule").css({'display': 'block'});
+        $("#add-schools-info").modal('show');
+    });
 
     // 院校xmls表文件上传
-    $("body").delegate("#test", 'click', function () {
-        var filePath = $("#file-upload").val();
-        var file = $("#file-upload")[0].files[0];
-        var point = filePath.lastIndexOf(".");
-        var type = filePath.substr(point);
-        var formData = new FormData();
-        alert("filePath：" + filePath);
-        if (file === undefined || type !== ".xls" && type !== ".xlsx") {
-            alert("本系统只支持.xls和.xlsx表格");
-            return;
-        }
-        formData.append("filePath",filePath);
-        formData.append("file",file);
-        $.ajax({
-            type: "POST",
-            url: "/importFile",
-            processData: false,
-            data: formData,
-            dataType: "JSON",
-            contentType: false,
-            async : false,
-            error: function () {
-                alert("导入失败")
-            },
-            success: function (responseData) {
-                alert(responseData.msg);
+    $("#add-schools-info").delegate("#file-commit", 'click', function () {
+        // 文件导入院校信息
+        if ($("#fileUploadModule").css("display") === 'block') {
+            var filePath = $("#file-upload").val();
+            var file = $("#file-upload")[0].files[0];
+            var point = filePath.lastIndexOf(".");
+            var type = filePath.substr(point);
+            var formData = new FormData();
+            if (file === undefined || type !== ".xls" && type !== ".xlsx") {
+                alert("本系统只支持.xls和.xlsx表格");
+                return;
             }
-        })
+            formData.append("filePath", filePath);
+            formData.append("file", file);
+            $.ajax({
+                type: "POST",
+                url: "/importFile",
+                processData: false,
+                data: formData,
+                dataType: "JSON",
+                contentType: false,
+                async: false,
+                error: function () {
+                    alert("文件导入失败");
+                },
+                success: function (responseData) {
+                    $("#backInfo-show").val(responseData.msg);
+                }
+            })
+        } // 手动添加院校信息
+        else if ($("#manualUploadModule").css("display") === "block") {
+            var schoolName = $("#school-name").val();
+            var schoolCode = $("#school-code").val();
+            var schoolLocation = $("#school-location").val();
+            var adminName = $("#admin-name").val();
+            var adminAccount = $("#admin-account").val();
+            var adminPassword = $("#admin-password").val();
+            if (schoolCode === "" || schoolLocation === "" || schoolName === "" ||
+                adminAccount === "" || adminName === "") {
+                alert("提交之前请先完善表单");
+                return;
+            }
+            if (adminPassword === "") {
+                adminPassword = "111111";
+            }
+            var requestData = {
+                "schoolName": schoolName,
+                "schoolCode": schoolCode,
+                "schoolLocation": schoolLocation,
+                "adminName": adminName,
+                "adminAccount": adminAccount,
+                "adminPassword": adminPassword,
+                "adminLevel": 1,
+                "isValid": true
+            };
+            $.ajax({
+                type: "POST",
+                url: "/manualAddSchool",
+                data: JSON.stringify(requestData),
+                dataType: "JSON",
+                contentType: "application/json",
+                error: function (responseData) {
+                    alert("添加失败");
+                },
+                success: function (responseData) {
+                    if (responseData.code === 200) {
+                        $("#school-name").val("");
+                        $("#school-code").val("");
+                        $("#school-location").val("");
+                        $("#admin-name").val("");
+                        $("#admin-account").val("");
+                        $("#admin-password").val("");
+                    }
+                    alert(responseData.msg());
+                }
+            })
+        }
+
     });
 
 

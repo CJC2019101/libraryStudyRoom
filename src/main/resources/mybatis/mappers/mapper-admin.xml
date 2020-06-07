@@ -17,8 +17,12 @@
     </resultMap>
 
     <insert id="addAdmin" parameterType="cn.cqucc.library.model.admin.Admin">
-        insert into admins(id, admin_name, account, password, is_valid, create_at) values (
-            #{id}, #{name}, #{account}, #{password}, #{isValid}, #{createAt}
+        insert into admins(id, admin_name, account, password, is_valid, school_code,
+         school_name, school_location, level, create_at)
+         values (
+            #{id}, #{name}, #{account}, #{password},
+            #{isValid}, #{schoolCode}, #{schoolName},
+            #{schoolLocation}, #{level}, #{createAt}
         )
     </insert>
 

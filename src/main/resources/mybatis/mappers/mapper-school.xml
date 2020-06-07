@@ -19,4 +19,14 @@
             )
         </foreach>
     </insert>
+
+    <insert id="insertSchool" parameterType="cn.cqucc.library.model.school.req.ManualAddSchoolReq">
+        insert into schools (school_code, school_name, school_location,
+            create_at, admin_account, is_valid)
+            values (#{schoolCode}, #{schoolName}, #{schoolLocation}, #{createAt}, #{adminAccount}, #{isValid});
+    </insert>
+
+    <select id="findSchool" resultType="java.lang.Integer">
+        select count(1) from schools where school_code = #{schoolCode}
+    </select>
 </mapper>

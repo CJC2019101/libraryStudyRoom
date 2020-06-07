@@ -79,7 +79,7 @@ public class FileBO implements FileAPI {
                             String location = schoolLocation.getStringCellValue();
                             String adminName = schoolAdmin.getStringCellValue();
                             if (isNorm(account) || isNorm(password)) {
-                                buffer.add("\n" + "第" + i + "行的账户或密码不规范");
+                                buffer.add("第" + i + "行的账户或密码不规范");
                                 continue;
                             }
                             school = new School(code, name, location, account, true, new Date());
@@ -87,8 +87,8 @@ public class FileBO implements FileAPI {
                                     adminName, account, password, true,
                                     new Date(), name, code, location,
                                     AdminDirectory.AdminLevel.SCHOOL_SUPER_ADMIN);
-                            schools.add(school);
-                            admins.add(admin);
+//                            schools.add(school);
+//                            admins.add(admin);
                         }
                     }
                 }
