@@ -2,14 +2,18 @@ package cn.cqucc.library.service.school.bo;
 
 import cn.cqucc.library.model.admin.Admin;
 import cn.cqucc.library.model.admin.directory.AdminDirectory;
+import cn.cqucc.library.model.school.School;
 import cn.cqucc.library.model.school.req.ManualAddSchoolReq;
 import cn.cqucc.library.service.admin.dao.ICKAdminDAO;
 import cn.cqucc.library.service.school.api.ISchoolApi;
 import cn.cqucc.library.service.school.dao.ISchoolDAO;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -41,5 +45,13 @@ public class SchoolBO implements ISchoolApi {
             adminDAO.addAdmin(admin);
             return 200;
         }
+    }
+
+    @Override
+    public PageInfo findAllSchool() {
+//        PageHelper.startPage(1,10);
+//        List<School> schools = schoolDAO.findAllSchool();
+//        return new PageInfo(schools);
+        return null;
     }
 }

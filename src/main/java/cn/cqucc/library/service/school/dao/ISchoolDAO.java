@@ -18,4 +18,6 @@ public interface ISchoolDAO {
     void insertSchool(ManualAddSchoolReq schoolReq);
 
     int findSchool(String schoolCode);
+
+    void findAllSchool();
 }

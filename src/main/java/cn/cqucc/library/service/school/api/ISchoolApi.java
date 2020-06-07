@@ -1,6 +1,10 @@
 package cn.cqucc.library.service.school.api;
 
+import cn.cqucc.library.model.school.School;
 import cn.cqucc.library.model.school.req.ManualAddSchoolReq;
+import com.github.pagehelper.PageInfo;
+
+import java.util.List;
 
 /**
  * @author JianfeiChen
@@ -9,4 +13,6 @@ import cn.cqucc.library.model.school.req.ManualAddSchoolReq;
  */
 public interface ISchoolApi {
     int insertSchool(ManualAddSchoolReq schoolReq);
+
+    PageInfo findAllSchool();
 }

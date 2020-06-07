@@ -1,8 +1,10 @@
 package cn.cqucc.library.controller.school;
 
+import cn.cqucc.library.model.school.School;
 import cn.cqucc.library.model.school.req.ManualAddSchoolReq;
 import cn.cqucc.library.service.school.bo.SchoolBO;
 import cn.cqucc.library.status.BaseResponse;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -13,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author JianfeiChen
@@ -48,6 +54,15 @@ public class ControllerSchool {
         }else if (statusCode == 502){
             response.setMsg("添加失败，院校标识码重复");
         }
+        return response;
+    }
+
+    @RequestMapping(value = "/findAllSchool",method = RequestMethod.POST)
+    @ApiOperation("查询所有院校")
+    @ResponseBody
+    public BaseResponse findAllSchool(){
+        BaseResponse response = new BaseResponse();
+        PageInfo pageInfo = schoolBO.findAllSchool();
         return response;
     }
 }
