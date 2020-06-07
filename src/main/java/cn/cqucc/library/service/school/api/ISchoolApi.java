@@ -15,4 +15,8 @@ public interface ISchoolApi {
     int insertSchool(ManualAddSchoolReq schoolReq);
 
     PageInfo findAllSchool(Integer pageNum);
+
+    void setSchoolIsValid(String schoolCode);
+
+    PageInfo searchSchools(String keyWord);
 }

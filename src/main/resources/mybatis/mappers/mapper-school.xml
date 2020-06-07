@@ -36,6 +36,21 @@
                admin_name adminName
             from schools join admins on admins.school_code = schools.school_code
             where admins.level = 1
+            order by schools.create_at
     </select>
 
+    <select id="searchSchools" resultType="cn.cqucc.library.model.school.resp.FindAllSchoolResp">
+        select schools.school_code schoolCode, schools.school_name schoolName, schools.school_location schoolLocation,
+               schools.create_at createAt, schools.admin_account adminAccount, schools.is_valid isValid,
+               admin_name adminName
+            from schools join admins on admins.school_code = schools.school_code
+            where admins.level = 1 and admins.school_code like '%' || #{keyWord} || '%'
+                or admins.school_name like '%' || #{keyWord} || '%'
+            order by schools.create_at
+    </select>
+
+    <update id="setSchoolIsValid">
+        update schools set update_at = now(), is_valid = not is_valid
+            where school_code = #{schoolCode}
+    </update>
 </mapper>

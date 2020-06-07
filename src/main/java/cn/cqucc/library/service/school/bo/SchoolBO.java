@@ -4,9 +4,11 @@ import cn.cqucc.library.model.admin.Admin;
 import cn.cqucc.library.model.admin.directory.AdminDirectory;
 import cn.cqucc.library.model.school.School;
 import cn.cqucc.library.model.school.req.ManualAddSchoolReq;
+import cn.cqucc.library.model.school.resp.FindAllSchoolResp;
 import cn.cqucc.library.service.admin.dao.ICKAdminDAO;
 import cn.cqucc.library.service.school.api.ISchoolApi;
 import cn.cqucc.library.service.school.dao.ISchoolDAO;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +51,23 @@ public class SchoolBO implements ISchoolApi {
 
     @Override
     public PageInfo findAllSchool(Integer pageNum) {
-        PageHelper.startPage(pageNum,10);
-        List<School> schools = schoolDAO.findAllSchool();
+        PageHelper.startPage(pageNum, 10);
+        List<FindAllSchoolResp> schools = schoolDAO.findAllSchool();
         return new PageInfo(schools);
+    }
+
+    @Override
+    public void setSchoolIsValid(String schoolCode) {
+        schoolDAO.setSchoolIsValid(schoolCode);
+        Admin admin = new Admin();
+        admin.setSchoolCode(schoolCode);
+        adminDAO.setAdminIsValid(admin);
+    }
+
+    @Override
+    public PageInfo searchSchools(String keyWord) {
+        PageHelper.startPage(1, 10);
+        List<FindAllSchoolResp> schoolResps = schoolDAO.searchSchools(keyWord);
+        return new PageInfo(schoolResps);
     }
 }

@@ -37,6 +37,9 @@ public class FindAllSchoolResp implements Serializable {
     @ApiModelProperty("院校加盟时间")
     private Date createAt;
 
+    @ApiModelProperty("院校是否有效")
+    private boolean isValid;
+
     public String getCreateStr(){
         return DateUtil.formatDate(this.createAt,"yyyy年M月d日");
     }

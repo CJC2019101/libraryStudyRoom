@@ -76,7 +76,14 @@
     <update id="setAdminIsValid" parameterType="cn.cqucc.library.model.admin.Admin">
         update admins
             set update_at = #{updateAt}, is_valid = not is_valid
-            where account = #{account}
+            <where>
+                <if test="account != null and account != ''">
+                    account = #{account}
+                </if>
+                <if test="schoolCode != null and schoolCode != ''">
+                    and school_code = #{schoolCode}
+                </if>
+            </where>
     </update>
 
 </mapper>

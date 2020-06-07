@@ -1,6 +1,5 @@
 package cn.cqucc.library.controller.school;
 
-import cn.cqucc.library.model.school.School;
 import cn.cqucc.library.model.school.req.ManualAddSchoolReq;
 import cn.cqucc.library.service.school.bo.SchoolBO;
 import cn.cqucc.library.status.BaseResponse;
@@ -16,10 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author JianfeiChen
@@ -67,12 +62,36 @@ public class ControllerSchool {
         if (pageInfo.getSize() == 0) {
             response.setCode(502);
             response.setMsg("没有院校数据");
-        } else{
+        } else {
             response.setCode(200);
             response.setData(pageInfo);
             response.setMsg("查询成功");
         }
 
+        return response;
+    }
+
+    @RequestMapping(value = "/setSchoolIsValid", method = RequestMethod.GET)
+    @ApiImplicitParam(type = "update", value = "schoolCode", name = "院校表示码", required = true)
+    @ApiOperation("修改院校使用状态")
+    @ResponseBody
+    public BaseResponse setSchoolIsValid(@RequestParam String schoolCode) {
+        BaseResponse response = new BaseResponse();
+        schoolBO.setSchoolIsValid(schoolCode);
+        response.setCode(200);
+        response.setMsg("修改成功");
+        return response;
+    }
+
+    @RequestMapping(value = "/searchSchools", method = RequestMethod.GET)
+    @ApiImplicitParam(type = "select", name = "keyWord", value = "检索关键字", required = true)
+    @ApiOperation("检索院校信息")
+    @ResponseBody
+    public BaseResponse searchSchools(@RequestParam String keyWord) {
+        BaseResponse response = new BaseResponse();
+        PageInfo pageInfo = schoolBO.searchSchools(keyWord);
+        response.setCode(200);
+        response.setData(pageInfo);
         return response;
     }
 }
