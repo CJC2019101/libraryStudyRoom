@@ -19,5 +19,5 @@ public interface ISchoolDAO {
 
     int findSchool(String schoolCode);
 
-    void findAllSchool();
+    List<School> findAllSchool();
 }

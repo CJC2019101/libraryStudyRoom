@@ -221,32 +221,6 @@
                 <th style="text-align: center;">操作</th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-                <td>重庆大学城市科技学院</td>
-                <td>cqucc</td>
-                <td>重庆永川</td>
-                <td>五月天</td>
-                <td>2020年05月05日</td>
-                <td>
-                    <button id='school-modify' class='btn btn-primary '>修改</button>
-                    <button id='school-stop' class='btn btn-primary '>禁用</button>
-                    <!--                    <button id='school-start' class='btn btn-primary ' >启用</button>-->
-                </td>
-            </tr>
-            <tr>
-                <td>重庆西南大学</td>
-                <td>Southwest University</td>
-                <td>重庆大学城</td>
-                <td>六月天</td>
-                <td>2020年06月01日</td>
-                <td>
-                    <button id='modifyRoomSize' class='btn btn-primary '>修改</button>
-                    <!--                    <button id='roomStatus' class='btn btn-primary ' >禁用</button>-->
-                    <button id='roomStatus' class='btn btn-primary '>启用</button>
-                </td>
-            </tr>
-            </tbody>
         </table>
         <div class="footer" style="position: fixed; bottom: 6px; width: 74%;">
             <ul class='pager' style="float: left; margin-left: 40px;">
@@ -259,14 +233,68 @@
     </div>
 </div>
 <script type="text/javascript">
+    var schoolPageNumber = 1;
+    var schoolPageMax;
     var roomPageNumber = 1;
     var roomPageMax;
     var adminPageNumber = 1;
     var adminPageMax;
     //一加载就执行填充信息  用于记住登录信息
     $(document).ready(function () {
+        // 加载学校表格信息
+        createSchoolTable(schoolPageNumber);
         // 获取用户信息
         getAdminInfo();
+    });
+
+    // 创建院校信息表
+    function createSchoolTable(pageNumber) {
+        $.ajax({
+            type: "GET",
+            url: "/findAllSchool",
+            data: "pageNum=" + pageNumber,
+            dataType: "json",
+            contentType: "application/json",
+            error: function () {
+                alert("查询所有院校信息失败");
+            },
+            success: function (responseData) {
+                var schools = responseData.data.list;
+                schoolPageMax = responseData.data.pages;
+                var schoolTable = $("#schools");
+                schoolTable.find("tbody").remove();
+                var schoolStatus = "";
+                for (var i = 0; i < schools.length; i++) {
+                    if (schools[i].isValid) {
+                        schoolStatus = "禁用";
+                    } else {
+                        schoolStatus = "启用";
+                    }
+                    schoolTable.append("<tr><td>" + schools[i].schoolName + "</td>" +
+                        "<td>" + schools[i].schoolCode + "</td>" +
+                        "<td>" + schools[i].schoolLocation + "</td><td>" + schools[i].adminName + "</td>" +
+                        "<td>" + schools[i].createStr + "</td>" +
+                        "<td><button id='modifySchool' class='btn btn-primary '>修改</button>&nbsp;" +
+                        "<button id='modifySchool' class='btn btn-primary '>" + schoolStatus + "</button>" +
+                        "</td></tr>"
+                    )
+                }
+            }
+        })
+    }
+
+    // 院校信息表上下翻页
+    $("body").delegate("#school-previous", "click", function () {
+        if ((schoolPageNumber - 1) <= 0) {
+            schoolPageNumber = 1;
+        }
+        createSchoolTable(schoolPageNumber);
+    });
+    $("body").delegate("#school-next", "click", function () {
+        if ((schoolPageNumber + 1) > schoolPageMax) {
+            schoolPageNumber = schoolPageMax;
+        }
+        createSchoolTable(schoolPageNumber);
     });
 
     // 展示院校信息文件上传模态框

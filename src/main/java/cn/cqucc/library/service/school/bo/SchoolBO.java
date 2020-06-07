@@ -48,10 +48,9 @@ public class SchoolBO implements ISchoolApi {
     }
 
     @Override
-    public PageInfo findAllSchool() {
-//        PageHelper.startPage(1,10);
-//        List<School> schools = schoolDAO.findAllSchool();
-//        return new PageInfo(schools);
-        return null;
+    public PageInfo findAllSchool(Integer pageNum) {
+        PageHelper.startPage(pageNum,10);
+        List<School> schools = schoolDAO.findAllSchool();
+        return new PageInfo(schools);
     }
 }

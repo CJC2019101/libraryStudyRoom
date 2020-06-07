@@ -1,6 +1,7 @@
 package cn.cqucc.library.service.admin.dao;
 
 import cn.cqucc.library.model.admin.Admin;
+import cn.cqucc.library.model.school.School;
 import cn.cqucc.library.model.student.req.CKLibraryUserReq;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -27,4 +28,5 @@ public interface ICKAdminDAO {
     void setAdminIsValid(Admin admin);
 
     void addAdmins(List<Admin> admins);
+
 }
