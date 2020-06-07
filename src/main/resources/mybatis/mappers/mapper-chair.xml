@@ -16,7 +16,6 @@
         <result column="create_at" property="createAt"/>
         <result column="update_at" property="updateAt"/>
     </resultMap>
-
     <select id="occupyChairs" resultType="cn.cqucc.library.model.chair.resp.CKStudentChairInfo">
         select ch.floor_number floorNumber ,ch.room_id roomId ,ch.chair_row crow ,ch.chair_cell cell,
             chair_status status, stu.procession_grade processionGrade, stu.student_name userName, stu.student_id userId

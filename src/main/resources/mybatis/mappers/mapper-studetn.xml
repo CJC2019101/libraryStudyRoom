@@ -10,6 +10,7 @@
         <result column="procession_grade" property="processionGrade"/>
         <result column="password" property="password"/>
         <result column="student_sex" property="sex"/>
+        <result column="user_type" property="userType"/>
     </resultMap>
 
     <select id="isExist" resultType="java.lang.Integer">
@@ -33,9 +34,9 @@
                 where stu.student_id = #{account}
     </select>
 
-
     <update id="resetPassword" parameterType="cn.cqucc.library.model.student.req.CKLibraryUserReq">
         update students set password = #{password}
             where student_id = #{account}
     </update>
+
 </mapper>

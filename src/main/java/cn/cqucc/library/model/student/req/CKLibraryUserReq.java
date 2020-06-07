@@ -18,15 +18,15 @@ public class CKLibraryUserReq implements Serializable {
     private static final long serialVersionUID = 3207624320911396425L;
 
     @ApiModelProperty(value = "用户名称")
-    String name;
+    private String name;
 
     @ApiModelProperty(value = "用户账号")
-    String account;
+    private String account;
 
     @ApiModelProperty(value = "用户密码")
-    String password;
+    private String password;
 
-    @ApiModelProperty(value = "用户类型：0-学生、图书馆管理员, 1-学生，2-图书馆管理员")
-    int userType;
+    @ApiModelProperty(value = "用户类型：0-全部, 1-学生，2-图书馆管理员")
+    private int userType;
 
 }

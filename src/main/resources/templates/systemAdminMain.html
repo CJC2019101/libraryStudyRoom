@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>系统管理主页</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/style/css/base.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/style/css/login.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/style/layui/css/layui.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/style/layer/skin/layer.css}">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.16.0/bootstrap-table.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.16.0/bootstrap-table.min.css" rel="stylesheet">
+
+
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.16.0/bootstrap-table.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.16.0/bootstrap-table.min.js"></script>
+    <script type="text/javascript" th:src="@{/style/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/style/layer/layer.js}"></script>
+    <style>
+
+        /*页面填满屏幕*/
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .text-center {
+            font-weight: 700;
+        / / 字体加粗
+            /*color: #2b2b2b;*/
+        font-size: 40 px;
+        }
+
+        #pageContent {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center; /*定义body的元素垂直居中*/
+            justify-content: center; /*定义body的里的元素水平居中*/
+        }
+
+        #schoolManage {
+            width: 80%;
+            height: 100%;
+            margin-top: 110px;
+            padding: 0;
+            border: 2px groove #6a6665;
+        }
+
+        #schoolRecord {
+            width: 26%;
+            height: 100%;
+            margin-top: 110px;
+            padding: 0;
+            border: 2px groove #6a6665;
+        }
+
+        .table {
+            font-size: 20px;
+        }
+
+        #loginALabel {
+            position: absolute;
+            top: 20px;
+            right: 10px;
+        }
+
+        #userInfo {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+        }
+
+        .pager {
+            float: left;
+            width: 33%;
+            margin: 20px auto;;
+        }
+
+    </style>
+
+</head>
+<body>
+<!--登录入口-->
+<div id="loginALabel">
+    <a href="/login">学生后台入口</a>&emsp;
+    <a href="/adminLogin">管理员后台入口</a>
+</div>
+<button id="userInfo" type="button" class="btn btn-warning"></button>
+<!-- 添加院校信息 -->
+<div class="modal fade" id="add-schools-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--院校信息文件上传-->
+            <div id="fileUploadModule">
+                <div class="modal-header">
+                    <div class="form-group">
+                        <label class="sr-only" for="file-upload">文件输入</label>
+                        <input type="file" id="file-upload">
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <textarea id="backInfo-show" style="color: #c70f12" class="form-control" rows="20"
+                              readonly="readonly"></textarea>
+                </div>
+            </div>
+            <!--手动添加院校信息-->
+            <div id="manualUploadModule">
+                <div class="modal-body">
+                    <table class="table table-striped" id="school-table">
+                        <tr>
+                            <td>
+                                <label for="school-name">院校名称</label>
+                                <input id="school-name" type="text" class="form-control"
+                                       placeholder="请输入院校名称">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="school-code">院校标识码</label>
+                                <input id="school-code" type="text" class="form-control"
+                                       onkeyup="value = value.replace(/[\W]/g,'')"
+                                       placeholder="请输入院校标识码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="school-location">归属地</label>
+                                <input id="school-location" type="text" class="form-control" placeholder="请输入院校归属地">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="admin-name">图书馆管理员</label>
+                                <input id="admin-name" type="text" class="form-control" placeholder="请输入图书馆管理员名称">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="admin-account">管理员账户</label>
+                                <input id="admin-account" type="text" class="form-control"
+                                       onkeyup="value = value.replace(/[\W]/g,'')" maxlength="16"
+                                       placeholder="请输入图书馆管理员账户">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="admin-password">管理员密码</label>
+                                <input id="admin-password" type="text" class="form-control"
+                                       onkeyup="value = value.replace(/[\W]/g,'')" maxlength="16"
+                                       placeholder="默认为：111111">
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="file-commit" type="button" class="btn btn-primary">
+                    提交更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<h3 class="text-center">图书馆座位管理系统</h3>
+<div id="pageContent">
+    <!--院校信息统计模块-->
+    <div id="schoolRecord">
+        <table border="6px" style="width: 100%; height: 100%;">
+            <tbody>
+            <tr>
+                <td>
+                    <h3 class="text-center">加盟院校数</h3>
+                </td>
+                <td>
+                    <h3 class="text-center">156所</h3>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">添加院校</td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="btn btn-primary" id="btn-file-upload">文件导入</button>
+                </td>
+                <td>
+                    <button id='btn-manual-upload' class='btn btn-primary '>手动添加</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--加盟院校信息管理模块-->
+    <div id="schoolManage">
+        <h3 class="text-center">加盟院校</h3>
+        <div class="pull-right form-group">
+            <label class="sr-only" for="email">院校检索</label>
+            <input id="email" type="text" class="form-control" placeholder="院校检索">
+        </div>
+        <table id="schools" class="table table-hover" style="text-align: center;">
+            <thead>
+            <tr>
+                <th style="text-align: center;">院校名称</th>
+                <th style="text-align: center;">标识码</th>
+                <th style="text-align: center;">归属地</th>
+                <th style="text-align: center;">院校管理员</th>
+                <th style="text-align: center;">加盟时间</th>
+                <th style="text-align: center;">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>重庆大学城市科技学院</td>
+                <td>cqucc</td>
+                <td>重庆永川</td>
+                <td>五月天</td>
+                <td>2020年05月05日</td>
+                <td>
+                    <button id='school-modify' class='btn btn-primary '>修改</button>
+                    <button id='school-stop' class='btn btn-primary '>禁用</button>
+                    <!--                    <button id='school-start' class='btn btn-primary ' >启用</button>-->
+                </td>
+            </tr>
+            <tr>
+                <td>重庆西南大学</td>
+                <td>Southwest University</td>
+                <td>重庆大学城</td>
+                <td>六月天</td>
+                <td>2020年06月01日</td>
+                <td>
+                    <button id='modifyRoomSize' class='btn btn-primary '>修改</button>
+                    <!--                    <button id='roomStatus' class='btn btn-primary ' >禁用</button>-->
+                    <button id='roomStatus' class='btn btn-primary '>启用</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="footer" style="position: fixed; bottom: 6px; width: 74%;">
+            <ul class='pager' style="float: left; margin-left: 40px;">
+                <li><a href='#' style="float: left;" id='school-previous'>上一页</a></li>
+            </ul>
+            <ul class='pager' style="float: right;  margin-right: 40px;">
+                <li><a href='#' style="float: right;" id='school-next'>下一页</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var roomPageNumber = 1;
+    var roomPageMax;
+    var adminPageNumber = 1;
+    var adminPageMax;
+    //一加载就执行填充信息  用于记住登录信息
+    $(document).ready(function () {
+        // 获取用户信息
+        getAdminInfo();
+    });
+
+    // 展示院校信息文件上传模态框
+    $("body").delegate('#btn-file-upload', 'click', function () {
+        $("#fileUploadModule").css({'display': 'block'});
+        $("#manualUploadModule").css({'display': 'none'});
+        $("#add-schools-info").modal('show');
+    });
+    $("body").delegate('#btn-manual-upload', 'click', function () {
+        $("#fileUploadModule").css({'display': 'none'});
+        $("#manualUploadModule").css({'display': 'block'});
+        $("#add-schools-info").modal('show');
+    });
+
+    // 院校xmls表文件上传
+    $("#add-schools-info").delegate("#file-commit", 'click', function () {
+        // 文件导入院校信息
+        if ($("#fileUploadModule").css("display") === 'block') {
+            var filePath = $("#file-upload").val();
+            var file = $("#file-upload")[0].files[0];
+            var point = filePath.lastIndexOf(".");
+            var type = filePath.substr(point);
+            var formData = new FormData();
+            if (file === undefined || type !== ".xls" && type !== ".xlsx") {
+                alert("本系统只支持.xls和.xlsx表格");
+                return;
+            }
+            formData.append("filePath", filePath);
+            formData.append("file", file);
+            $.ajax({
+                type: "POST",
+                url: "/importFile",
+                processData: false,
+                data: formData,
+                dataType: "JSON",
+                contentType: false,
+                async: false,
+                error: function () {
+                    alert("文件导入失败");
+                },
+                success: function (responseData) {
+                    $("#backInfo-show").val(responseData.msg);
+                }
+            })
+        } // 手动添加院校信息
+        else if ($("#manualUploadModule").css("display") === "block") {
+            var schoolName = $("#school-name").val();
+            var schoolCode = $("#school-code").val();
+            var schoolLocation = $("#school-location").val();
+            var adminName = $("#admin-name").val();
+            var adminAccount = $("#admin-account").val();
+            var adminPassword = $("#admin-password").val();
+            if (schoolCode === "" || schoolLocation === "" || schoolName === "" ||
+                adminAccount === "" || adminName === "") {
+                alert("提交之前请先完善表单");
+                return;
+            }
+            if (adminPassword === "") {
+                adminPassword = "111111";
+            }
+            var requestData = {
+                "schoolName": schoolName,
+                "schoolCode": schoolCode,
+                "schoolLocation": schoolLocation,
+                "adminName": adminName,
+                "adminAccount": adminAccount,
+                "adminPassword": adminPassword,
+                "adminLevel": 1,
+                "isValid": true
+            };
+            $.ajax({
+                type: "POST",
+                url: "/manualAddSchool",
+                data: JSON.stringify(requestData),
+                dataType: "JSON",
+                contentType: "application/json",
+                error: function (responseData) {
+                    alert("添加失败");
+                },
+                success: function (responseData) {
+                    if (responseData.code === 200) {
+                        $("#school-name").val("");
+                        $("#school-code").val("");
+                        $("#school-location").val("");
+                        $("#admin-name").val("");
+                        $("#admin-account").val("");
+                        $("#admin-password").val("");
+                    }
+                    alert(responseData.msg());
+                }
+            })
+        }
+
+    });
+
+
+    // 管理员“禁用/启用”
+    $("#adminTable").delegate('#adminStatus', 'click', function () {
+        // 行位置
+        var row = $(this).parent().parent().index() + 1;
+        // 列位置
+        var col = $(this).parent().index() + 1;
+        var x = document.getElementById('adminTable').rows[row].cells;
+        // 教室号
+        var adminAccount = x[1].innerHTML;
+        $.ajax({
+            type: "GET",
+            url: "/setAdminIsValid",
+            data: "account=" + adminAccount,
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function (data) {
+                // alert(data.msg)  -- 当前未添加事务回滚
+                alert("数据查询失败")
+            },
+            success: function (data) {
+                alert(data.msg);
+                if (data.code === 200) {
+                    findAllAdmins(adminPageNumber);
+                }
+            }
+        })
+
+
+    });
+
+    // 修改“教室长或宽”
+    $("#rooms").delegate('#modifyRoomSize', 'click', function () {
+        // 行位置
+        var row = $(this).parent().parent().index() + 1;
+        // 列位置
+        var col = $(this).parent().index() + 1;
+        var x = document.getElementById('rooms').rows[row].cells;
+        // 教室号
+        var roomId = x[0].innerHTML;
+        // 楼层号
+        var floorNumber = x[1].innerHTML.replace("楼", "");
+        // 教室大小
+        var roomSize = x[2].innerHTML.split("x");
+        // 修改statusDiv状态提示框的display属性
+        $("#statusDiv").css('display', 'none');
+        $("#myModalLabel").html("修改教室大小");
+        // 取消用户信息表单搜索框
+        $("#roomTable").bootstrapTable('destroy').bootstrapTable({
+            search: false
+        });
+        document.getElementById("roomTable").innerHTML = "";
+        $("#roomTable").append("<tr><td>" +
+            "<label for='name'>教室编号：</label>\n" +
+            "<input onkeyup=\"value=value.replace(/[\\W]/g,'')\" " +
+            " type='text' id='newRoomId' maxlength='6' class=\"form-control\" value=" + roomId +
+            " placeholder=\"请输入新的教室编号\">\n" +
+            "</td></tr>"
+        );
+        $("#roomTable").append("<input id='oldRoomId' type='hidden' value='" + roomId + "'/>");
+        $("#roomTable").append("<tr><td>" +
+            "<label for=\"name\">长度：</label>\n" +
+            "<input type=\"number\" id='newRoomWidth' maxlength='6' class=\"form-control\" " +
+            "oninput='if (value<=0) value = 1; if (value>99) value=99;  '" +
+            " placeholder=\"请输入修改后的教室长度\" value=" + roomSize[0] + ">\n" +
+            "</td></tr>");
+        $("#roomTable").append("<tr><td>" +
+            "<label for=\"name\">宽度：</label>\n" +
+            "<input type=\"number\" id='newRoomLength' maxlength='6' class=\"form-control\"" +
+            " oninput='if (value>99)value=99; if (value<=0) value=1; '" +
+            " placeholder=\"请输入修改后的教室宽度\" value=" + roomSize[1] + ">\n" +
+            "</td></tr>");
+        $("#roomTable").append("<input id='floorNumber' type='hidden' value='" + floorNumber + "'/>");
+        // 显示模态框
+        $('#myModal').modal('show');
+
+    });
+
+    function getAdminInfo() {
+        // 发送ajax请求 -- 获取用户信息
+        $.ajax({
+            type: 'GET',
+            url: '/getAdminInfo',
+            data: 'account=' + $.cookie("account"),
+            dataType: 'JSON',
+            error: function (data) {
+                alert(data.msg)
+            },
+            success: function (data) {
+                var admin = data.data;
+                $("#userInfo").html(admin.name);
+            }
+        })
+    }
+
+    // 教室上下翻页
+    $("#schools").delegate("#roomPrevious", 'click', function () {
+        roomPageNumber = roomPageNumber - 1;
+        createRoomTable(roomPageNumber);
+    });
+    $("#schools").delegate("#roomNext", 'click', function () {
+        roomPageNumber = roomPageNumber + 1;
+        createRoomTable(roomPageNumber);
+    });
+
+    $("body").delegate('#addRoomButton', 'click', function () {
+        $(this).css({'background-color': '#539d38'});
+        $("#addRoomBody").css({'display': 'block'});
+        $("#addAdminButton").css({'background-color': '#286090'});
+        $("#addAdminBody").css({'display': 'none'});
+        $("#viewAdmins").css({'background-color': '#286090'});
+        $("#adminsBody").css({'display': 'none'});
+        $("#adminModal-footer").css({'display': 'block'});
+    });
+    $("body").delegate('#addAdminButton', 'click', function () {
+        $(this).css({'background-color': '#539d38'});
+        $("#addAdminBody").css({'display': 'block'});
+        $("#addRoomButton").css({'background-color': '#286090'});
+        $("#addRoomBody").css({'display': 'none'});
+        $("#viewAdmins").css({'background-color': '#286090'});
+        $("#adminsBody").css({'display': 'none'});
+        $("#adminModal-footer").css({'display': 'block'});
+    });
+    $("body").delegate('#viewAdmins', 'click', function () {
+        $(this).css({'background-color': '#539d38'});
+        $("#adminsBody").css({'display': 'block'});
+        $("#addRoomButton").css({'background-color': '#286090'});
+        $("#addRoomBody").css({'display': 'none'});
+        $("#addAdminButton").css({'background-color': '#286090'});
+        $("#addAdminBody").css({'display': 'none'});
+        $("#adminModal-footer").css({'display': 'none'});
+        findAllAdmins(adminPageNumber)
+    });
+
+    // 查看普通管理员账户信息
+    function findAllAdmins(pageNumber) {
+        var adminTable = $("#adminTable");
+        adminTable.find("tbody").remove();
+        if (pageNumber <= 0) {
+            pageNumber = 1;
+            adminPageNumber = 1;
+        } else if (adminPageNumber > adminPageMax) {
+            pageNumber = adminPageMax;
+            adminPageNumber = adminPageMax;
+        }
+        $.ajax({
+            type: "GET",
+            url: "findAllAdmins",
+            data: "pageNumber=" + pageNumber,
+            dataType: "JSON",
+            contentType: "application/json",
+            error: function (responseData) {
+                alert(responseData.msg)
+            },
+            success: function (responseData) {
+                var admins = responseData.data.list;
+                adminPageMax = responseData.data.pages;
+                var adminStatus;
+                adminTable.append("<tbody>");
+                for (var i = 0; i < admins.length; i++) {
+                    if (admins[i].isValid) {
+                        adminStatus = "<button id='adminStatus' class='btn btn-primary ' >禁用</button>";
+                    } else {
+                        adminStatus = "<button id='adminStatus' class='btn btn-primary ' >启用</button>"
+                    }
+                    adminTable.append("<tr><td>" + admins[i].name +
+                        "</td><td>" + admins[i].account +
+                        "</td><td>" + admins[i].password +
+                        "</td><td>" + admins[i].createAtStr +
+                        "</td><td>" + admins[i].updateAtStr +
+                        "</td><td>" + adminStatus +
+                        "</td></tr>"
+                    );
+                }
+                adminTable.append("<tr><td colspan='3'>" +
+                    "   <ul class='pager'>\n" +
+                    "       <li><a href='#' id='adminPrevious'>&laquo;Previous</a></li>\n" +
+                    "   </ul></td>" +
+                    "<td colspan='3'>" +
+                    "   <ul class='pager' style='float: right;'>\n" +
+                    "       <li><a href='#' id='adminNext'>Next&raquo;</a></li>\n" +
+                    "   </ul></td>" +
+                    "</tr></tbody>");
+            }
+        })
+    };
+
+    // 管理员用户表上下翻页
+    $("#adminTable").delegate('#adminPrevious', 'click', function () {
+        // alert("管理员用户上一页");
+        // return;
+        adminPageNumber = adminPageNumber - 1;
+        findAllAdmins(adminPageNumber);
+    });
+    $("#adminTable").delegate('#adminNext', 'click', function () {
+        // alert("管理员用户下一页");
+        // return;
+        adminPageNumber = adminPageNumber + 1;
+        findAllAdmins(adminPageNumber);
+    });
+
+    // 添加教室、普通管理员
+    $("body").delegate('#adminCommit', 'click', function () {
+        var requestData = "";
+        if ($("#addRoomBody").css("display") === 'block') {   // 判断visibility样式属性
+            var createRoomId = $("#createRoomId").val();
+            var createFloorNumber = $("#createFloorNumber").val();
+            var createRoomWidth = $("#createRoomWidth").val();
+            var createRoomLong = $("#createRoomLong").val();
+            if (createRoomId === '' || createRoomLong === '' || createRoomWidth === '' || createFloorNumber === '') {
+                alert("请检查您填写的数据是否完善");
+                return;
+            }
+            requestData = {
+                "id": createRoomId,
+                "floorNumber": createFloorNumber,
+                "roomWidth": createRoomWidth,
+                "roomLong": createRoomLong,
+                "isValid": false
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/createRoom",
+                data: JSON.stringify(requestData),
+                dataType: "JSON",
+                contentType: "application/json",
+                error: function (data) {
+                    alert(data.msg);
+                },
+                success: function (data) {
+                    alert(data.msg);
+                    if (data.code === 200) {
+                        $("#createRoomId").val("");
+                        $("#createFloorNumber").val("");
+                        $("#createRoomWidth").val("");
+                        $("#createRoomLong").val("");
+                        // 关闭模态框
+                        $('#adminModal').modal('hide');
+                        createRoomTable(roomPageNumber);
+                    }
+
+                }
+            })
+
+        }// 添加教室
+        else if ($("#addAdminBody").css("display") === 'block') {
+            var createAdminName = $("#createAdminName").val();
+            var createAdminAccount = $("#createAdminAccount").val();
+            var createAdminPassword = $("#createAdminPassword").val();
+            if (createAdminAccount === '' || createAdminName === '') {
+                alert("请检查您填写的数据是否完善");
+                return;
+            }
+            if (createAdminPassword === '') {
+                createAdminPassword = "admin";
+            }
+            requestData = {
+                "name": createAdminName,
+                "account": createAdminAccount,
+                "password": createAdminPassword,
+                "isValid": false
+            };
+            var sure = confirm("管理员账户无法修改请谨慎提交");
+            if (sure) {
+                $.ajax({
+                    type: "POST",
+                    url: "/addAdmin",
+                    data: JSON.stringify(requestData),
+                    dataType: "JSON",
+                    contentType: "application/json",
+                    error: function (responseData) {
+                        alert(responseData.msg);
+                    },
+                    success: function (responseData) {
+                        alert(responseData.msg)
+                        if (responseData.code === 200) {
+                            $("#createAdminName").val("");
+                            $("#createAdminAccount").val("");
+                            $("#createAdminPassword").val("");
+                            $("#adminModal").modal('hide');
+                        }
+                    }
+                })
+            }
+        }
+    });
+
+    // userInfo按钮点击事件
+    $('#userInfo').on('click',
+        function () {
+            // 修改statusDiv状态提示框的display属性
+            $("#statusDiv").css('display', 'none');
+            $("#myModalLabel").html("修改密码");
+            // 用户信息表单
+            $("#roomTable").bootstrapTable('destroy').bootstrapTable({
+                search: false
+            });
+            document.getElementById("roomTable").innerHTML = "";
+            $("#roomTable").append("<tr><td>" +
+                "<label for=\"name\">新的账户名称：</label>\n" +
+                "<input type=\"text\" id='newAdminName' maxlength='6'value='" + $(this).text() + "' class=\"form-control\" placeholder=\"请输入新的账户名称，默认不改变\">\n" +
+                "</td></tr>");
+            $("#roomTable").append("<tr><td>" +
+                "<label for=\"name\">原密码：</label>\n" +
+                "<input type=\"password\" id='oldPassword' maxlength='6' class=\"form-control\" placeholder=\"请输入原密码\">\n" +
+                "</td></tr>");
+            $("#roomTable").append("<tr><td>" +
+                "<label for=\"name\">新密码：</label>\n" +
+                "<input type=\"password\" id='newPassword' maxlength='6' class=\"form-control\" placeholder=\"请输入新密码\">\n" +
+                "</td></tr>");
+            $("#roomTable").append("<tr><td>" +
+                "<label for=\"name\">确认新密码：</label>\n" +
+                "<input type=\"password\" id='confirmPassword' maxlength='6' class=\"form-control\" placeholder=\"请输入新密码\">\n" +
+                "</td></tr>");
+            // 显示模态框
+            $('#myModal').modal('show')
+        });
+
+
+</script>
+
+
+</body>
+</html>

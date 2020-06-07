@@ -13,15 +13,11 @@ public class CKStudentDictory {
 
     public static class UserType {
 
-        @Description(description = "全部")
-        public static int all = 0;
-
         @Description(description = "学生")
-        public static int student = 1;
+        public static int student = 0;
 
-        @Description(description = "管理员")
-        public static int manager = 2;
-
+        @Description(description = "教职工")
+        public static int staff = 1;
 
     }
 }

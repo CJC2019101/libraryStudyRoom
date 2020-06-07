@@ -66,6 +66,11 @@ public class ControllerAdmin {
             @ApiImplicitParam(type = "insert", name = "name", value = "管理员名称", required = true),
             @ApiImplicitParam(type = "insert", name = "account", value = "管理员密码：为空则为默认密码admin", required = true),
             @ApiImplicitParam(type = "insert", name = "password", value = "管理员密码", required = true),
+            @ApiImplicitParam(type = "insert", name = "schoolName", value = "所属院校", required = true),
+            @ApiImplicitParam(type = "insert", name = "schoolCode", value = "所属院校码", required = true),
+            @ApiImplicitParam(type = "insert", name = "schoolLocation", value = "所属院校归属地", required = true),
+            @ApiImplicitParam(type = "insert", name = "level", value = "管理员等级", required = true),
+            @ApiImplicitParam(type = "insert", name = "isValid", value = "是否有效", required = true)
     })
     @ApiOperation(value = "添加普通管理员")
     @ResponseBody
@@ -75,7 +80,7 @@ public class ControllerAdmin {
         if (statusCode == 200) {
             response.setMsg("添加成功");
         } else if (statusCode == 502) {
-            response.setMsg("添加失败，存在相同的管理员账户");
+            response.setMsg("添加失败，存在相同的管理员账户或所属院校不存在");
         }
         response.setCode(statusCode);
         return response;

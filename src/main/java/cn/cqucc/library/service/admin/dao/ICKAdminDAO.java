@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Mapper
 public interface ICKAdminDAO {
-    int isExist(@Param(value = "account")String account, @Param(value = "password")String password);
+    int isExist(Admin admin);
 
     Admin getAdminInfo(@Param(value = "account") String account);
 
@@ -25,4 +25,6 @@ public interface ICKAdminDAO {
     void addAdmin(Admin admin);
 
     void setAdminIsValid(Admin admin);
+
+    void addAdmins(List<Admin> admins);
 }

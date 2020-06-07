@@ -252,6 +252,24 @@
                     <table class="table table-striped">
                         <tr>
                             <td>
+                                <label>院校名称-归属地：</label>
+                                <input type="text" class="form-control" id="shcool-location"
+                                       onkeyup="value = value.replace(/[\W]/g,'')"
+                                       maxlength="8"
+                                       placeholder="请输入管理员密码,默认为:admin">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>院校标识码：</label>
+                                <input type="text" class="form-control" id="school-code"
+                                       onkeyup="value = value.replace(/[\W]/g,'')"
+                                       maxlength="8"
+                                       placeholder="请输入管理员密码,默认为:admin">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <label>管理员姓名：</label>
                                 <input type="text" class="form-control" id="createAdminName"
                                        placeholder="请输入管理员姓名">
@@ -262,7 +280,7 @@
                                 <label>管理员账号：</label>
                                 <input type="text" class="form-control" id="createAdminAccount"
                                        onkeyup="value = value.replace(/[\W]/g,'')"
-                                       maxlength="8"
+                                       maxlength="16"
                                        placeholder="请输入管理员账号">
                             </td>
                         </tr>
@@ -422,7 +440,7 @@
         $("#rooms").find(".footer").remove();
         if ($.cookie("account") === 'admin') {
             addRoom = "<ul class='pager'>\n" +
-                "<li><a class='btn btn-primary btn-lg'style='color: #286090;' data-toggle='modal' data-target='#adminModal' id='roomAdd'>&oplus;Add</a></li>\n" +
+                "<li><a class='btn btn-primary btn-lg'style='color: #286090;' data-toggle='modal' data-target='#adminModal' id='roomAdd'>添加教室</a></li>\n" +
                 "</ul>\n";
             // alert("超级管理员用户")
         }
@@ -458,11 +476,11 @@
                     }
                     $("#rooms").append("<div class='footer'  style=\"position: fixed; bottom: 6px; width: 67%;\">" +
                         "           <ul class='pager'>\n" +
-                        "               <li><a href='#' id='roomPrevious'>&laquo;Previous</a></li>\n" +
+                        "               <li><a href='#' id='roomPrevious'>上一页</a></li>\n" +
                         "           </ul>\n" +
                         addRoom +
                         "           <ul class='pager' style='float: right;'>\n" +
-                        "               <li><a href='#' id='roomNext'>Next&raquo;</a></li>\n" +
+                        "               <li><a href='#' id='roomNext'>下一页</a></li>\n" +
                         "           </ul></div>"
                     )
                 } else {
