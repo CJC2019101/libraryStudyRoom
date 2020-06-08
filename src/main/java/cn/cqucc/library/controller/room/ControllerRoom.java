@@ -61,11 +61,14 @@ public class ControllerRoom {
 
 
     @RequestMapping(value = "/findAllRooms", method = RequestMethod.GET)
-    @ApiImplicitParam(type = "query", name = "pageNumber", value = "查询指定页", required = true)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "query", name = "pageNumber", value = "查询指定页", required = true),
+            @ApiImplicitParam(type = "query", name = "schoolCode", value = "院校标识码", required = true)
+    })
     @ApiOperation(value = "查询所有教室")
     @ResponseBody
-    public BaseResponse findAll(@RequestParam Integer pageNumber) {
-        PageInfo allRooms = roomBO.findAll(pageNumber);
+    public BaseResponse findAll(@RequestParam Integer pageNumber,@RequestParam String schoolCode) {
+        PageInfo allRooms = roomBO.findAll(pageNumber,schoolCode);
         BaseResponse response = new BaseResponse();
         response.setCode(200);
         response.setMsg("成功");
@@ -157,7 +160,8 @@ public class ControllerRoom {
             @ApiImplicitParam(type = "insert", name = "id", value = "教室编号", required = true),
             @ApiImplicitParam(type = "insert", name = "floorNumber", value = "楼层数", required = true),
             @ApiImplicitParam(type = "insert", name = "roomWidth", value = "教室宽度", required = true),
-            @ApiImplicitParam(type = "insert", name = "roomLong", value = "教室长度", required = true)
+            @ApiImplicitParam(type = "insert", name = "roomLong", value = "教室长度", required = true),
+            @ApiImplicitParam(type = "insert", name = "schoolCode", value = "院校标识码", required = true),
     })
     @ApiOperation(value = "创建教室")
     @ResponseBody

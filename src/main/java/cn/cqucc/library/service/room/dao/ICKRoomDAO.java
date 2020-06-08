@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Mapper
 public interface ICKRoomDAO {
-    List<Room> findAll();
+    List<Room> findAll(String schoolCode);
 
     Room findRoom(String roomId);
 

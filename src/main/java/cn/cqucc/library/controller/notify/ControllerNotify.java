@@ -85,7 +85,8 @@ public class ControllerNotify {
     @RequestMapping(value = "/findAllNotify", method = RequestMethod.POST)
     @ApiImplicitParams({
             @ApiImplicitParam(type = "query", name = "account", value = "当前账户", required = true),
-            @ApiImplicitParam(type = "query", name = "pageNumber", value = "当前查询页", required = true)
+            @ApiImplicitParam(type = "query", name = "pageNumber", value = "当前查询页", required = true),
+            @ApiImplicitParam(type = "query", name = "schoolCode", value = "院校标识码", required = true)
     })
     @ApiOperation(value = "查询所有发布公共")
     @ResponseBody

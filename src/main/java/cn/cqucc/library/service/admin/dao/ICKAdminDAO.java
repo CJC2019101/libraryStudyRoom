@@ -21,7 +21,7 @@ public interface ICKAdminDAO {
 
     void resetPassword(CKLibraryUserReq user);
 
-    List<Admin> findAllAdmins();
+    List<Admin> findAllAdmins(String schoolCode);
 
     void addAdmin(Admin admin);
 

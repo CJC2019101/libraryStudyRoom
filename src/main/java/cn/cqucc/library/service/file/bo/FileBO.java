@@ -156,6 +156,8 @@ public class FileBO implements FileAPI {
                             }
                             String idCardStringValue = idCard.getStringCellValue();
 //                            ^：表示从字符串头部开始匹配。如：^aaa：只有开头是aaa的字符串才匹配成功。
+//                            字符串头部^和字符串尾部$：表示匹配一个完整的字符串。
+//                                  如^[a-z]$：只能是小写英文字母组成的字符串才可以匹配
                             if (!(schoolCode.getStringCellValue().matches("^[a-z0-9A-Z]+$")) ||
                                     !(idCardStringValue.matches("^[a-z0-9A-Z]+$"))) {
                                 buffer.add("第" + i + "行的院校标识码或身份证号码不规范");

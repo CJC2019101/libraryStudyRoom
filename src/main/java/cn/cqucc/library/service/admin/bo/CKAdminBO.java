@@ -2,9 +2,11 @@ package cn.cqucc.library.service.admin.bo;
 
 import cn.cqucc.library.model.admin.Admin;
 import cn.cqucc.library.model.admin.directory.AdminDirectory;
+import cn.cqucc.library.model.school.School;
 import cn.cqucc.library.model.student.req.CKLibraryUserReq;
 import cn.cqucc.library.service.admin.api.ICKAdminAPI;
 import cn.cqucc.library.service.admin.dao.ICKAdminDAO;
+import cn.cqucc.library.service.school.dao.ISchoolDAO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import java.util.UUID;
 public class CKAdminBO implements ICKAdminAPI {
     @Autowired
     ICKAdminDAO adminDAO;
+    @Autowired
+    ISchoolDAO schoolDAO;
 
     @Override
     public int isExist(Admin admin) {
@@ -40,17 +44,19 @@ public class CKAdminBO implements ICKAdminAPI {
     }
 
     @Override
-    public PageInfo<List> findAllAdmins(Integer pageNumber) {
+    public PageInfo<List> findAllAdmins(Integer pageNumber, String schoolCode) {
         PageHelper.startPage(pageNumber, 5);
-        List<Admin> admins = adminDAO.findAllAdmins();
+        List<Admin> admins = adminDAO.findAllAdmins(schoolCode);
         return new PageInfo(admins);
     }
 
     @Override
     public int addAdmin(Admin admin) {
         Admin duplicate = adminDAO.getAdminInfo(admin.getAccount());
-        // TODO 所属院校是否存在
         if (duplicate == null || duplicate.getId() == null || ("".equals(duplicate.getId()))) {
+            School school = schoolDAO.findSchool(admin.getSchoolCode());
+            admin.setSchoolName(school.getSchoolName());
+            admin.setSchoolLocation(school.getSchoolLocation());
             admin.setCreateAt(new Date());
             admin.setId(UUID.randomUUID().toString().replaceAll("-", ""));
             adminDAO.addAdmin(admin);

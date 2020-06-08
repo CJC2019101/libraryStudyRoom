@@ -1,14 +1,11 @@
 package cn.cqucc.library.service.school.bo;
 
 import cn.cqucc.library.model.admin.Admin;
-import cn.cqucc.library.model.admin.directory.AdminDirectory;
-import cn.cqucc.library.model.school.School;
 import cn.cqucc.library.model.school.req.ManualAddSchoolReq;
 import cn.cqucc.library.model.school.resp.FindAllSchoolResp;
 import cn.cqucc.library.service.admin.dao.ICKAdminDAO;
 import cn.cqucc.library.service.school.api.ISchoolApi;
 import cn.cqucc.library.service.school.dao.ISchoolDAO;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +31,7 @@ public class SchoolBO implements ISchoolApi {
     @Override
     // TODO 添加事务回滚
     public int insertSchool(ManualAddSchoolReq schoolReq) {
-        int isExist = schoolDAO.findSchool(schoolReq.getSchoolCode());
+        int isExist = schoolDAO.schoolIsExist(schoolReq.getSchoolCode());
         if (isExist == 1) {
             return 502;
         } else {

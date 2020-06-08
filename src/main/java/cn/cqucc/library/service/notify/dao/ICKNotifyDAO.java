@@ -21,7 +21,7 @@ public interface ICKNotifyDAO {
 
     void updateNotify(Notify notify);
 
-    List<Notify> findAllNotify();
+    List<Notify> findAllNotify(String schoolCode);
 
     void lookNotify(Notify notify);
 

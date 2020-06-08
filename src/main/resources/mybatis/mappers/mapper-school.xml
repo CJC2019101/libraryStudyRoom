@@ -26,8 +26,12 @@
             values (#{schoolCode}, #{schoolName}, #{schoolLocation}, #{createAt}, #{adminAccount}, #{isValid});
     </insert>
 
-    <select id="findSchool" resultType="java.lang.Integer">
+    <select id="schoolIsExist" resultType="java.lang.Integer">
         select count(1) from schools where school_code = #{schoolCode}
+    </select>
+
+    <select id="findSchool" resultMap="BaseResultMap">
+        select * from schools where school_code = #{schoolCode}
     </select>
 
     <select id="findAllSchool" resultType="cn.cqucc.library.model.school.resp.FindAllSchoolResp">

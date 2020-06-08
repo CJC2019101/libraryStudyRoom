@@ -19,7 +19,9 @@ public interface ISchoolDAO {
 
     void insertSchool(ManualAddSchoolReq schoolReq);
 
-    int findSchool(String schoolCode);
+    int schoolIsExist(String schoolCode);
+
+    School findSchool(String schoolCode);
 
     List<FindAllSchoolResp> findAllSchool();
 

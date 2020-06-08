@@ -257,20 +257,9 @@
                     <table class="table table-striped">
                         <tr>
                             <td>
-                                <label>院校名称-归属地：</label>
-                                <input type="text" class="form-control" id="shcool-location"
-                                       onkeyup="value = value.replace(/[\W]/g,'')"
-                                       maxlength="8"
-                                       placeholder="请输入管理员密码,默认为:admin">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
                                 <label>院校标识码：</label>
                                 <input type="text" class="form-control" id="school-code"
-                                       onkeyup="value = value.replace(/[\W]/g,'')"
-                                       maxlength="8"
-                                       placeholder="请输入管理员密码,默认为:admin">
+                                       readonly="readonly">
                             </td>
                         </tr>
                         <tr>
@@ -286,7 +275,7 @@
                                 <input type="text" class="form-control" id="createAdminAccount"
                                        onkeyup="value = value.replace(/[\W]/g,'')"
                                        maxlength="16"
-                                       placeholder="请输入管理员账号">
+                                       placeholder="请输入管理员账号(默认添加院校标识码作为账号前缀)">
                             </td>
                         </tr>
                         <tr>
@@ -322,8 +311,8 @@
                             <label class="sr-only" for="file-upload">文件输入</label>
                             <input type="file" id="file-upload">
                         </div>
-                    <textarea id="backInfo-show" style="color: #c70f12" class="form-control" rows="20"
-                              readonly="readonly"></textarea>
+                        <textarea id="backInfo-show" style="color: #c70f12" class="form-control" rows="20"
+                                  readonly="readonly"></textarea>
                     </div>
                 </div>
             </div>
@@ -434,12 +423,12 @@
     var adminPageMax;
     //一加载就执行填充信息  用于记住登录信息
     $(document).ready(function () {
+        // 获取用户信息
+        getAdminInfo();
         // 公告栏的创建
         createNotifyModule(notificationPageNumber);
         //发送ajax请求 -- 教室表格的创建
         createRoomTable(1);
-        // 获取用户信息
-        getAdminInfo();
     });
 
     //发送ajax请求 -- 教室表格的创建
@@ -463,7 +452,7 @@
         $.ajax({
             type: 'GET',
             url: '/findAllRooms',
-            data: 'pageNumber=' + pageNum,
+            data: 'pageNumber=' + pageNum + '&schoolCode=' + $.cookie('schoolCode'),
             dataType: 'JSON',
             error: function (data) {
                 alert("连接超时");
@@ -519,7 +508,8 @@
         $("#notification").find("#notify-group").empty();
         var requestData = {
             "account": $.cookie('account'),
-            "pageNumber": pageNum
+            "pageNumber": pageNum,
+            "schoolCode": $.cookie("schoolCode")
         };
         $.ajax({
             type: "POST",
@@ -732,6 +722,7 @@
             success: function (data) {
                 var admin = data.data;
                 $("#userInfo").html(admin.name);
+                $.cookie("schoolCode", admin.schoolCode, {expires: 7});
             }
         })
     }
@@ -802,6 +793,7 @@
         $("#loadUser").css({'background-color': '#286090'});
         $("#fileUploadModule").css({'display': 'none'});
         $("#adminModal-footer").css({'display': 'block'});
+        $("#school-code").val($.cookie("schoolCode"));
     });
     $("body").delegate('#viewAdmins', 'click', function () {
         $(this).css({'background-color': '#539d38'});
@@ -841,8 +833,8 @@
         }
         $.ajax({
             type: "GET",
-            url: "findAllAdmins",
-            data: "pageNumber=" + pageNumber,
+            url: "/findAllAdmins",
+            data: "pageNumber=" + pageNumber + "&schoolCode=" + $.cookie('schoolCode'),
             dataType: "JSON",
             contentType: "application/json",
             error: function (responseData) {
@@ -911,7 +903,8 @@
                 "floorNumber": createFloorNumber,
                 "roomWidth": createRoomWidth,
                 "roomLong": createRoomLong,
-                "isValid": false
+                "isValid": false,
+                "schoolCode": $.cookie('schoolCode')
             };
 
             $.ajax({
@@ -952,9 +945,11 @@
             }
             requestData = {
                 "name": createAdminName,
-                "account": createAdminAccount,
+                "account": $.cookie('schoolCode') + createAdminAccount,
                 "password": createAdminPassword,
-                "isValid": false
+                "isValid": false,
+                "schoolCode": $.cookie('schoolCode'),
+                "level": 3
             };
             var sure = confirm("管理员账户无法修改请谨慎提交");
             if (sure) {
@@ -1122,6 +1117,7 @@
     $("#add-schools-info").delegate("#file-commit", 'click', function () {
 
     });
+
     // 删除管理员草稿状态的公共
     function updateNotifyStatus() {
         $.ajax({
@@ -1169,6 +1165,7 @@
             // 显示模态框
             $('#myModal').modal('show')
         });
+
     // 创建座位表格
     function buildTable($el, cells, rows, floorNumber, roomId) {
         var chairData = {
@@ -1241,6 +1238,7 @@
             }
         });
     }
+
     // 发送选中的座位数据、新的密码、修改后教室长宽
     $("body").delegate("#commit", "click", function () {
         var modalTitle = $("#myModalLabel").text();

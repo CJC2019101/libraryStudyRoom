@@ -27,9 +27,9 @@ public class CKRoomBO implements ICKRoomApi {
     ICKChairDAO chairDAO;
 
     @Override
-    public PageInfo<List> findAll(Integer pageNumber) {
+    public PageInfo<List> findAll(Integer pageNumber, String schoolCode) {
         PageHelper.startPage(pageNumber, 9);
-        List<Room> allRooms = roomDAO.findAll();
+        List<Room> allRooms = roomDAO.findAll(schoolCode);
         return new PageInfo(allRooms);
     }
 

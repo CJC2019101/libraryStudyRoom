@@ -18,7 +18,7 @@ public interface ICKAdminAPI {
 
     void resetPassword(CKLibraryUserReq user);
 
-    PageInfo<List> findAllAdmins(Integer pageNumber);
+    PageInfo<List> findAllAdmins(Integer pageNumber, String schoolCode);
 
     int addAdmin(Admin admin);
 

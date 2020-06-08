@@ -56,7 +56,7 @@
     <select id="findAllAdmins" resultMap="BaseResultMap">
         select *
             from admins
-            where admins.account != 'admin'
+            where school_code = #{schoolCode} and level != 1
             order by admins.admin_name desc,admins.create_at desc
     </select>
 

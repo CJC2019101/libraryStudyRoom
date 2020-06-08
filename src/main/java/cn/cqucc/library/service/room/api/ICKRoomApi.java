@@ -12,7 +12,7 @@ import java.util.List;
  * @Description cn.cqucc.library.service.room.api
  */
 public interface ICKRoomApi {
-    PageInfo<List> findAll(Integer pageNumber);
+    PageInfo<List> findAll(Integer pageNumber, String schoolCode);
 
     Room findRoom(String roomId);
 

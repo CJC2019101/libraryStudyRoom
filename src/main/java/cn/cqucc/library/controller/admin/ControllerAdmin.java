@@ -49,12 +49,15 @@ public class ControllerAdmin {
     }
 
     @RequestMapping(value = "/findAllAdmins", method = RequestMethod.GET)
-    @ApiImplicitParam(type = "query", name = "pageNumber", value = "当前页", required = true)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "query", name = "pageNumber", value = "当前页", required = true),
+            @ApiImplicitParam(type = "query", name = "schoolCode", value = "院校标识码", required = true)
+    })
     @ApiOperation(value = "查询所有管理员账户信息，除开超级管理员")
     @ResponseBody
-    public BaseResponse findAllAdmins(@RequestParam Integer pageNumber) {
+    public BaseResponse findAllAdmins(@RequestParam Integer pageNumber, @RequestParam String schoolCode) {
         BaseResponse response = new BaseResponse();
-        PageInfo<List> pageInfo = adminBO.findAllAdmins(pageNumber);
+        PageInfo<List> pageInfo = adminBO.findAllAdmins(pageNumber,schoolCode);
         response.setCode(200);
         response.setMsg("success");
         response.setData(pageInfo);
@@ -66,11 +69,9 @@ public class ControllerAdmin {
             @ApiImplicitParam(type = "insert", name = "name", value = "管理员名称", required = true),
             @ApiImplicitParam(type = "insert", name = "account", value = "管理员密码：为空则为默认密码admin", required = true),
             @ApiImplicitParam(type = "insert", name = "password", value = "管理员密码", required = true),
-            @ApiImplicitParam(type = "insert", name = "schoolName", value = "所属院校", required = true),
             @ApiImplicitParam(type = "insert", name = "schoolCode", value = "所属院校码", required = true),
-            @ApiImplicitParam(type = "insert", name = "schoolLocation", value = "所属院校归属地", required = true),
-            @ApiImplicitParam(type = "insert", name = "level", value = "管理员等级", required = true),
-            @ApiImplicitParam(type = "insert", name = "isValid", value = "是否有效", required = true)
+            @ApiImplicitParam(type = "insert", name = "isValid", value = "是否有效", required = true),
+            @ApiImplicitParam(type = "insert", name = "level", value = "管理员等级", required = true)
     })
     @ApiOperation(value = "添加普通管理员")
     @ResponseBody

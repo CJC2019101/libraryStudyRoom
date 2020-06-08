@@ -15,6 +15,7 @@
 
     <select id="findAll" resultMap="BaseResultMap">
         select * from rooms
+            where school_code = #{schoolCode}
             order by floor_number asc,id asc
     </select>
 
@@ -53,12 +54,13 @@
     </update>
 
     <insert id="createRoom" parameterType="cn.cqucc.library.model.room.Room">
-        insert into rooms(id, floor_number, width, long, is_valid, create_at) values(
+        insert into rooms(id, floor_number, width, long, is_valid, school_code, create_at) values(
             #{id},
             #{floorNumber},
             #{roomWidth},
             #{roomLong},
             false,
+            #{schoolCode},
             #{createAt}
         )
     </insert>
