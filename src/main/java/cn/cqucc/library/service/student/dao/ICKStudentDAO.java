@@ -6,6 +6,8 @@ import cn.cqucc.library.model.student.resp.StudentInfoResp;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author JianfeiChen
  * @date 2020/4/6 10:50
@@ -20,4 +22,6 @@ public interface ICKStudentDAO {
     void resetPassword(CKLibraryUserReq user);
 
     StudentInfoResp getDetailUserInfo(String account);
+
+    void insertStudents(List<Student> students);
 }

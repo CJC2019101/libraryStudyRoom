@@ -12,6 +12,7 @@
         <result column="status" property="status"/>
         <result column="looked_user_id" typeHandler="cn.cqucc.library.utils.ArrayTypeHandler"
                 property="lookedUserId"/>
+        <result column="school_code" property="schoolCode"/>
     </resultMap>
 
     <insert id="addNotify" parameterType="cn.cqucc.library.model.notify.Notify">

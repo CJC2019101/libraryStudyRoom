@@ -8,6 +8,7 @@
         <result column="long" property="roomLong"/>
         <result column="width" property="roomWidth"/>
         <result column="is_valid" property="isValid"/>
+        <result column="school_code" property="schoolCode"/>
         <result column="create_at" property="createAt"/>
         <result column="update_at" property="updateAt"/>
     </resultMap>

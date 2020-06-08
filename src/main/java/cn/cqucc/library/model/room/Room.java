@@ -33,6 +33,9 @@ public class Room implements Serializable {
     @ApiModelProperty(value = "教室是否启用")
     private Boolean isValid;
 
+    @ApiModelProperty(value = "院校标识码")
+    private String schoolCode;
+
     @ApiModelProperty(value = "创建时间")
     private Date createAt;
 

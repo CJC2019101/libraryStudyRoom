@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @date 2020/5/10 16:58
  * @Description cn.cqucc.library.model.notify.req
  */
-@ApiModel("查询所有发布公告")
+@ApiModel("查询所属院校所有发布公告")
 @Data
 public class NotifyFindAllReq implements Serializable {
     private static final long serialVersionUID = -2784598400874963893L;
@@ -21,4 +21,7 @@ public class NotifyFindAllReq implements Serializable {
 
     @ApiModelProperty(value = "当前的查询页")
     private Integer pageNumber;
+
+    @ApiModelProperty(value = "院校标识码")
+    private String schoolCode;
 }

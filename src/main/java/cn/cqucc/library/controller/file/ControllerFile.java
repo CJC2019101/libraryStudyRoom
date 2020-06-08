@@ -39,4 +39,21 @@ public class ControllerFile {
         return response;
     }
 
+    @RequestMapping(value = "/importUser", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "insert", value = "file", name = "文件", required = true),
+            @ApiImplicitParam(type = "insert", value = "filePath", name = "文件路径", required = true)
+    })
+    @ApiOperation("文件导入院校教职工/学生信息")
+    @ResponseBody
+    public BaseResponse importUser(@RequestParam("file") MultipartFile file, @RequestParam("filePath") String filePath) {
+        BaseResponse response = new BaseResponse();
+        String msg = fileBO.importUser(file, filePath);
+        response.setMsg(msg);
+        System.out.println(msg);
+        return response;
+    }
+
+
+
 }

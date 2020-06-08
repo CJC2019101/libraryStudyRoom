@@ -195,7 +195,7 @@
     </div><!-- /.modal -->
 </div>
 
-<!-- 添加教室、添加管理员 -->
+<!-- 添加教室、添加管理员、文件导入教职工/学生信息 -->
 <div class="modal fade" id="adminModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -208,9 +208,13 @@
                 </button>&nbsp;
                 <button id="viewAdmins" class='btn ' style=" width: 50%; color: white; background-color: #286090;">
                     普通管理员表格
+                </button>&nbsp;
+                <button id="loadUser" class='btn ' style=" width: 50%; color: white; background-color: #286090;">
+                    导入用户
                 </button>
             </div>
             <div class="modal-body">
+                <!--添加教室-->
                 <div id="addRoomBody">
                     <table class="table table-striped">
                         <tr>
@@ -248,6 +252,7 @@
                         </tr>
                     </table>
                 </div>
+                <!--添加普通管理员-->
                 <div id="addAdminBody" style="display: none;">
                     <table class="table table-striped">
                         <tr>
@@ -295,6 +300,7 @@
                         </tr>
                     </table>
                 </div>
+                <!--普通管理员表格-->
                 <div id="adminsBody" style="display: none;">
                     <table id="adminTable" class="table table-striped">
                         <thead>
@@ -308,6 +314,17 @@
                         </tr>
                         </thead>
                     </table>
+                </div>
+                <!--院校信息文件上传-->
+                <div id="fileUploadModule" style="display: none;">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="sr-only" for="file-upload">文件输入</label>
+                            <input type="file" id="file-upload">
+                        </div>
+                    <textarea id="backInfo-show" style="color: #c70f12" class="form-control" rows="20"
+                              readonly="readonly"></textarea>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer" id="adminModal-footer">
@@ -371,7 +388,7 @@
     </div><!-- /.modal -->
 </div>
 
-<h3 class="text-center">城科图书馆</h3>
+<h3 class="text-center">图书馆</h3>
 <div id="pageContent">
     <!--教室信息管理模块-->
     <div id="roomManage">
@@ -387,7 +404,6 @@
             </thead>
         </table>
     </div>
-
     <!--告示信息模块-->
     <div id="notification">
         <h4 class="text-center">公告</h4>
@@ -533,7 +549,6 @@
             }
         })
     };
-
     // 公共栏的上下翻页
     $("#notification").delegate('#notify-previous', 'click', function () {
         notificationPageNumber = notificationPageNumber - 1;
@@ -543,7 +558,6 @@
         notificationPageNumber = notificationPageNumber + 1;
         createNotifyModule(notificationPageNumber);
     });
-
     // 公共信息的展示
     $("#notification").delegate('#short-title', 'click', function () {
         // $(this).next()下一个节点元素
@@ -593,7 +607,6 @@
             }
         })
     });
-
     // 教室“禁用/启用”
     $("#rooms").delegate('#roomStatus', 'click', function () {
         // 行位置
@@ -630,7 +643,6 @@
 
 
     });
-
     // 管理员“禁用/启用”
     $("#adminTable").delegate('#adminStatus', 'click', function () {
         // 行位置
@@ -660,7 +672,6 @@
 
 
     });
-
     // 修改“教室长或宽”
     $("#rooms").delegate('#modifyRoomSize', 'click', function () {
         // 行位置
@@ -760,7 +771,6 @@
         });
 
     });
-
     // 教室上下翻页
     $("#rooms").delegate("#roomPrevious", 'click', function () {
         roomPageNumber = roomPageNumber - 1;
@@ -778,6 +788,8 @@
         $("#addAdminBody").css({'display': 'none'});
         $("#viewAdmins").css({'background-color': '#286090'});
         $("#adminsBody").css({'display': 'none'});
+        $("#loadUser").css({'background-color': '#286090'});
+        $("#fileUploadModule").css({'display': 'none'});
         $("#adminModal-footer").css({'display': 'block'});
     });
     $("body").delegate('#addAdminButton', 'click', function () {
@@ -787,6 +799,8 @@
         $("#addRoomBody").css({'display': 'none'});
         $("#viewAdmins").css({'background-color': '#286090'});
         $("#adminsBody").css({'display': 'none'});
+        $("#loadUser").css({'background-color': '#286090'});
+        $("#fileUploadModule").css({'display': 'none'});
         $("#adminModal-footer").css({'display': 'block'});
     });
     $("body").delegate('#viewAdmins', 'click', function () {
@@ -796,8 +810,22 @@
         $("#addRoomBody").css({'display': 'none'});
         $("#addAdminButton").css({'background-color': '#286090'});
         $("#addAdminBody").css({'display': 'none'});
+        $("#loadUser").css({'background-color': '#286090'});
+        $("#fileUploadModule").css({'display': 'none'});
         $("#adminModal-footer").css({'display': 'none'});
         findAllAdmins(adminPageNumber)
+    });
+    $("body").delegate('#loadUser', 'click', function () {
+        $(this).css({'background-color': '#539d38'});
+        $("#fileUploadModule").css({'display': 'block'});
+        $("#addRoomButton").css({'background-color': '#286090'});
+        $("#addRoomBody").css({'display': 'none'});
+        $("#addAdminButton").css({'background-color': '#286090'});
+        $("#addAdminBody").css({'display': 'none'});
+        $("#viewAdmins").css({'background-color': '#286090'});
+        $("#adminsBody").css({'display': 'none'});
+        $("#adminModal-footer").css({'display': 'block'});
+        $("#backInfo-show").val("");
     });
 
     // 查看普通管理员账户信息
@@ -866,7 +894,6 @@
         adminPageNumber = adminPageNumber + 1;
         findAllAdmins(adminPageNumber);
     });
-
     // 添加教室、普通管理员
     $("body").delegate('#adminCommit', 'click', function () {
         var requestData = "";
@@ -951,6 +978,34 @@
                     }
                 })
             }
+        }// 文件导入院校信息
+        else if ($("#fileUploadModule").css("display") === 'block') {
+            var filePath = $("#file-upload").val();
+            var file = $("#file-upload")[0].files[0];
+            var point = filePath.lastIndexOf(".");
+            var type = filePath.substr(point);
+            var formData = new FormData();
+            if (file === undefined || type !== ".xls" && type !== ".xlsx") {
+                alert("本系统只支持.xls和.xlsx表格");
+                return;
+            }
+            formData.append("filePath", filePath);
+            formData.append("file", file);
+            $.ajax({
+                type: "POST",
+                url: "/importUser",
+                processData: false,
+                data: formData,
+                dataType: "JSON",
+                contentType: false,
+                async: false,
+                error: function () {
+                    alert("文件导入失败");
+                },
+                success: function (responseData) {
+                    $("#backInfo-show").val(responseData.msg);
+                }
+            })
         }
     });
 
@@ -1063,6 +1118,10 @@
             }
         })
     });
+    // 院校xmls表文件上传
+    $("#add-schools-info").delegate("#file-commit", 'click', function () {
+
+    });
     // 删除管理员草稿状态的公共
     function updateNotifyStatus() {
         $.ajax({
@@ -1079,6 +1138,7 @@
             }
         });
     }
+
     // userInfo按钮点击事件
     $('#userInfo').on('click',
         function () {

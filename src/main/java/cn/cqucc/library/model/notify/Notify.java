@@ -43,6 +43,9 @@ public class Notify implements Serializable, Comparable<Notify> {
     @ApiModelProperty(value = "查阅的用户ID")
     private String[] lookedUserId;
 
+    @ApiModelProperty(value = "院校标识码")
+    private String schoolCode;
+
     // 当前用户是否阅读该公告
     public Boolean isLooked() {
         return Arrays.asList(lookedUserId).contains(account);

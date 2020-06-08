@@ -16,4 +16,12 @@ public interface FileAPI {
      * @return
      */
     String importFile(MultipartFile file, String filePath);
+
+    /**
+     * 文件导入教职工/学生信息
+     * @param file
+     * @param filePath
+     * @return
+     */
+    String importUser(MultipartFile file, String filePath);
 }

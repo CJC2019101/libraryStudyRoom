@@ -11,7 +11,18 @@
         <result column="password" property="password"/>
         <result column="student_sex" property="sex"/>
         <result column="user_type" property="userType"/>
+        <result column="school_code" property="schoolCode"/>
     </resultMap>
+
+    <insert id="insertStudents" parameterType="java.util.List">
+        <foreach collection="list" item="student" separator=";" index="0">
+            insert into students(student_id, student_id_card, student_name, student_age,
+                procession_grade, password, student_sex, user_type, school_code) values (
+                #{student.studentId}, #{student.studentIdCard}, #{student.studentName}, #{student.studentAge},
+                #{student.processionGrade}, #{student.password}, #{student.sex}, #{student.userType}, #{student.schoolCode}
+            )
+        </foreach>
+    </insert>
 
     <select id="isExist" resultType="java.lang.Integer">
         select count(*)

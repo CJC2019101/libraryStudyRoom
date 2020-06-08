@@ -18,6 +18,23 @@ import java.io.Serializable;
 public class Student implements Serializable {
     private static final long serialVersionUID = 2537006568381805744L;
 
+    public Student() {
+    }
+
+    public Student(String studentId, String studentName, Integer studentAge,
+                   String studentIdCard, String password, String processionGrade,
+                   int sex, int userType, String schoolCode) {
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.studentAge = studentAge;
+        this.studentIdCard = studentIdCard;
+        this.password = password;
+        this.processionGrade = processionGrade;
+        this.sex = sex;
+        this.userType = userType;
+        this.schoolCode = schoolCode;
+    }
+
     @ApiModelProperty("学号-职工号")
     private String studentId;
 
@@ -30,7 +47,7 @@ public class Student implements Serializable {
     @ApiModelProperty("身份证号码")
     private String studentIdCard;
 
-    @ApiModelProperty("登录密码")
+    @ApiModelProperty("登录密码：默认为身份证后六位")
     private String password;
 
     @ApiModelProperty("专业年级-教职工部门")
@@ -42,4 +59,6 @@ public class Student implements Serializable {
     @ApiModelProperty("用户类型：0-学生，1-教职工")
     private int userType;
 
+    @ApiModelProperty("院校标识码")
+    private String schoolCode;
 }
