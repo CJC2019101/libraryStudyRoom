@@ -41,4 +41,6 @@ public interface ICKChairDAO {
     int getUnvalidChairCount(Room room);
 
     List<Chair> selectChairHistory(String userId);
+
+    Chair selectChairInfo(String chairId);
 }

@@ -26,4 +26,6 @@ public interface ICKChairAPI {
     List<ChairReq> selectAllChairs(ChairResp chairResp);
 
     List<Chair> selectChairHistory(String userId);
+
+    Chair findChairInfo(String chairId);
 }

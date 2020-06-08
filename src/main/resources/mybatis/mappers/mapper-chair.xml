@@ -53,6 +53,12 @@
         where user_id = #{userId}
             order by sign_status ,create_at
     </select>
+
+    <select id="selectChairInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select * from public.chairs
+        where chair_id=#{chairId}
+    </select>
+
     <select id="getUnvalidChairCount" parameterType="cn.cqucc.library.model.room.Room" resultType="java.lang.Integer">
         select count(1) from chairs
             where room_id = #{id} and floor_number = #{floorNumber} and is_valid = true and chair_status!=4

@@ -114,4 +114,10 @@ public class CKChairBO implements ICKChairAPI {
 
         return chairDAO.selectChairHistory(userId);
     }
+
+    @Override
+    public Chair findChairInfo(String chairId) {
+
+        return chairDAO.selectChairInfo(chairId);
+    }
 }

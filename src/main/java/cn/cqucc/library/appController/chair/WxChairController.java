@@ -10,12 +10,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -84,8 +81,26 @@ public class WxChairController {
             response.setData(chairList);
             response.setCode(200);
         }
-//        response.setCode(status);
+        return response;
+    }
 
+    @PostMapping(value = "findChairInfo")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "insert", name = "座位id", value = "chairId", required = true)
+    })
+    @ApiOperation(value = "选中座位")
+    @ResponseBody
+    public BaseResponse findChairInfo(String  chairId) {
+        System.out.println(chairId);
+        BaseResponse response = new BaseResponse();
+        Chair chairList= chairApi.findChairInfo(chairId);
+        if (chairList==null){
+            response.setMsg("没有可以签到的座位");
+            response.setCode(502);
+        }else {
+            response.setData(chairList);
+            response.setCode(200);
+        }
         return response;
     }
 }
