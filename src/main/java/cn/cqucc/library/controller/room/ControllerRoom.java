@@ -29,7 +29,6 @@ public class ControllerRoom {
     @Autowired
     CKRoomBO roomBO;
 
-
     @RequestMapping(value = "/morning")
     @ApiOperation(value = "座位状态：上午")
     public String morning() {

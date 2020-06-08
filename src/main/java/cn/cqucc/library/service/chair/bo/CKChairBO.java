@@ -1,8 +1,12 @@
 package cn.cqucc.library.service.chair.bo;
 
 import cn.cqucc.library.model.chair.Chair;
+import cn.cqucc.library.model.chair.req.ChairReq;
+import cn.cqucc.library.model.chair.resp.ChairResp;
+import cn.cqucc.library.model.room.Room;
 import cn.cqucc.library.service.chair.api.ICKChairAPI;
 import cn.cqucc.library.service.chair.dao.ICKChairDAO;
+import cn.cqucc.library.service.room.dao.ICKRoomDAO;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,6 +28,9 @@ public class CKChairBO implements ICKChairAPI {
 
     @Autowired
     ICKChairDAO chairDAO;
+
+    @Autowired
+    ICKRoomDAO roomDAO;
 
     @Override
     public List<Chair> occupyChairs(Chair chair) {
@@ -55,6 +62,17 @@ public class CKChairBO implements ICKChairAPI {
     }
 
     @Override
+    public int selectChair(Chair chair) {
+        chair.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+        chair.setCreateAt(new Date());
+        chair.setUpdateAt(new Date());
+        chair.setIsOccupy(true);
+        chair.setIsValid(true);
+        chairDAO.selectChair(chair);
+        return 200;
+    }
+
+    @Override
     public void cancelChairs(List<Chair> chairs) {
         for (Chair chair : chairs) {
             chair.setUpdateAt(new Date());
@@ -67,5 +85,33 @@ public class CKChairBO implements ICKChairAPI {
         PageHelper.startPage(pageNumber, 10);
         List<Chair> chairs = chairDAO.getUserInfoOfSelectedChair(account);
         return new PageInfo(chairs);
+    }
+
+    @Override
+    public List<ChairReq> selectAllChairs(ChairResp chairResp) {
+        Room room = roomDAO.findRoom(chairResp.getRoomId() + "");
+        if (room == null) {
+            throw new RuntimeException("没有该教室");
+        }
+        int roomWidth = room.getRoomWidth();
+        int roomLong = room.getRoomLong();
+        List<ChairReq> chairReqList = new ArrayList<>();
+        for (int i = 1; i < roomWidth; i++) {
+            for (int j = 1; j < roomLong; j++) {
+                ChairReq chairReq = new ChairReq();
+                chairReq.setCrow(i);
+                chairReq.setCell(j);
+                chairReqList.add(chairReq);
+            }
+        }
+        List<ChairReq> chairReqs = chairDAO.allOccupyChairs(chairResp);
+        boolean b = chairReqList.removeAll(chairReqs);
+        return chairReqList;
+    }
+
+    @Override
+    public List<Chair> selectChairHistory(String userId) {
+
+        return chairDAO.selectChairHistory(userId);
     }
 }

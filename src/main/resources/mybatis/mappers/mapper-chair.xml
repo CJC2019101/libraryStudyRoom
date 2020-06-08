@@ -7,14 +7,15 @@
         <result column="chair_row" property="crow"/>
         <result column="chair_cell" property="cell"/>
         <result column="user_id" property="userId"/>
+        <result column="chair_id" property="id"/>
         <result column="user_type" property="userType"/>
         <result column="is_occupy" property="isOccupy"/>
+        <result column="sign_status" property="signStatus"/>
         <result column="is_valid" property="isValid"/>
         <result column="chair_status" property="status"/>
         <result column="create_at" property="createAt"/>
         <result column="update_at" property="updateAt"/>
     </resultMap>
-
     <select id="occupyChairs" resultType="cn.cqucc.library.model.chair.resp.CKStudentChairInfo">
         select ch.floor_number floorNumber ,ch.room_id roomId ,ch.chair_row crow ,ch.chair_cell cell,
             chair_status status, stu.procession_grade processionGrade, stu.student_name userName, stu.student_id userId
@@ -31,6 +32,11 @@
                          room_id = #{roomId} and ch.is_occupy = true and ch.is_valid = true
     </select>
 
+    <select id="allOccupyChairs" resultType="cn.cqucc.library.model.chair.req.ChairReq">
+    SELECT chair_row crow, chair_cell cell FROM public.chairs
+	where floor_number=#{floorNumber} and room_id=#{roomId} and is_occupy = true and is_valid = true;
+    </select>
+
     <select id="selectChairAmount" parameterType="java.lang.String" resultType="java.lang.Integer">
         select count(*) from chairs
             where user_id = #{account} and is_valid =true;
@@ -42,6 +48,11 @@
             order by create_at desc
     </select>
 
+    <select id="selectChairHistory" resultMap="BaseResultMap">
+        select * from chairs
+        where user_id = #{userId}
+            order by sign_status ,create_at
+    </select>
     <select id="getUnvalidChairCount" parameterType="cn.cqucc.library.model.room.Room" resultType="java.lang.Integer">
         select count(1) from chairs
             where room_id = #{id} and floor_number = #{floorNumber} and is_valid = true and chair_status!=4

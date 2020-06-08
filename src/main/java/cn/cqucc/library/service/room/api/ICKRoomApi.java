@@ -18,6 +18,8 @@ public interface ICKRoomApi {
 
     PageInfo findValidRooms(Integer pageNumber);
 
+    PageInfo findValidRooms(Integer pageNumber,Integer pageSize);
+
     int setRoomIsValid(Room room);
 
     int modifyRoomSize(RoomUpdateReq room);
