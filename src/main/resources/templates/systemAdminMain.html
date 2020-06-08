@@ -90,7 +90,7 @@
     </style>
 
 </head>
-<body>
+<body onkeydown="schoolSearch()">
 <!--登录入口-->
 <div id="loginALabel">
     <a href="/login">学生后台入口</a>&emsp;
@@ -175,6 +175,60 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
+<!-- 修改院校信息 -->
+<div class="modal fade" id="modify-school-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table class="table table-striped" id="schoolInfo-table">
+                    <tr>
+                        <td>
+                            <label for="schoolInfo-name">院校名称</label>
+                            <input id="schoolInfo-name" type="text" class="form-control"
+                                   placeholder="请输入院校名称">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="schoolInfo-code">院校标识码</label>
+                            <input id="schoolInfo-code" type="text" class="form-control"
+                                   readonly="readonly" placeholder="请输入院校标识码">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="schoolInfo-location">归属地</label>
+                            <input id="schoolInfo-location" type="text" class="form-control"
+                                   readonly="readonly" placeholder="请输入院校归属地">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="adminInfo-name">图书馆管理员</label>
+                            <input id="adminInfo-name" type="text" class="form-control"
+                                   placeholder="请输入图书馆管理员名称">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="adminInfo-account">管理员账户</label>
+                            <input id="adminInfo-account" type="text" class="form-control"
+                                   readonly="readonly" placeholder="请输入图书馆管理员账户">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button id="updateSchool" type="button" class="btn btn-primary">
+                    提交更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <h3 class="text-center">图书馆座位管理系统</h3>
 <div id="pageContent">
     <!--院校信息统计模块-->
@@ -207,8 +261,8 @@
     <div id="schoolManage">
         <h3 class="text-center">加盟院校</h3>
         <div class="pull-right form-group">
-            <label class="sr-only" for="email">院校检索</label>
-            <input id="email" type="text" class="form-control" placeholder="院校检索">
+            <label class="sr-only" for="school-search">院校检索</label>
+            <input id="school-search" type="text" class="form-control" placeholder="检索(院校名称、标识码)">
         </div>
         <table id="schools" class="table table-hover" style="text-align: center;">
             <thead>
@@ -221,53 +275,218 @@
                 <th style="text-align: center;">操作</th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-                <td>重庆大学城市科技学院</td>
-                <td>cqucc</td>
-                <td>重庆永川</td>
-                <td>五月天</td>
-                <td>2020年05月05日</td>
-                <td>
-                    <button id='school-modify' class='btn btn-primary '>修改</button>
-                    <button id='school-stop' class='btn btn-primary '>禁用</button>
-                    <!--                    <button id='school-start' class='btn btn-primary ' >启用</button>-->
-                </td>
-            </tr>
-            <tr>
-                <td>重庆西南大学</td>
-                <td>Southwest University</td>
-                <td>重庆大学城</td>
-                <td>六月天</td>
-                <td>2020年06月01日</td>
-                <td>
-                    <button id='modifyRoomSize' class='btn btn-primary '>修改</button>
-                    <!--                    <button id='roomStatus' class='btn btn-primary ' >禁用</button>-->
-                    <button id='roomStatus' class='btn btn-primary '>启用</button>
-                </td>
-            </tr>
-            </tbody>
         </table>
         <div class="footer" style="position: fixed; bottom: 6px; width: 74%;">
             <ul class='pager' style="float: left; margin-left: 40px;">
-                <li><a href='#' style="float: left;" id='school-previous'>上一页</a></li>
+                <li>
+                    <a href='#' style="float: left;" id='school-previous'>上一页</a>
+                    <!--根据值判断是查询所有还是模糊查询：findAll-查询所有，search-模糊查询-->
+                    <input id="judge" hidden value="findAll">
+                </li>
             </ul>
             <ul class='pager' style="float: right;  margin-right: 40px;">
-                <li><a href='#' style="float: right;" id='school-next'>下一页</a></li>
+                <li>
+                    <a href='#' style="float: right;" id='school-next'>下一页</a>
+                </li>
             </ul>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    var roomPageNumber = 1;
-    var roomPageMax;
+    var schoolPageNumber = 1;
+    var schoolPageMax;
     var adminPageNumber = 1;
     var adminPageMax;
     //一加载就执行填充信息  用于记住登录信息
     $(document).ready(function () {
+        // 加载学校表格信息
+        createSchoolTable(schoolPageNumber);
         // 获取用户信息
         getAdminInfo();
     });
+
+    // 创建院校信息表
+    function createSchoolTable(pageNumber) {
+        $.ajax({
+            type: "GET",
+            url: "/findAllSchool",
+            data: "pageNum=" + pageNumber,
+            dataType: "json",
+            contentType: "application/json",
+            error: function () {
+                alert("查询所有院校信息失败");
+            },
+            success: function (responseData) {
+                <!--根据值判断是查询所有还是模糊查询：findAll-查询所有，search-模糊查询-->
+                $("#judge").val("findAll");
+                var schools = responseData.data.list;
+                schoolPageMax = responseData.data.pages;
+                var schoolTable = $("#schools");
+                schoolTable.find("tbody").remove();
+                var schoolStatus = "";
+                for (var i = 0; i < schools.length; i++) {
+                    if (schools[i].valid) {
+                        schoolStatus = "禁用";
+                    } else {
+                        schoolStatus = "启用";
+                    }
+                    schoolTable.append("<tr><td>" + schools[i].schoolName + "</td>" +
+                        "<td>" + schools[i].schoolCode + "</td>" +
+                        "<td>" + schools[i].schoolLocation + "</td><td>" + schools[i].adminName + "：" + schools[i].adminAccount + "</td>" +
+                        "<td>" + schools[i].createStr + "</td>" +
+                        "<td><button id='modifySchoolInfo' class='btn btn-primary 'data-toggle='modal' data-target='#modify-school-info'>修改</button>&nbsp;" +
+                        "<button id='modifySchoolStatus' class='btn btn-primary '>" + schoolStatus + "</button>" +
+                        "</td></tr>"
+                    )
+                }
+            }
+        })
+    }
+
+    // 院校信息表上下翻页
+    $("body").delegate("#school-previous", "click", function () {
+        if ((schoolPageNumber - 1) <= 0) {
+            schoolPageNumber = 1;
+        }
+        if ($("#judge").val() === "findAll") {
+            createSchoolTable(schoolPageNumber);
+        } else if ($("#judge").val() === "search") {
+            schoolSearch();
+        }
+    });
+    $("body").delegate("#school-next", "click", function () {
+        if ((schoolPageNumber + 1) > schoolPageMax) {
+            schoolPageNumber = schoolPageMax;
+        }
+        if ($("#judge").val() === "findAll") {
+            createSchoolTable(schoolPageNumber);
+        } else if ($("#judge").val() === "search") {
+            schoolSearch();
+        }
+    });
+
+    // 院校禁用/启用
+    $("body").delegate('#modifySchoolStatus', 'click', function () {
+        // 行位置
+        var row = $(this).parent().parent().index() + 1;
+        // 列位置
+        var col = $(this).parent().index() + 1;
+        var x = document.getElementById('schools').rows[row].cells;
+        var schoolCode = x[1].innerHTML;
+        var btn_content = $(this).text();
+        if (btn_content === "启用") {
+            $(this).text("禁用");
+        } else if (btn_content === "禁用") {
+            $(this).text("启用");
+        }
+        $.ajax({
+            type: "GET",
+            url: "/setSchoolIsValid",
+            data: "schoolCode=" + schoolCode,
+            dataType: "json",
+            contentType: "application/json",
+            error: function (responseData) {
+                alert("修改院校状态失败");
+            },
+            success: function (responseData) {
+                alert(responseData.msg);
+            }
+        })
+    });
+
+    // 修改院校信息
+    $("body").delegate("#modifySchoolInfo", 'click', function () {
+        // 行位置
+        var row = $(this).parent().parent().index() + 1;
+        // 列位置
+        var col = $(this).parent().index() + 1;
+        var schoolInfos = document.getElementById('schools').rows[row].cells;
+        var adminInfos = schoolInfos[3].innerHTML.split("：");
+        var adminName = adminInfos[0];
+        var adminAccount = adminInfos[1];
+        $("#schoolInfo-name").val(schoolInfos[0].innerHTML);
+        $("#schoolInfo-code").val(schoolInfos[1].innerHTML);
+        $("#schoolInfo-location").val(schoolInfos[2].innerHTML);
+        $("#adminInfo-name").val(adminName);
+        $("#adminInfo-account").val(adminAccount);
+    });
+    $("#modify-school-info").delegate("#updateSchool", 'click', function () {
+        var schoolName = $("#schoolInfo-name").val();
+        var schoolCode = $("#schoolInfo-code").val();
+        var schoolLocation = $("#schoolInfo-location").val();
+        var adminName = $("#adminInfo-name").val();
+        var adminAccount = $("#adminInfo-account").val();
+        var requestData = {
+            "schoolName": schoolName,
+            "schoolCode": schoolCode,
+            "schoolLocation": schoolLocation,
+            "adminName": adminName,
+            "adminAccount": adminAccount
+        };
+        $.ajax({
+            type: "POST",
+            url: "/updateSchool",
+            data: JSON.stringify(requestData),
+            dataType: 'json',
+            contentType: "application/json",
+            error: function (responseData) {
+                alert("修改院校信息失败");
+            },
+            success: function (responseData) {
+                $("#schoolInfo-name").val("");
+                $("#schoolInfo-code").val("");
+                $("#schoolInfo-location").val("");
+                $("#adminInfo-name").val("");
+                $("#adminInfo-account").val("");
+                createSchoolTable(schoolPageNumber);
+                $("#modify-school-info").modal('hide');
+                alert(responseData.msg);
+            }
+        })
+
+    });
+
+    // 院校检索
+    function schoolSearch() {
+        var keyWord = $("#school-search").val();
+        if (event.keyCode === 13 && $("#school-search").is(':focus') && keyWord !== "") {
+            $.ajax({
+                type: "GET",
+                url: "/searchSchools",
+                data: "keyWord=" + keyWord,
+                dataType: "json",
+                contentType: "application/json",
+                error: function (responseData) {
+                    alert("检索失败");
+                },
+                success: function (responseData) {
+                    $("#school-search").blur();
+                    <!--根据值判断是查询所有还是模糊查询：findAll-查询所有，search-模糊查询-->
+                    $("#judge").val("search");
+                    schoolPageMax = responseData.data.pages;
+                    schoolPageNumber = 1;
+                    var schools = responseData.data.list;
+                    var schoolTable = $("#schools");
+                    schoolTable.find("tbody").remove();
+                    for (var i = 0; i < schools.length; i++) {
+                        if (schools[i].valid) {
+                            schoolStatus = "禁用";
+                        } else {
+                            schoolStatus = "启用";
+                        }
+                        schoolTable.append("<tr><td>" + schools[i].schoolName + "</td>" +
+                            "<td>" + schools[i].schoolCode + "</td>" +
+                            "<td>" + schools[i].schoolLocation + "</td><td>" + schools[i].adminName + "：" + schools[i].adminAccount + "</td>" +
+                            "<td>" + schools[i].createStr + "</td>" +
+                            "<td><button id='modifySchoolInfo' class='btn btn-primary '>修改</button>&nbsp;" +
+                            "<button id='modifySchoolStatus' class='btn btn-primary '>" + schoolStatus + "</button>" +
+                            "</td></tr>"
+                        )
+                    }
+                }
+            })
+        }
+    }
 
     // 展示院校信息文件上传模态框
     $("body").delegate('#btn-file-upload', 'click', function () {
@@ -362,7 +581,6 @@
 
     });
 
-
     // 管理员“禁用/启用”
     $("#adminTable").delegate('#adminStatus', 'click', function () {
         // 行位置
@@ -440,6 +658,7 @@
 
     });
 
+    // 获取用户信息
     function getAdminInfo() {
         // 发送ajax请求 -- 获取用户信息
         $.ajax({
@@ -561,93 +780,6 @@
         // return;
         adminPageNumber = adminPageNumber + 1;
         findAllAdmins(adminPageNumber);
-    });
-
-    // 添加教室、普通管理员
-    $("body").delegate('#adminCommit', 'click', function () {
-        var requestData = "";
-        if ($("#addRoomBody").css("display") === 'block') {   // 判断visibility样式属性
-            var createRoomId = $("#createRoomId").val();
-            var createFloorNumber = $("#createFloorNumber").val();
-            var createRoomWidth = $("#createRoomWidth").val();
-            var createRoomLong = $("#createRoomLong").val();
-            if (createRoomId === '' || createRoomLong === '' || createRoomWidth === '' || createFloorNumber === '') {
-                alert("请检查您填写的数据是否完善");
-                return;
-            }
-            requestData = {
-                "id": createRoomId,
-                "floorNumber": createFloorNumber,
-                "roomWidth": createRoomWidth,
-                "roomLong": createRoomLong,
-                "isValid": false
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "/createRoom",
-                data: JSON.stringify(requestData),
-                dataType: "JSON",
-                contentType: "application/json",
-                error: function (data) {
-                    alert(data.msg);
-                },
-                success: function (data) {
-                    alert(data.msg);
-                    if (data.code === 200) {
-                        $("#createRoomId").val("");
-                        $("#createFloorNumber").val("");
-                        $("#createRoomWidth").val("");
-                        $("#createRoomLong").val("");
-                        // 关闭模态框
-                        $('#adminModal').modal('hide');
-                        createRoomTable(roomPageNumber);
-                    }
-
-                }
-            })
-
-        }// 添加教室
-        else if ($("#addAdminBody").css("display") === 'block') {
-            var createAdminName = $("#createAdminName").val();
-            var createAdminAccount = $("#createAdminAccount").val();
-            var createAdminPassword = $("#createAdminPassword").val();
-            if (createAdminAccount === '' || createAdminName === '') {
-                alert("请检查您填写的数据是否完善");
-                return;
-            }
-            if (createAdminPassword === '') {
-                createAdminPassword = "admin";
-            }
-            requestData = {
-                "name": createAdminName,
-                "account": createAdminAccount,
-                "password": createAdminPassword,
-                "isValid": false
-            };
-            var sure = confirm("管理员账户无法修改请谨慎提交");
-            if (sure) {
-                $.ajax({
-                    type: "POST",
-                    url: "/addAdmin",
-                    data: JSON.stringify(requestData),
-                    dataType: "JSON",
-                    contentType: "application/json",
-                    error: function (responseData) {
-                        alert(responseData.msg);
-                    },
-                    success: function (responseData) {
-                        alert(responseData.msg)
-                        if (responseData.code === 200) {
-                            $("#createAdminName").val("");
-                            $("#createAdminAccount").val("");
-                            $("#createAdminPassword").val("");
-                            $("#adminModal").modal('hide');
-                        }
-                    }
-                })
-            }
-        }
     });
 
     // userInfo按钮点击事件

@@ -2,6 +2,8 @@ package cn.cqucc.library.service.school.dao;
 
 import cn.cqucc.library.model.school.School;
 import cn.cqucc.library.model.school.req.ManualAddSchoolReq;
+import cn.cqucc.library.model.school.resp.FindAllSchoolResp;
+import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -19,5 +21,11 @@ public interface ISchoolDAO {
 
     int findSchool(String schoolCode);
 
-    void findAllSchool();
+    List<FindAllSchoolResp> findAllSchool();
+
+    void setSchoolIsValid(String schoolCode);
+
+    List<FindAllSchoolResp> searchSchools(String keyWord);
+
+    void updateSchool(ManualAddSchoolReq school);
 }

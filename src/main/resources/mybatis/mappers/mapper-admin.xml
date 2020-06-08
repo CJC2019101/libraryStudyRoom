@@ -29,22 +29,22 @@
     <insert id="addAdmins" parameterType="java.util.List">
         <foreach collection="list" index="0" item="admin" separator=";">
             insert into admins(id, admin_name, account, password, is_valid,
-             create_at, school_name, school_code,
-              school_location, level) values (
-              #{admin.id}, #{admin.name}, #{admin.account}, #{admin.password},
-              #{admin.isValid},#{admin.createAt}, #{admin.schoolName},
-              #{admin.schoolCode}, #{admin.schoolLocation}, #{admin.level}
+            create_at, school_name, school_code,
+            school_location, level) values (
+            #{admin.id}, #{admin.name}, #{admin.account}, #{admin.password},
+            #{admin.isValid},#{admin.createAt}, #{admin.schoolName},
+            #{admin.schoolCode}, #{admin.schoolLocation}, #{admin.level}
             )
         </foreach>
     </insert>
 
     <select id="isExist" resultType="java.lang.Integer">
         select count(*)
-            from admins
-            where admins.account = #{account} and admins.password = #{password} and is_valid = true
-            <if test="level != 0">
-                and admins.level = #{level}
-            </if>
+        from admins
+        where admins.account = #{account} and admins.password = #{password} and is_valid = true
+        <if test="level != 0">
+            and admins.level = #{level}
+        </if>
     </select>
 
     <select id="getAdminInfo" resultMap="BaseResultMap">
@@ -75,8 +75,19 @@
 
     <update id="setAdminIsValid" parameterType="cn.cqucc.library.model.admin.Admin">
         update admins
-            set update_at = #{updateAt}, is_valid = not is_valid
-            where account = #{account}
+        set update_at = #{updateAt}, is_valid = not is_valid
+        <where>
+            <if test="account != null and account != ''">
+                account = #{account}
+            </if>
+            <if test="schoolCode != null and schoolCode != ''">
+                and school_code = #{schoolCode}
+            </if>
+        </where>
     </update>
 
+    <update id="updateAdmin">
+        update admins set admin_name = #{adminName}
+            where account = #{adminAccount}
+    </update>
 </mapper>
