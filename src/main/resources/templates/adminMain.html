@@ -988,7 +988,6 @@
             }
         })
     });
-
     // 发送新建的“公告”json数据--有效
     $("#notify").delegate('#valid', 'click', function () {
         var notifyTitle = $("#notify-title").val();
@@ -1064,7 +1063,6 @@
             }
         })
     });
-
     // 删除管理员草稿状态的公共
     function updateNotifyStatus() {
         $.ajax({
@@ -1081,7 +1079,6 @@
             }
         });
     }
-
     // userInfo按钮点击事件
     $('#userInfo').on('click',
         function () {
@@ -1112,7 +1109,6 @@
             // 显示模态框
             $('#myModal').modal('show')
         });
-
     // 创建座位表格
     function buildTable($el, cells, rows, floorNumber, roomId) {
         var chairData = {
@@ -1185,7 +1181,6 @@
             }
         });
     }
-
     // 发送选中的座位数据、新的密码、修改后教室长宽
     $("body").delegate("#commit", "click", function () {
         var modalTitle = $("#myModalLabel").text();
