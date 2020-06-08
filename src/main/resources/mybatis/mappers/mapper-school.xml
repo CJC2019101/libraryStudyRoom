@@ -53,4 +53,10 @@
         update schools set update_at = now(), is_valid = not is_valid
             where school_code = #{schoolCode}
     </update>
+
+    <update id="updateSchool">
+        update schools set school_name = #{schoolName}
+            where school_code =#{schoolCode}
+    </update>
+
 </mapper>

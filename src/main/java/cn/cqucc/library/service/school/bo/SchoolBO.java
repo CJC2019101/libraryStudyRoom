@@ -70,4 +70,11 @@ public class SchoolBO implements ISchoolApi {
         List<FindAllSchoolResp> schoolResps = schoolDAO.searchSchools(keyWord);
         return new PageInfo(schoolResps);
     }
+
+    @Override
+    // TODO 添加事务回滚
+    public void updateSchool(ManualAddSchoolReq school) {
+        schoolDAO.updateSchool(school);
+        adminDAO.updateAdmin(school.getAdminAccount(),school.getAdminName());
+    }
 }

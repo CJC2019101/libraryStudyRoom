@@ -26,4 +26,6 @@ public interface ISchoolDAO {
     void setSchoolIsValid(String schoolCode);
 
     List<FindAllSchoolResp> searchSchools(String keyWord);
+
+    void updateSchool(ManualAddSchoolReq school);
 }

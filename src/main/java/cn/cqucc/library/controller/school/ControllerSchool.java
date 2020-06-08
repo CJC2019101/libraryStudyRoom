@@ -94,4 +94,22 @@ public class ControllerSchool {
         response.setData(pageInfo);
         return response;
     }
+
+    @RequestMapping(value = "/updateSchool",method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "insert", value = "schoolName", name = "院校名称", required = true),
+            @ApiImplicitParam(type = "insert", value = "schoolCode", name = "院校标识码", required = true),
+            @ApiImplicitParam(type = "insert", value = "schoolLocation", name = "院校归属地", required = true),
+            @ApiImplicitParam(type = "insert", value = "adminName", name = "院校管理员名称", required = true),
+            @ApiImplicitParam(type = "insert", value = "adminAccount", name = "院校管理员账户", required = true)
+    })
+    @ApiOperation("修改院校信息")
+    @ResponseBody
+    public BaseResponse updateSchool(@RequestBody ManualAddSchoolReq school){
+        BaseResponse response = new BaseResponse();
+        schoolBO.updateSchool(school);
+        response.setCode(200);
+        response.setMsg("修改成功");
+        return response;
+    }
 }

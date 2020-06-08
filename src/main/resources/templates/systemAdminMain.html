@@ -175,6 +175,60 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
+<!-- 修改院校信息 -->
+<div class="modal fade" id="modify-school-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table class="table table-striped" id="schoolInfo-table">
+                    <tr>
+                        <td>
+                            <label for="schoolInfo-name">院校名称</label>
+                            <input id="schoolInfo-name" type="text" class="form-control"
+                                   placeholder="请输入院校名称">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="schoolInfo-code">院校标识码</label>
+                            <input id="schoolInfo-code" type="text" class="form-control"
+                                   readonly="readonly" placeholder="请输入院校标识码">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="schoolInfo-location">归属地</label>
+                            <input id="schoolInfo-location" type="text" class="form-control"
+                                   readonly="readonly" placeholder="请输入院校归属地">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="adminInfo-name">图书馆管理员</label>
+                            <input id="adminInfo-name" type="text" class="form-control"
+                                   placeholder="请输入图书馆管理员名称">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="adminInfo-account">管理员账户</label>
+                            <input id="adminInfo-account" type="text" class="form-control"
+                                   readonly="readonly" placeholder="请输入图书馆管理员账户">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button id="updateSchool" type="button" class="btn btn-primary">
+                    提交更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <h3 class="text-center">图书馆座位管理系统</h3>
 <div id="pageContent">
     <!--院校信息统计模块-->
@@ -225,7 +279,7 @@
         <div class="footer" style="position: fixed; bottom: 6px; width: 74%;">
             <ul class='pager' style="float: left; margin-left: 40px;">
                 <li>
-                    <a href='#' style="float: left;" id='school-previous' >上一页</a>
+                    <a href='#' style="float: left;" id='school-previous'>上一页</a>
                     <!--根据值判断是查询所有还是模糊查询：findAll-查询所有，search-模糊查询-->
                     <input id="judge" hidden value="findAll">
                 </li>
@@ -280,7 +334,7 @@
                         "<td>" + schools[i].schoolCode + "</td>" +
                         "<td>" + schools[i].schoolLocation + "</td><td>" + schools[i].adminName + "：" + schools[i].adminAccount + "</td>" +
                         "<td>" + schools[i].createStr + "</td>" +
-                        "<td><button id='modifySchoolInfo' class='btn btn-primary '>修改</button>&nbsp;" +
+                        "<td><button id='modifySchoolInfo' class='btn btn-primary 'data-toggle='modal' data-target='#modify-school-info'>修改</button>&nbsp;" +
                         "<button id='modifySchoolStatus' class='btn btn-primary '>" + schoolStatus + "</button>" +
                         "</td></tr>"
                     )
@@ -295,10 +349,8 @@
             schoolPageNumber = 1;
         }
         if ($("#judge").val() === "findAll") {
-            alert("findAll");
             createSchoolTable(schoolPageNumber);
-        }else if ($("#judge").val() === "search") {
-            alert("search");
+        } else if ($("#judge").val() === "search") {
             schoolSearch();
         }
     });
@@ -307,10 +359,8 @@
             schoolPageNumber = schoolPageMax;
         }
         if ($("#judge").val() === "findAll") {
-            alert("findAll");
             createSchoolTable(schoolPageNumber);
-        }else if ($("#judge").val() === "search") {
-            alert("search");
+        } else if ($("#judge").val() === "search") {
             schoolSearch();
         }
     });
@@ -342,6 +392,58 @@
                 alert(responseData.msg);
             }
         })
+    });
+
+    // 修改院校信息
+    $("body").delegate("#modifySchoolInfo", 'click', function () {
+        // 行位置
+        var row = $(this).parent().parent().index() + 1;
+        // 列位置
+        var col = $(this).parent().index() + 1;
+        var schoolInfos = document.getElementById('schools').rows[row].cells;
+        var adminInfos = schoolInfos[3].innerHTML.split("：");
+        var adminName = adminInfos[0];
+        var adminAccount = adminInfos[1];
+        $("#schoolInfo-name").val(schoolInfos[0].innerHTML);
+        $("#schoolInfo-code").val(schoolInfos[1].innerHTML);
+        $("#schoolInfo-location").val(schoolInfos[2].innerHTML);
+        $("#adminInfo-name").val(adminName);
+        $("#adminInfo-account").val(adminAccount);
+    });
+    $("#modify-school-info").delegate("#updateSchool", 'click', function () {
+        var schoolName = $("#schoolInfo-name").val();
+        var schoolCode = $("#schoolInfo-code").val();
+        var schoolLocation = $("#schoolInfo-location").val();
+        var adminName = $("#adminInfo-name").val();
+        var adminAccount = $("#adminInfo-account").val();
+        var requestData = {
+            "schoolName": schoolName,
+            "schoolCode": schoolCode,
+            "schoolLocation": schoolLocation,
+            "adminName": adminName,
+            "adminAccount": adminAccount
+        };
+        $.ajax({
+            type: "POST",
+            url: "/updateSchool",
+            data: JSON.stringify(requestData),
+            dataType: 'json',
+            contentType: "application/json",
+            error: function (responseData) {
+                alert("修改院校信息失败");
+            },
+            success: function (responseData) {
+                $("#schoolInfo-name").val("");
+                $("#schoolInfo-code").val("");
+                $("#schoolInfo-location").val("");
+                $("#adminInfo-name").val("");
+                $("#adminInfo-account").val("");
+                createSchoolTable(schoolPageNumber);
+                $("#modify-school-info").modal('hide');
+                alert(responseData.msg);
+            }
+        })
+
     });
 
     // 院校检索

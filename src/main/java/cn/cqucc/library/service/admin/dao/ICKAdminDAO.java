@@ -29,4 +29,5 @@ public interface ICKAdminDAO {
 
     void addAdmins(List<Admin> admins);
 
+    void updateAdmin(@Param(value = "adminAccount") String adminAccount, @Param(value = "adminName") String adminName);
 }
