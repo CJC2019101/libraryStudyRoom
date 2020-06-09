@@ -20,4 +20,8 @@ public interface ICKStudentDAO {
     void resetPassword(CKLibraryUserReq user);
 
     StudentInfoResp getDetailUserInfo(String account);
+
+    Student selectStudentByOpenId(String openId);
+
+    void updateStudentOpenId(@Param("openId") String openId,@Param("studentId")String studentId);
 }

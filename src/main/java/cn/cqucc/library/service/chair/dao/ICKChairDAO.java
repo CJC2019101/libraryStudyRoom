@@ -1,10 +1,13 @@
 package cn.cqucc.library.service.chair.dao;
 
 import cn.cqucc.library.model.chair.Chair;
+import cn.cqucc.library.model.chair.directory.CKChairDirectory;
 import cn.cqucc.library.model.chair.req.ChairReq;
 import cn.cqucc.library.model.chair.resp.ChairResp;
+import cn.cqucc.library.model.chair.resp.SignChairResp;
 import cn.cqucc.library.model.room.Room;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -43,4 +46,14 @@ public interface ICKChairDAO {
     List<Chair> selectChairHistory(String userId);
 
     Chair selectChairInfo(String chairId);
+
+    void updateChairSignStatus(SignChairResp signChairResp);
+
+    List<Chair> selectAllChair(Integer chairStatus);
+
+    void autoUpdateChairSignStatus(int chairStatus);
+
+    void updateChairsStatus(String id);
+
+    Chair selectChairNum(@Param("userId") String userId, @Param("status")Integer status);
 }

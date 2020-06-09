@@ -3,16 +3,17 @@ package cn.cqucc.library.service.chair.bo;
 import cn.cqucc.library.model.chair.Chair;
 import cn.cqucc.library.model.chair.req.ChairReq;
 import cn.cqucc.library.model.chair.resp.ChairResp;
+import cn.cqucc.library.model.chair.resp.SignChairResp;
 import cn.cqucc.library.model.room.Room;
 import cn.cqucc.library.service.chair.api.ICKChairAPI;
 import cn.cqucc.library.service.chair.dao.ICKChairDAO;
 import cn.cqucc.library.service.room.dao.ICKRoomDAO;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,6 +64,10 @@ public class CKChairBO implements ICKChairAPI {
 
     @Override
     public int selectChair(Chair chair) {
+        Chair chairDb = chairDAO.selectChairNum(chair.getUserId(), chair.getStatus());
+        if (chairDb != null) {
+            return 503;
+        }
         chair.setId(UUID.randomUUID().toString().replaceAll("-", ""));
         chair.setCreateAt(new Date());
         chair.setUpdateAt(new Date());
@@ -119,5 +124,11 @@ public class CKChairBO implements ICKChairAPI {
     public Chair findChairInfo(String chairId) {
 
         return chairDAO.selectChairInfo(chairId);
+    }
+
+    @Override
+    public int signInChair(SignChairResp signChairResp) {
+        chairDAO.updateChairSignStatus(signChairResp);
+        return 200;
     }
 }
