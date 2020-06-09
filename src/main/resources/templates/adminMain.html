@@ -421,6 +421,7 @@
     var notificationPageMax;
     var adminPageNumber = 1;
     var adminPageMax;
+    var adminLevel;
     //一加载就执行填充信息  用于记住登录信息
     $(document).ready(function () {
         // 获取用户信息
@@ -443,11 +444,10 @@
         }
         $("#rooms").find("tbody").remove();
         $("#rooms").find(".footer").remove();
-        if ($.cookie("account") === 'admin') {
+        if (adminLevel === 1) {
             addRoom = "<ul class='pager'>\n" +
                 "<li><a class='btn btn-primary btn-lg'style='color: #286090;' data-toggle='modal' data-target='#adminModal' id='roomAdd'>添加教室</a></li>\n" +
                 "</ul>\n";
-            // alert("超级管理员用户")
         }
         $.ajax({
             type: 'GET',
@@ -723,6 +723,7 @@
                 var admin = data.data;
                 $("#userInfo").html(admin.name);
                 $.cookie("schoolCode", admin.schoolCode, {expires: 7});
+                adminLevel = admin.level;
             }
         })
     }

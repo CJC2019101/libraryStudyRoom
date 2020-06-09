@@ -662,11 +662,11 @@
                     chairInfo.push(checkboxs[i].value)
                 }
             }
-            if (chairInfo.length > 4) {
-                alert("您选择的座位太多，我规定最多只能选择4个。而您选中了" + chairInfo.length + "个")
+            if (chairInfo.length > 1) {
+                alert("您选择的座位太多，一个人只能选中一个。而您选中了" + chairInfo.length + "个")
                 return
             } else if (chairInfo.length === 0) {
-                alert("请至少选择一个座位")
+                alert("请至少选择一个座位");
                 return
             }
 

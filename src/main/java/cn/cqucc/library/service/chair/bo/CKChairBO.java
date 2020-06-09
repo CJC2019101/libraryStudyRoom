@@ -49,7 +49,7 @@ public class CKChairBO implements ICKChairAPI {
             int selectedChairCount = chairs.size();
             // 已经选中的座位数
             int chairCount = chairDAO.selectChairAmount(chairs.get(0).getUserId());
-            if ((selectedChairCount + chairCount) > 4) {
+            if ((selectedChairCount + chairCount) > 1) {
                 return 502;
             }
         }

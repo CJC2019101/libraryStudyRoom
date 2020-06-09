@@ -60,7 +60,7 @@ public class ControllerChair {
         int status = chairBO.selectChair(chairs);
         response.setCode(status);
         if (status == 502) {
-            response.setMsg("每个人最多选中四个座位，您选择的过多了");
+            response.setMsg("您已经选中一个位置了");
             return response;
         }
         response.setCode(200);
