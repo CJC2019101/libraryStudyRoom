@@ -3,6 +3,7 @@ package cn.cqucc.library.service.chair.api;
 import cn.cqucc.library.model.chair.Chair;
 import cn.cqucc.library.model.chair.req.ChairReq;
 import cn.cqucc.library.model.chair.resp.ChairResp;
+import cn.cqucc.library.model.chair.resp.SignChairResp;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -26,4 +27,8 @@ public interface ICKChairAPI {
     List<ChairReq> selectAllChairs(ChairResp chairResp);
 
     List<Chair> selectChairHistory(String userId);
+
+    Chair findChairInfo(String chairId);
+
+    int signInChair(SignChairResp signChairResp);
 }

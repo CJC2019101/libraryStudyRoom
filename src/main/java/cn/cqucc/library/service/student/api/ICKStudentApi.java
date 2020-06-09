@@ -3,6 +3,8 @@ package cn.cqucc.library.service.student.api;
 import cn.cqucc.library.model.student.Student;
 import cn.cqucc.library.model.student.req.CKLibraryUserReq;
 import cn.cqucc.library.model.student.resp.StudentInfoResp;
+import cn.cqucc.library.model.student.resp.WxUserResp;
+import cn.cqucc.library.status.BaseResponse;
 
 /**
  * @author JianfeiChen
@@ -10,6 +12,8 @@ import cn.cqucc.library.model.student.resp.StudentInfoResp;
  * @Description cn.cqucc.library.service.student.api
  */
 public interface ICKStudentApi {
+
+    BaseResponse loginUser(WxUserResp wxUser);
     /**
      * @param account
      * @return

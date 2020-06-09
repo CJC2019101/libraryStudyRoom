@@ -53,11 +53,25 @@
         where user_id = #{userId}
             order by sign_status ,create_at
     </select>
+
+    <select id="selectChairInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select * from public.chairs
+        where chair_id=#{chairId}
+    </select>
+
     <select id="getUnvalidChairCount" parameterType="cn.cqucc.library.model.room.Room" resultType="java.lang.Integer">
         select count(1) from chairs
             where room_id = #{id} and floor_number = #{floorNumber} and is_valid = true and chair_status!=4
     </select>
 
+    <select id="selectAllChair" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select * from chairs
+            where sign_status=0 and chair_status=#{chairStatus}
+    </select>
+    <select id="selectChairNum" resultMap="BaseResultMap">
+        select * from chairs
+            where user_id=#{userId} and chair_status=#{status} and sign_status=0
+    </select>
     <insert id="selectChair" parameterType="cn.cqucc.library.model.chair.Chair">
         insert into
             chairs (chair_id, chair_row, chair_cell, room_id, floor_number, is_occupy, user_id, is_valid, chair_status,
@@ -67,11 +81,24 @@
                 #{createAt}
                 );
     </insert>
+    <update id="updateChairSignStatus" parameterType="cn.cqucc.library.model.chair.resp.SignChairResp">
+        update chairs set sign_status = #{signStatus},update_at=now()
+            where chair_id = #{chairId}
+    </update>
 
+    <update id="autoUpdateChairSignStatus" parameterType="java.lang.Integer">
+        update chairs set sign_status = 2,update_at=now()
+            where chair_status = #{chairStatus}
+    </update>
 
     <update id="updateChairMorningStatus" parameterType="java.lang.Integer">
         update chairs set is_valid = false ,is_occupy = false
             where chair_status = #{morning}
+    </update>
+
+    <update id="updateChairsStatus" parameterType="java.lang.String">
+        update chairs set is_valid = false ,is_occupy = false
+            where chair_id = #{id}
     </update>
 
     <update id="updateChairAfternoonStatus" parameterType="java.lang.Integer">

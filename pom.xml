@@ -19,6 +19,7 @@
         <java.version>1.8</java.version>
         <swagger_ui_version>2.9.2</swagger_ui_version>
         <swagger_version>1.5.22</swagger_version>
+        <okhttp_version>4.2.1</okhttp_version>
     </properties>
 
     <dependencies>
@@ -26,7 +27,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp_version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>

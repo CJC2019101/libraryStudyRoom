@@ -48,7 +48,7 @@ public class Chair implements Serializable {
     @ApiModelProperty(value = "座位选中状态：0-全天，1-上午，2-下午，3-晚上")
     private Integer status;
 
-    @ApiModelProperty("状态：0-未签到 1-已签到 2-已释放")
+    @ApiModelProperty("状态：0-未签到 1-已签到 2-逾期 3-取消")
     private Integer signStatus;
 
     @ApiModelProperty(value = "创建时间")

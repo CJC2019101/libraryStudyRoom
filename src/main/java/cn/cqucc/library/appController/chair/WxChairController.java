@@ -3,6 +3,7 @@ package cn.cqucc.library.appController.chair;
 import cn.cqucc.library.model.chair.Chair;
 import cn.cqucc.library.model.chair.req.ChairReq;
 import cn.cqucc.library.model.chair.resp.ChairResp;
+import cn.cqucc.library.model.chair.resp.SignChairResp;
 import cn.cqucc.library.service.chair.api.ICKChairAPI;
 import cn.cqucc.library.status.BaseResponse;
 import io.swagger.annotations.Api;
@@ -10,15 +11,15 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,10 +62,25 @@ public class WxChairController {
     @ApiOperation(value = "选中座位")
     @ResponseBody
     public BaseResponse selectChair(Chair chair) {
+        Date date = new Date();
+        SimpleDateFormat f = new SimpleDateFormat("HH");
         BaseResponse response = new BaseResponse();
+        int hours = Integer.parseInt(f.format(date));
+        if (chair.getStatus()==1&&hours>12&&hours<=22){
+            response.setMsg("当前时间不能选择上午");
+            response.setCode(502);
+            return response;
+        }else if(chair.getStatus()==2&&hours>18&&hours<=22){
+            response.setMsg("当前时间不能选择下午午");
+            response.setCode(502);
+            return response;
+        }
+        System.out.println(chair);
         int status = chairApi.selectChair(chair);
+        if (status==503){
+            response.setMsg("当前时间已经预约过了，请不要重复预约");
+        }
         response.setCode(status);
-        response.setCode(200);
         return response;
     }
 
@@ -72,7 +88,7 @@ public class WxChairController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "insert", name = "账户", value = "userId", required = true)
     })
-    @ApiOperation(value = "选中座位")
+    @ApiOperation(value = "选中座位历史记录")
     @ResponseBody
     public BaseResponse selectChairHistory(String  userId) {
         BaseResponse response = new BaseResponse();
@@ -84,8 +100,42 @@ public class WxChairController {
             response.setData(chairList);
             response.setCode(200);
         }
-//        response.setCode(status);
+        return response;
+    }
 
+    @PostMapping(value = "findChairInfo")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "insert", name = "座位id", value = "chairId", required = true)
+    })
+    @ApiOperation(value = "座位信息")
+    @ResponseBody
+    public BaseResponse findChairInfo(String  chairId) {
+        System.out.println(chairId);
+        BaseResponse response = new BaseResponse();
+        Chair chairList= chairApi.findChairInfo(chairId);
+        if (chairList==null){
+            response.setMsg("没有可以签到的座位");
+            response.setCode(502);
+        }else {
+            response.setData(chairList);
+            response.setCode(200);
+        }
+        return response;
+    }
+
+
+    @PostMapping(value = "signInChair")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "update", name = "座位id", value = "chairId", required = true),
+            @ApiImplicitParam(paramType = "update", name = "座位id", value = "signStatus", required = true)
+    })
+    @ApiOperation(value = "改变座位签到状态")
+    @ResponseBody
+    public BaseResponse signInChair(SignChairResp signChairResp) {
+        System.out.println(signChairResp);
+        BaseResponse response = new BaseResponse();
+        int code=chairApi.signInChair(signChairResp);
+        response.setCode(code);
         return response;
     }
 }

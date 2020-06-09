@@ -36,6 +36,16 @@
             where students.student_id = #{account} and students.password = #{password}
     </select>
 
+    <select id="selectStudentByOpenId" resultMap="BaseResultMap">
+        select *
+            from students
+            where open_id = #{openId}
+    </select>
+    <update id="updateStudentOpenId">
+        update students set open_id = #{openId}
+            where student_id = #{studentId}
+    </update>
+
     <select id="getDetailUserInfo" parameterType="java.lang.String" resultType="cn.cqucc.library.model.student.resp.StudentInfoResp">
         select stu.student_id userId, stu.student_name userName, stu.procession_grade processionGrade,
             stu.student_age userAge, stu.student_sex userSex,
