@@ -23,11 +23,10 @@ public interface ICKStudentDAO {
 
     StudentInfoResp getDetailUserInfo(String account);
 
-<<<<<<< HEAD
     void insertStudents(List<Student> students);
-=======
+
     Student selectStudentByOpenId(String openId);
 
     void updateStudentOpenId(@Param("openId") String openId,@Param("studentId")String studentId);
->>>>>>> 3cb2301f9e76f782a365a2642e243c4137a0423f
+
 }

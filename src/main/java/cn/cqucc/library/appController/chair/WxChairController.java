@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,7 +40,7 @@ public class WxChairController {
             @ApiImplicitParam(paramType = "query", name = "floorNumber", value = "楼层号", required = true)
     }
     )
-    @ApiOperation(value = "获取被占用的座位")
+    @ApiOperation(value = "获取没有被占用的座位")
     @ResponseBody
     public BaseResponse selectAllChair(ChairResp chairResp) {
         List<ChairReq> occupyChairs = chairApi.selectAllChairs(chairResp);

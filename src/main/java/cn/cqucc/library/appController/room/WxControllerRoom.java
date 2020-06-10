@@ -1,5 +1,6 @@
 package cn.cqucc.library.appController.room;
 
+import cn.cqucc.library.model.room.req.wxRoomReq;
 import cn.cqucc.library.service.room.bo.CKRoomBO;
 import cn.cqucc.library.status.BaseResponse;
 import com.github.pagehelper.PageInfo;
@@ -10,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,15 +30,17 @@ public class WxControllerRoom {
     @Autowired
     private CKRoomBO roomBO;
 
-    @GetMapping(value = "findValidRooms")
+    @PostMapping(value = "findValidRooms")
     @ApiImplicitParams({
             @ApiImplicitParam(type= "select", name = "pageNumber", value = "页数", required = true),
-            @ApiImplicitParam(type = "select", name = "pageSize", value = "页面大小", required = true)
+            @ApiImplicitParam(type = "select", name = "pageSize", value = "页面大小", required = true),
+            @ApiImplicitParam(type = "select", name = "schoolCode", value = "学校编号", required = true)
     } )
     @ApiOperation(value = "查找可用教室")
     @ResponseBody
-    public BaseResponse findValidRooms(@RequestParam Integer pageNumber,@RequestParam Integer pageSize){
-        PageInfo allRooms = roomBO.findValidRooms(pageNumber,pageSize);
+    public BaseResponse findValidRooms(wxRoomReq wxRoomReq){
+        System.out.println(wxRoomReq);
+        PageInfo allRooms = roomBO.findValidRoomsBySchoolCode(wxRoomReq);
         BaseResponse response = new BaseResponse();
         if (allRooms.getSize() == 0) {
             response.setCode(502);
