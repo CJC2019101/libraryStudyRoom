@@ -39,7 +39,6 @@ public class ControllerAdmin {
     })
     @ApiOperation(value = "管理员用户重置密码")
     @ResponseBody
-    //TODO 后续添加事务的回滚功能。
     public BaseResponse resetPassword(@RequestBody CKLibraryUserReq user) {
         BaseResponse response = new BaseResponse();
         adminBO.resetPassword(user);
@@ -91,7 +90,6 @@ public class ControllerAdmin {
     @ApiImplicitParam(type = "update", name = "account", value = "管理员账户", required = true)
     @ApiOperation(value = "修改普通管理员是否可用")
     @ResponseBody
-    // TODO 后续添加事务控制
     public BaseResponse setAdminIsValid(@RequestParam String account) {
         BaseResponse response = new BaseResponse();
         adminBO.setAdminIsValid(account);

@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -30,6 +31,7 @@ import java.util.UUID;
  * @date 2020/6/5 10:23
  * @Description cn.cqucc.library.service.file.bo
  */
+@Transactional
 @Service
 public class FileBO implements FileAPI {
 

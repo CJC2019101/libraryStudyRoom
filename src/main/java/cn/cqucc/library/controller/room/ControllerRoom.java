@@ -120,7 +120,6 @@ public class ControllerRoom {
     })
     @ApiOperation(value = "管理员修改教室启用状态")
     @ResponseBody
-    // TODO 后续添加事务回滚
     public BaseResponse setRoomIsValid(@RequestBody Room room) {
         BaseResponse response = new BaseResponse();
         int statusCode = roomBO.setRoomIsValid(room);
@@ -165,7 +164,6 @@ public class ControllerRoom {
     })
     @ApiOperation(value = "创建教室")
     @ResponseBody
-    // TODO 添加事务的回滚
     public BaseResponse createRoom(@RequestBody Room room) {
         BaseResponse response = new BaseResponse();
         int statusCode = roomBO.createRoom(room);

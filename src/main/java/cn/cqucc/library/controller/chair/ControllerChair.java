@@ -77,7 +77,6 @@ public class ControllerChair {
     })
     @ApiOperation(value = "取消选中座位")
     @ResponseBody
-    // TODO 后续添加事务的回滚
     public BaseResponse cancelChairs(@RequestBody List<Chair> chair) {
         BaseResponse response = new BaseResponse();
         chairBO.cancelChairs(chair);
@@ -88,7 +87,6 @@ public class ControllerChair {
     @RequestMapping(value = "/getUserInfoOfSelectedChair", method = RequestMethod.GET)
     @ApiOperation(value = "获取用户曾经的选座信息")
     @ResponseBody
-    // TODO 后续添加事务回滚
     public BaseResponse getUserInfoOfSelectedChair(@RequestParam String account, @RequestParam(defaultValue = "0") Integer pageNumber) {
         BaseResponse response = new BaseResponse();
         PageInfo pageInfo = chairBO.getUserInfoOfSelectedChair(account, pageNumber);

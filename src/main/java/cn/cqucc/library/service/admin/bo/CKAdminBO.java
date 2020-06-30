@@ -11,6 +11,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.UUID;
  * @date 2020/4/7 9:55
  * @Description cn.cqucc.library.service.admin.bo
  */
+
+@Transactional
 @Service
 public class CKAdminBO implements ICKAdminAPI {
     @Autowired

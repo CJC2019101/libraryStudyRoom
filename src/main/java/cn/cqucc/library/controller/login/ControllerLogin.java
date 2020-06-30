@@ -97,7 +97,6 @@ public class ControllerLogin {
     })
     @ApiOperation(value = "普通用户重置密码")
     @ResponseBody
-    //TODO 后续添加事务的回滚功能。
     public BaseResponse resetPassword(@RequestBody CKLibraryUserReq user) {
         BaseResponse response = new BaseResponse();
         studentBO.resetPassword(user);

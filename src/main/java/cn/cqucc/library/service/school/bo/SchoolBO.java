@@ -10,6 +10,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.UUID;
  * @date 2020/6/5 22:08
  * @Description cn.cqucc.library.service.school.bo
  */
+@Transactional
 @Service
 public class SchoolBO implements ISchoolApi {
 
@@ -29,7 +31,6 @@ public class SchoolBO implements ISchoolApi {
     ICKAdminDAO adminDAO;
 
     @Override
-    // TODO 添加事务回滚
     public int insertSchool(ManualAddSchoolReq schoolReq) {
         int isExist = schoolDAO.schoolIsExist(schoolReq.getSchoolCode());
         if (isExist == 1) {
@@ -69,7 +70,6 @@ public class SchoolBO implements ISchoolApi {
     }
 
     @Override
-    // TODO 添加事务回滚
     public void updateSchool(ManualAddSchoolReq school) {
         schoolDAO.updateSchool(school);
         adminDAO.updateAdmin(school.getAdminAccount(),school.getAdminName());

@@ -23,6 +23,7 @@ import java.util.Date;
  * @date 2020/4/6 10:43
  * @Description cn.cqucc.library.service.student.bo
  */
+@Transactional
 @Service
 public class CKStudentBO implements ICKStudentApi {
     @Autowired
