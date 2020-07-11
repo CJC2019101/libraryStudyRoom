@@ -25,4 +25,6 @@ public interface ICKRoomDAO {
     void modifyRoomSize(RoomUpdateReq room);
 
     void createRoom(Room room);
+
+    List<Room> findValidRoomsBySchoolCode(String schoolCode);
 }

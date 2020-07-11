@@ -24,6 +24,10 @@
             where is_valid = true order by floor_number asc, id asc
     </select>
 
+    <select id="findValidRoomsBySchoolCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select * from rooms
+            where is_valid = true and school_code=#{schoolCode} order by floor_number asc, id asc
+    </select>
     <select id="findRoom" resultMap="BaseResultMap">
         select * from rooms
             where rooms.id = #{roomId}

@@ -2,6 +2,7 @@ package cn.cqucc.library.service.room.bo;
 
 import cn.cqucc.library.model.room.Room;
 import cn.cqucc.library.model.room.req.RoomUpdateReq;
+import cn.cqucc.library.model.room.req.wxRoomReq;
 import cn.cqucc.library.service.chair.dao.ICKChairDAO;
 import cn.cqucc.library.service.room.api.ICKRoomApi;
 import cn.cqucc.library.service.room.dao.ICKRoomDAO;
@@ -48,9 +49,9 @@ public class CKRoomBO implements ICKRoomApi {
     }
 
     @Override
-    public PageInfo findValidRooms(Integer pageNumber, Integer pageSize) {
-        PageHelper.startPage(pageNumber,pageSize);
-        List<Room> rooms = roomDAO.findValidRooms();
+    public PageInfo findValidRoomsBySchoolCode(wxRoomReq wxRoomReq) {
+        PageHelper.startPage(wxRoomReq.getPageNumber(),wxRoomReq.getPageSize());
+        List<Room> rooms = roomDAO.findValidRoomsBySchoolCode(wxRoomReq.getSchoolCode());
         return new PageInfo(rooms);
     }
 

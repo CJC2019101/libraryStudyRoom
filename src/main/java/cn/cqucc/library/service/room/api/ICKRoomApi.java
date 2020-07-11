@@ -2,6 +2,7 @@ package cn.cqucc.library.service.room.api;
 
 import cn.cqucc.library.model.room.Room;
 import cn.cqucc.library.model.room.req.RoomUpdateReq;
+import cn.cqucc.library.model.room.req.wxRoomReq;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface ICKRoomApi {
 
     PageInfo findValidRooms(Integer pageNumber);
 
-    PageInfo findValidRooms(Integer pageNumber,Integer pageSize);
+    PageInfo findValidRoomsBySchoolCode(wxRoomReq wxRoomReq);
 
     int setRoomIsValid(Room room);
 
