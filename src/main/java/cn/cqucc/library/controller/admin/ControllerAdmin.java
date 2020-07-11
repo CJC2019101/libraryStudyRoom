@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.awt.*;
 import java.util.List;
 
 /**
@@ -56,7 +55,7 @@ public class ControllerAdmin {
     @ResponseBody
     public BaseResponse findAllAdmins(@RequestParam Integer pageNumber, @RequestParam String schoolCode) {
         BaseResponse response = new BaseResponse();
-        PageInfo<List> pageInfo = adminBO.findAllAdmins(pageNumber,schoolCode);
+        PageInfo<List> pageInfo = adminBO.findAllAdmins(pageNumber, schoolCode);
         response.setCode(200);
         response.setMsg("success");
         response.setData(pageInfo);

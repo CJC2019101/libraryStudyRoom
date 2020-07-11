@@ -36,7 +36,7 @@
 
     <select id="findAllSchool" resultType="cn.cqucc.library.model.school.resp.FindAllSchoolResp">
         select schools.school_code schoolCode, schools.school_name schoolName, schools.school_location schoolLocation,
-               schools.create_at createAt, schools.admin_account adminAccount, schools.is_valid isValid,
+               schools.create_at createAt, schools.update_at updateAt, schools.admin_account adminAccount, schools.is_valid isValid,
                admin_name adminName
             from schools join admins on admins.school_code = schools.school_code
             where admins.level = 1
