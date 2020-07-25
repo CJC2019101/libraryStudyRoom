@@ -93,8 +93,6 @@
         if ($.cookie("account") !== '') {
             $("#account").val($.cookie("account"));
         }
-
-
     })
 
 
@@ -180,7 +178,7 @@
                     changeImg();
                     alert("密码错误");
                 } else { //登录成功跳转页面
-                    window.location.href = '/main.html';
+                    window.location.href = '/main';
                 }
             },
         });

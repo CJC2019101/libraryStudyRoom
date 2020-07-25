@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +38,37 @@ public class ControllerLogin {
     public String login() {
         return "login";
     }
+
+    @GetMapping("/main")
+    @ApiOperation(value = "访问主页")
+    public String viewMain() {
+        return "main";
+    }
+
+    @GetMapping("/afternoon")
+    @ApiOperation(value = "访问afternoon.html")
+    public String viewAfternoon() {
+        return "afternoon";
+    }
+
+    @GetMapping("/morning")
+    @ApiOperation(value = "访问morning.html")
+    public String viewMorning() {
+        return "morning";
+    }
+
+    @GetMapping("/night")
+    @ApiOperation(value = "访问night.html")
+    public String viewNight() {
+        return "afternoon";
+    }
+
+    @GetMapping("/allDay")
+    @ApiOperation(value = "访问allDay.html")
+    public String viewAllDay() {
+        return "allDay";
+    }
+
 
     @RequestMapping(value = "/isExist", method = RequestMethod.POST)
     @ApiOperation(value = "学生登录判断")
@@ -105,34 +137,34 @@ public class ControllerLogin {
         return response;
     }
 
-    @RequestMapping(value = "/getAdminInfo",method = RequestMethod.GET)
+    @RequestMapping(value = "/getAdminInfo", method = RequestMethod.GET)
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "account",value = "账号",required = true),
-            @ApiImplicitParam(type = "query",name = "password",value = "密码",required = true)
+            @ApiImplicitParam(type = "query", name = "account", value = "账号", required = true),
+            @ApiImplicitParam(type = "query", name = "password", value = "密码", required = true)
     })
     @ApiOperation(value = "获取管理员用户信息")
     @ResponseBody
-    public BaseResponse getAdminInfo(@RequestParam String account){
+    public BaseResponse getAdminInfo(@RequestParam String account) {
         BaseResponse response = new BaseResponse();
         Admin admin = adminBO.getAdminInfo(account);
-        if (admin==null){
+        if (admin == null) {
             response.setCode(502);
             response.setMsg("查询管理员用户信息失败");
-        }else {
+        } else {
             response.setCode(200);
             response.setData(admin);
         }
         return response;
     }
 
-    @RequestMapping(value = "/systemAdminLogin",method = RequestMethod.POST)
+    @RequestMapping(value = "/systemAdminLogin", method = RequestMethod.POST)
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "account",value = "系统管理员账户",required = true),
-            @ApiImplicitParam(type = "query",name = "password",value = "密码",required = true)
+            @ApiImplicitParam(type = "query", name = "account", value = "系统管理员账户", required = true),
+            @ApiImplicitParam(type = "query", name = "password", value = "密码", required = true)
     })
     @ApiOperation("系统管理员登录判断")
     @ResponseBody
-    public int systemAdminLogin(@RequestBody Admin admin){
+    public int systemAdminLogin(@RequestBody Admin admin) {
         return adminBO.systemAdminLogin(admin);
     }
 

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>主页</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/style/js/chair.js}" charset="UTF-8"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.js"></script>
     <style>
@@ -99,10 +100,10 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a  class="btn btn-default"  href="/morning" role="button">上午</a></li>
-                            <li><a class="btn btn-default" href="/afternoon" role="button">下午</a></li>
-                            <li><a class="btn btn-default" href="/night" role="button">晚上</a></li>
-                            <li><a class="btn btn-default" href="/allDay" role="button">整天</a></li>
+                            <li><a id="morning" class="btn btn-default" href="/morning" role="button">上午</a></li>
+                            <li><a id="afternoon" class="btn btn-default" href="/afternoon" role="button">下午</a></li>
+                            <li><a id="night" class="btn btn-default" href="/night" role="button">晚上</a></li>
+                            <li><a id="allDay" class="btn btn-default" href="/allDay" role="button">整天</a></li>
                         </ul>
                     </div>
                 </td>
@@ -180,7 +181,9 @@
 
         // 填写用户选座信息
         getUserInfoOfSelectedChair(pageNumber)
-    })
+        //控制选座时间
+        setChairStatus();
+    });
 
 
     // 用户记录信息表
@@ -231,7 +234,7 @@
                             "<td>" + info.createAtStr + "</td>" +
                             "</td></tr>"
                         )
-                    }else {
+                    } else {
                         isValid = "过期"
                         $("#recordInfo").append("<tr id='infoFlag' class='" + status + "'>\n" +
                             "<td>" + info.floorNumber + "楼" + info.roomId +
@@ -266,12 +269,17 @@
         pageNumber = pageNumber - 1;
         getUserInfoOfSelectedChair(pageNumber);
     });
-
     $("#recordInfo").delegate("#next", "click", function () {
         $("#recordInfo").find("tbody").remove();
         pageNumber = pageNumber + 1;
         getUserInfoOfSelectedChair(pageNumber);
     });
+
+    // 控制选座时间
+    function setChairStatus(){
+        chairJs.setChairStatus();
+    }
+
 
 
 </script>
